@@ -5,7 +5,7 @@
 // 1. Download the JSON library at https://github.com/nlohmann/json/blob/develop/single_include/nlohmann/json.hpp
 // 2. Compile with a C++ compiler, for example with the GNU Compiler: g++ -o IHTP_Validator IHTP_Validator.cc 
 // 3. Run with: ./IHTP_Validator <instance_file> <solution_file> [verbose] 
-// Example: ./IHTP_Validator ../toy.json ../solution.json
+// Example: ./IHTP_Validator ../input/toy.json ../output/solution.json
 
 #include <iostream>
 #include <iomanip>
