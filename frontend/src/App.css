@@ -1,6 +1,14 @@
 #root {
-    max-width: 1280px;
     margin: 0 auto;
-    padding: 2rem;
     text-align: center;
+}
+
+nav a {
+    color: blue;
+    text-decoration: none;
+    padding: 5px;
+}
+
+nav a:hover {
+    color: red;
 }
