@@ -1,22 +1,14 @@
 import React from 'react'
 
-// import classNames from "classnames";
-import homeStyle from './home.module.scss'
+// import HomeStyle from './home.module.scss'
+import { InputFiles } from '../../components/InputFiles';
 
-export type HomeComponentProps = {
-    className?: string;
-    children?: React.ReactNode;
-    [key: string]: any;
-};
-
-export const Home: React.FC<HomeComponentProps> = ({
-    children,
-    ...props
-}) => {
+export const Home: React.FC = () => {
 
     return (
-        <div className={homeStyle.Home} {...props}>
-            {children}
+        <div>
+            <h1>Welcome</h1>
+            <InputFiles></InputFiles>
         </div>
     );
 };
