@@ -1,3 +1,5 @@
+import Style  from './InputFiles.module.scss';
+
 import React from 'react';
 import { useData } from '../../DataContext';
 
@@ -27,12 +29,12 @@ export const InputFiles: React.FC = () => {
   return (
     <div>
       <div>
-        <label>Archivo de entrada:</label>
-        <input type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'input')} />
+        <label>Archivo de entrada: </label>
+        <input className={Style.miau} type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'input')} />
       </div>
       <div>
-        <label>Archivo de salida:</label>
-        <input type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'output')} />
+        <label>Archivo de salida: </label>
+        <input className={Style.miau} type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'output')} />
       </div>
     </div>
   );
