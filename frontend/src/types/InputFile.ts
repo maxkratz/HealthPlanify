@@ -1,11 +1,13 @@
 import { ShiftType } from "./types";
+import { AgeGroup } from "./types";
+import { Gender } from "./types";
 
 // Representa el header y los datos generales del input
 export interface InputFile {
   days: number;
   skill_levels: number;
   shift_types: ShiftType[]; // p.ej. "early", "late", "night"
-  age_groups: string[];      // p.ej. "infant", "adult", "elderly"
+  age_groups: AgeGroup[];      // p.ej. "infant", "adult", "elderly"
   weights: Weights;
   nurses: Nurse[];
   surgeons: Surgeon[];
@@ -62,7 +64,7 @@ interface Room {
 // Datos de cada ocupante (paciente que ya está ingresado)
 interface Occupant {
   id: string;
-  gender: string;        // Podrías restringirlo si conoces los valores, por ejemplo "A" | "B"
+  gender: Gender;        // p.ej. "A" | "B"
   age_group: string;
   length_of_stay: number;
   workload_produced: number[];
