@@ -2,7 +2,7 @@ import React from 'react';
 import { useData } from '../../DataContext';
 
 export const InputFiles: React.FC = () => {
-  const { setInputData, setOutputData } = useData();
+  const { setInputData, setSolutionData } = useData();
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'input' | 'output') => {
     const file = e.target.files?.[0];
@@ -14,7 +14,7 @@ export const InputFiles: React.FC = () => {
           if (type === 'input') {
             setInputData(json);
           } else {
-            setOutputData(json);
+            setSolutionData(json);
           }
         } catch (error) {
           console.error("Error al parsear el JSON", error);

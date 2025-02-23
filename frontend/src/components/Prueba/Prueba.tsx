@@ -4,10 +4,12 @@ import { useData } from "../../DataContext";
 export const Prueba: React.FC = () => {
   const data = useData();
 
+  const outputdata = data.solutionData?.nurses
+
   return (
     <div>
       <h1>Data from Context:</h1>
-      /* <pre>{JSON.stringify(data, null, 2)}</pre> */
+      <pre>{JSON.stringify(outputdata, null, 2)}</pre>
     </div>
   );
 };
