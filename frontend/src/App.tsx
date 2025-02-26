@@ -1,6 +1,6 @@
 import "./App.css";
 
-//import { Prueba } from "./views/Prueba";
+// import { Prueba } from "./views/Prueba";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { DataProvider } from './DataContext';
 import { Home } from "./views/Home/Home";

@@ -1,19 +1,26 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import { useData } from '../../DataContext';
 
-// import PatientsDayDetailStyle from './PatientsDayDetail.module.scss';
+export const PatientsDayDetail: React.FC = () => {
+  const { dayId } = useParams();
+  // Convertir a número si lo necesitas para manipular los datos
+  const dayNumber = Number(dayId);
+  const data = useData();
+  
+  // Ahora puedes obtener los datos correspondientes a este día usando dayNumber
+  const dayData = data.inputData?.operating_theaters[0].availability[dayNumber];
 
-export type PatientsDayDetailComponentProps = {
-    dayNumber?: number;
-};
-
-export const PatientsDayDetail: React.FC<PatientsDayDetailComponentProps> = ({
-    dayNumber,
-    ...props
-}) => {
-
-    return (
+  return (
+    <div>
+      <h1>Detalle del Día {dayNumber}</h1>
+      {dayData ? (
         <div>
-            <span {...props}>MIAUUU</span>
+          <p>{JSON.stringify(dayData)}</p>
         </div>
-    );
+      ) : (
+        <p>No hay datos disponibles para este día.</p>
+      )}
+    </div>
+  );
 };
