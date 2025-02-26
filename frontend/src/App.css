@@ -2,13 +2,3 @@
     margin: 0 auto;
     text-align: center;
 }
-
-nav a {
-    color: blue;
-    text-decoration: none;
-    padding: 5px;
-}
-
-nav a:hover {
-    color: red;
-}

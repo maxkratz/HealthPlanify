@@ -47,18 +47,18 @@ export const InputFiles: React.FC = () => {
     return (
         <div>
             <div>
-                <label>Archivo de entrada: </label>
+                <label>Input File: </label>
                 <input
-                    className={Style.miau}
+                    className={Style.input}
                     type="file"
                     accept=".json"
                     onChange={(e) => handleFileUpload(e, 'input')}
                 />
             </div>
             <div>
-                <label>Archivo de salida: </label>
+                <label>Solution File: </label>
                 <input
-                    className={Style.miau}
+                    className={Style.input}
                     type="file"
                     accept=".json"
                     onChange={(e) => handleFileUpload(e, 'output')}

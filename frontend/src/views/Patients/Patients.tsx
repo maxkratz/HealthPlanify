@@ -9,7 +9,7 @@ export const Patients: React.FC = () => {
   const days = data.inputData?.days || 0;
 
   return (
-    <div>
+    <div className="flex flex-row">
       {Array.from({ length: days }, (_, index) => (
         <Day key={index} dayNumber={index} />
       ))}

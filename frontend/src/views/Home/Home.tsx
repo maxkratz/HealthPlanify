@@ -7,7 +7,7 @@ export const Home: React.FC = () => {
 
     return (
         <div>
-            <h1>Welcome</h1>
+            <h1>Welcome!</h1>
             <InputFiles></InputFiles>
         </div>
     );

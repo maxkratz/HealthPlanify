@@ -7,7 +7,7 @@ import { First } from '../../components/First/First';
 export const FirstElection: React.FC = () => {
 
     return (
-        <div>
+        <div className="flex flex-row gap-4">
             <First>
                 <nav>
                     <Link to="/FirstElection/Patients">Patients</Link>
