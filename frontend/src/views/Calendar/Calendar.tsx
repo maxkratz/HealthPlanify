@@ -1,0 +1,32 @@
+import React from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { Day } from '../../components/Day/Day';
+import { useData } from "../../DataContext";
+
+export const Calendar: React.FC = () => {
+    const { branch } = useParams();
+    const data = useData();
+    const days = data.inputData?.days || 0;
+
+    const generateLink = (dayIndex: number) => {
+        if (branch === 'Patients') {
+            return `/FirstElection/${branch}/Calendar/${dayIndex}/Rooms`;
+        } else if (branch === 'Nurses') {
+            return `/FirstElection/${branch}/Calendar/${dayIndex}/Shifts`;
+        } else if (branch === 'Surgeons') {
+            return `/FirstElection/${branch}/Calendar/${dayIndex}/Operations`;
+        } else {
+            return `/FirstElection/${branch}/Calendar/${dayIndex}`;
+        }
+    };
+
+    return (
+        <div className="flex flex-row">
+            {Array.from({ length: days }, (_, index) => (
+                <Link key={index} to={generateLink(index)}>
+                    <Day dayNumber={index} />
+                </Link>
+            ))}
+        </div>
+    );
+};

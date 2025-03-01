@@ -10,11 +10,21 @@ export const FirstElection: React.FC = () => {
         <div className="flex flex-row gap-4">
             <First>
                 <nav>
-                    <Link to="/FirstElection/Patients">Patients</Link>
+                    <Link to="/FirstElection/Patients/Calendar">Patients</Link>
                 </nav>
             </First>
-            <First>Nurses</First>
-            <First>Surgeons</First>
+            
+            <First>
+                <nav>
+                    <Link to="/FirstElection/Nurses/Calendar">Nurses</Link>
+                </nav>
+            </First>
+
+            <First>
+                <nav>
+                    <Link to="/FirstElection/Surgeons/Calendar">Surgeons</Link>
+                </nav>
+            </First>
         </div>
     );
 };

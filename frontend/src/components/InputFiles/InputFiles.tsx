@@ -45,7 +45,7 @@ export const InputFiles: React.FC = () => {
     };
 
     return (
-        <div>
+        <div className='flex flex-col gap-2'>
             <div>
                 <label>Input File: </label>
                 <input
@@ -55,7 +55,7 @@ export const InputFiles: React.FC = () => {
                     onChange={(e) => handleFileUpload(e, 'input')}
                 />
             </div>
-            <div>
+            <div className='mb-8'>
                 <label>Solution File: </label>
                 <input
                     className={Style.input}

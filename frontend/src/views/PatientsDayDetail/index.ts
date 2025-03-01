@@ -1,1 +1,0 @@
-export { PatientsDayDetail } from './PatientsDayDetail'
