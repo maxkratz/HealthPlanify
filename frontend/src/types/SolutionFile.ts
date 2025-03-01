@@ -7,7 +7,7 @@ export interface SolutionFile {
 }
 
 // Información de solución para cada paciente
-interface PatientOutput {
+export interface PatientOutput {
   id: string;
   admission_day: number;
   room: string;

@@ -62,7 +62,7 @@ interface Room {
 }
 
 // Datos de cada ocupante (paciente que ya está ingresado)
-interface Occupant {
+export interface Occupant {
   id: string;
   gender: Gender;        // p.ej. "A" | "B"
   age_group: string;
