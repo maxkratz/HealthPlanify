@@ -24,8 +24,19 @@ export const Rooms: React.FC = () => {
                     (occupant) => occupant.room_id === room.id
                 ) || [];
 
+                const roomData = {
+                    roomId: room.id,
+                    capacity: room.capacity,
+                    patients: patientsAssigned,
+                    occupants: occupantsAssigned,
+                };
+
                 return (
-                    <Link key={room.id} to={`/FirstElection/${branch}/Calendar/${dayIndex}/Rooms/${room.id}`}>
+                    <Link
+                        key={room.id}
+                        to={`/FirstElection/${branch}/Calendar/${dayIndex}/Rooms/${room.id}`}
+                        state={{ roomData }}
+                    >
                         <Room
                             roomId={room.id}
                             capacity={room.capacity}
