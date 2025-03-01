@@ -24,11 +24,11 @@ export const Room: React.FC<RoomComponentProps> = ({
   // - Verde si está por debajo del 50% de la capacidad.
   // - Amarillo si está entre el 50% y la capacidad.
   // - Rojo si es igual o mayor a la capacidad.
-  let modifier = 'green';
+  let modifier = 'free';
   if (totalAssigned >= capacity) {
-    modifier = 'red';
+    modifier = 'full';
   } else if (totalAssigned >= capacity * 0.5) {
-    modifier = 'yellow';
+    modifier = 'half';
   }
 
   // Combina la clase base con la modificadora

@@ -11,15 +11,15 @@
     align-items: center; // Centra horizontalmente
     gap: 10px;
   
-    &--green {
+    &--free {
       background-color: rgb(19, 97, 0);
     }
   
-    &--yellow {
+    &--half {
       background-color: rgb(255, 123, 0);
     }
   
-    &--red {
+    &--full {
       background-color: rgb(138, 0, 0);
     }
   }
