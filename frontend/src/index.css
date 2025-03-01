@@ -6,13 +6,17 @@
     font-weight: 700;
 
     color-scheme: light dark;
-    color: rgb(255, 255, 255);
-    background-color: #252525;
+    color: var(--color-white);
+    background-color: var(--color-black);
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    --color-white: #ffffff;
+    --color-black: #252525;
+    --color-green: #009c0d;
 }
 
 body {
