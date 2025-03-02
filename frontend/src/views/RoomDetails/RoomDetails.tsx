@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { useData } from "../../DataContext";
 import { PatientOutput } from '../../types/SolutionFile';
 import { Occupant } from '../../types/InputFile';
 
@@ -7,6 +8,7 @@ export const RoomDetails: React.FC = () => {
     const location = useLocation();
     const { dayIndex } = useParams();
     const currentDay = Number(dayIndex);
+    const data = useData();
     const roomData = location.state?.roomData;
 
     if (!roomData) {
@@ -34,12 +36,21 @@ export const RoomDetails: React.FC = () => {
                     <p>No patients assigned.</p>
                 ) : (
                     <ul>
-                        {roomData.patients.map((patient: PatientOutput) => (
-                            <li key={patient.id}>
-                                <strong>ID:</strong> {patient.id} -{' '}
-                                <strong>Admission Day:</strong> {patient.admission_day}
-                            </li>
-                        ))}
+                        {roomData.patients.map((patient: PatientOutput) => {
+                            const inputPatient = data.inputData?.patients.find(p => p.id === patient.id);
+                            const daysLeft = inputPatient
+                                ? (patient.admission_day + inputPatient.length_of_stay) - currentDay
+                                : 'N/A';
+                            return (
+                                <li key={patient.id}>
+                                    <strong>ID:</strong> {patient.id} -{' '}
+                                    <strong>Admission Day:</strong> {patient.admission_day} -{' '}
+                                    <strong>Gender:</strong> {inputPatient?.gender || 'Unknown'} -{' '}
+                                    <strong>Age Group:</strong> {inputPatient?.age_group || 'Unknown'} -{' '}
+                                    <strong>Days Left:</strong> {daysLeft}
+                                </li>
+                            );
+                        })}
                     </ul>
                 )}
             </section>
