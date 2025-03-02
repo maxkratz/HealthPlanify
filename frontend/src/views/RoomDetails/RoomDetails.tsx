@@ -1,36 +1,43 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { PatientOutput } from '../../types/SolutionFile';
 import { Occupant } from '../../types/InputFile';
 
 export const RoomDetails: React.FC = () => {
     const location = useLocation();
+    const { dayIndex } = useParams();
+    const currentDay = Number(dayIndex);
     const roomData = location.state?.roomData;
 
     if (!roomData) {
-        return <div>No hay datos para esta sala.</div>;
+        return <div>No room data available.</div>;
     }
 
     return (
-        <div>
-            <h1>Detalles de la Sala: {roomData.roomId}</h1>
-            <p><strong>Capacidad:</strong> {roomData.capacity}</p>
-            <p>
-                <strong>Pacientes Asignados:</strong> {roomData.patients.length}
-            </p>
-            <p>
-                <strong>Ocupantes:</strong> {roomData.occupants.length}
-            </p>
+        <div className='flex flex-col items-center gap-8'>
+            <section>
+                <h1>Room Details: {roomData.roomId}</h1>
+                <p>
+                    <strong>Capacity:</strong> {roomData.capacity}
+                </p>
+                <p>
+                    <strong>Assigned Patients:</strong> {roomData.patients.length}
+                </p>
+                <p>
+                    <strong>Occupants:</strong> {roomData.occupants.length}
+                </p>
+            </section>
 
             <section>
-                <h2>Listado de Pacientes</h2>
+                <h2>Patient List</h2>
                 {roomData.patients.length === 0 ? (
-                    <p>No hay pacientes asignados.</p>
+                    <p>No patients assigned.</p>
                 ) : (
                     <ul>
                         {roomData.patients.map((patient: PatientOutput) => (
                             <li key={patient.id}>
-                                <strong>ID:</strong> {patient.id} - <strong>Día de admisión:</strong> {patient.admission_day}
+                                <strong>ID:</strong> {patient.id} -{' '}
+                                <strong>Admission Day:</strong> {patient.admission_day}
                             </li>
                         ))}
                     </ul>
@@ -38,16 +45,22 @@ export const RoomDetails: React.FC = () => {
             </section>
 
             <section>
-                <h2>Listado de Ocupantes</h2>
+                <h2>Occupant List</h2>
                 {roomData.occupants.length === 0 ? (
-                    <p>No hay occupants asignados.</p>
+                    <p>No occupants assigned.</p>
                 ) : (
                     <ul>
-                        {roomData.occupants.map((occupant: Occupant) => (
-                            <li key={occupant.id}>
-                                <strong>ID:</strong> {occupant.id} - <strong>Género:</strong> {occupant.gender} - <strong>Grupo de edad:</strong> {occupant.age_group}
-                            </li>
-                        ))}
+                        {roomData.occupants.map((occupant: Occupant) => {
+                            const daysLeft = occupant.length_of_stay - currentDay;
+                            return (
+                                <li key={occupant.id}>
+                                    <strong>ID:</strong> {occupant.id} -{' '}
+                                    <strong>Gender:</strong> {occupant.gender} -{' '}
+                                    <strong>Age Group:</strong> {occupant.age_group} -{' '}
+                                    <strong>Days Left:</strong> {daysLeft}
+                                </li>
+                            );
+                        })}
                     </ul>
                 )}
             </section>

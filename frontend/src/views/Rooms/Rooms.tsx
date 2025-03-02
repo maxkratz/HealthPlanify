@@ -12,11 +12,7 @@ export const Rooms: React.FC = () => {
     return (
         <div className="flex flex-row gap-4">
             {rooms.map((room) => {
-                // Filtrar pacientes asignados a esta sala que estén admitidos y aún se encuentren
-                // en el hospital, usando length_of_stay del input. Se asume que en el archivo de solución
-                // el paciente solo tiene admission_day, por lo que se consulta el input para obtener length_of_stay.
                 const patientsAssigned = data.solutionData?.patients.filter((patient) => {
-                    // Buscar el paciente en el input para obtener el length_of_stay
                     const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
                     if (!patientInput) return false;
                     return (
@@ -26,7 +22,6 @@ export const Rooms: React.FC = () => {
                     );
                 }) || [];
 
-                // Filtrar occupants asignados a esta sala. Se asume que su admisión es el día 0.
                 const occupantsAssigned = data.inputData?.occupants.filter(
                     (occupant) =>
                         occupant.room_id === room.id &&

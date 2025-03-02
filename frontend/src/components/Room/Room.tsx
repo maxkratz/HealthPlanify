@@ -17,13 +17,8 @@ export const Room: React.FC<RoomComponentProps> = ({
   occupants,
   ...props
 }) => {
-  // Sumar el número de pacientes y occupants asignados
   const totalAssigned = patients.length + occupants.length;
 
-  // Definir el modificador según thresholds:
-  // - Verde si está por debajo del 50% de la capacidad.
-  // - Amarillo si está entre el 50% y la capacidad.
-  // - Rojo si es igual o mayor a la capacidad.
   let modifier = 'free';
   if (totalAssigned >= capacity) {
     modifier = 'full';
@@ -31,14 +26,13 @@ export const Room: React.FC<RoomComponentProps> = ({
     modifier = 'half';
   }
 
-  // Combina la clase base con la modificadora
   const containerClassName = `${RoomStyle.container} ${RoomStyle[`container--${modifier}`]}`;
 
   return (
     <div className={containerClassName}>
-      <span {...props}>Sala: {roomId}</span>
-      <span {...props}>Capacidad: {capacity}</span>
-      <span {...props}>Asignados: {totalAssigned}</span>
+      <span {...props}>Room: {roomId}</span>
+      <span {...props}>Capacity: {capacity}</span>
+      <span {...props}>Assigned: {totalAssigned}</span>
     </div>
   );
 };
