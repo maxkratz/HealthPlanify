@@ -6,13 +6,13 @@ import { Link } from "react-router-dom";
 export const InputFiles: React.FC = () => {
     const { setInputData, setSolutionData } = useData();
 
-    // Estados para controlar la subida de cada fichero
     const [inputUploaded, setInputUploaded] = useState(false);
     const [outputUploaded, setOutputUploaded] = useState(false);
-    // Estado que se pone a true cuando ambos archivos han sido subidos
     const [filesUploaded, setFilesUploaded] = useState(false);
 
-    // Cuando cambie alguno de los estados, comprobamos si ya se subieron ambos
+    const [inputFileName, setInputFileName] = useState('');
+    const [solutionFileName, setSolutionFileName] = useState('');
+
     useEffect(() => {
         if (inputUploaded && outputUploaded) {
             setFilesUploaded(true);
@@ -32,9 +32,11 @@ export const InputFiles: React.FC = () => {
                     if (type === 'input') {
                         setInputData(json);
                         setInputUploaded(true);
+                        setInputFileName(file.name);
                     } else {
                         setSolutionData(json);
                         setOutputUploaded(true);
+                        setSolutionFileName(file.name);
                     }
                 } catch (error) {
                     console.error("Error al parsear el JSON", error);
@@ -47,23 +49,53 @@ export const InputFiles: React.FC = () => {
     return (
         <div className='flex flex-col gap-2'>
             <div>
-                <label>Input File: </label>
+                <label>Input file: </label>
+
+                {!inputFileName && (
+                    <label htmlFor="inputFile" className={Style.customFileLabel}>
+                        Upload file
+                    </label>
+                )}
+
                 <input
-                    className={Style.input}
+                    id="inputFile"
                     type="file"
                     accept=".json"
                     onChange={(e) => handleFileUpload(e, 'input')}
+                    className={Style.hiddenInput}
                 />
+
+                <span className={Style.fileName}>
+                    {inputFileName || ''}
+                </span>
             </div>
+
+
+
             <div className='mb-8'>
-                <label>Solution File: </label>
+                <label>Solution file: </label>
+
+                {!solutionFileName && (
+                    <label htmlFor="solutionFile" className={Style.customFileLabel}>
+                        Upload file
+                    </label>
+                )}
+
                 <input
-                    className={Style.input}
+                    id="solutionFile"
                     type="file"
                     accept=".json"
                     onChange={(e) => handleFileUpload(e, 'output')}
+                    className={Style.hiddenInput}
                 />
+
+                <span className={Style.fileName}>
+                    {solutionFileName || ''}
+                </span>
             </div>
+
+
+
             {filesUploaded && (
                 <nav>
                     <Link to="/FirstElection">Continue</Link>

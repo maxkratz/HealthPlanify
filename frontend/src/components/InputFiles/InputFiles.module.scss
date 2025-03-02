@@ -1,4 +1,15 @@
-.input {
-    text-decoration: underline;
+.hiddenInput {
+    display: none;
+}
+
+.customFileLabel {
+    cursor: pointer;
     color: var(--color-green);
+    text-decoration: underline;
+}
+
+.fileName {
+    cursor: pointer;
+    color: var(--color-green);
+    text-decoration: underline;
 }
