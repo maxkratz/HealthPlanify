@@ -15,7 +15,7 @@ export const Shifts: React.FC = () => {
                     key={shiftType}
                     to={`/FirstElection/${branch}/Calendar/${dayIndex}/Shifts/${shiftType}`}
                 >
-                    <Shift>
+                    <Shift shiftType={shiftType as 'early' | 'late' | 'night'}>
                         {`${shiftType.charAt(0).toUpperCase()}${shiftType.slice(1)} Shift`}
                     </Shift>
                 </Link>
