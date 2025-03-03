@@ -10,7 +10,7 @@ export const Rooms: React.FC = () => {
     const dayNumber = Number(dayIndex);
 
     return (
-        <div className="flex flex-row flex-wrap m-4 gap-4">
+        <div className="flex items-center justify-center flex-row flex-wrap m-4 gap-4">
             {rooms.map((room) => {
                 const patientsAssigned = data.solutionData?.patients.filter((patient) => {
                     const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
