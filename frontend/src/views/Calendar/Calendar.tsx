@@ -21,7 +21,7 @@ export const Calendar: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-row flex-wrap m-4">
             {Array.from({ length: days }, (_, index) => (
                 <Link key={index} to={generateLink(index)}>
                     <Day dayNumber={index} />
