@@ -27,8 +27,17 @@ export const Nurse: React.FC<NurseComponentProps> = ({
         return patient.requiredSkill > max ? patient.requiredSkill : max;
     }, 0);
 
+    let modifier = 'free';
+    if (actualLoad >= maxLoad) {
+        modifier = 'full';
+    } else if (actualLoad >= maxLoad * 0.5) {
+        modifier = 'half';
+    }
+
+    const containerClassName = `${NurseStyle.container} ${NurseStyle[`container--${modifier}`]}`;
+
     return (
-        <div className={NurseStyle.container}>
+        <div className={containerClassName}>
             <span {...props}>Nurse: {nurseId}</span>
             <span {...props}>Skill Level: {skillLevel}</span>
             <span {...props}>Required Skill: {maxRequiredSkill}</span>
