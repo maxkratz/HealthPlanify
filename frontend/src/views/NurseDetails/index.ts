@@ -1,0 +1,1 @@
+export { NurseDetails } from './NurseDetails'

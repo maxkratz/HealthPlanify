@@ -39,7 +39,7 @@ export const Rooms: React.FC = () => {
                     <Link
                         key={room.id}
                         to={`/FirstElection/${branch}/Calendar/${dayIndex}/Rooms/${room.id}`}
-                        state={{ roomData }}
+                        state={{ roomData }} // Necessary for RoomDetails
                     >
                         <Room
                             roomId={room.id}

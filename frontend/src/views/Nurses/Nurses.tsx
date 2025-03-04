@@ -64,10 +64,18 @@ export const Nurses: React.FC = () => {
                     } as AssignedPatient;
                 }).filter(Boolean) as AssignedPatient[];
 
+                const nurseData = {
+                    nurseId: nurse.id,
+                    skillLevel: nurse.skill_level,
+                    maxLoad,
+                    assignedPatients
+                };
+
                 return (
                     <Link
                         key={nurse.id}
                         to={`/FirstElection/${branch}/Calendar/${dayIndex}/Shifts/${shiftType}/Nurses/${nurse.id}`}
+                        state={{nurseData}} // Necessary for NurseDetails
                     >
                         <Nurse
                             nurseId={nurse.id}
