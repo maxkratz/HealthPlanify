@@ -3,6 +3,7 @@ import "./App.css";
 // import { Prueba } from "./views/Prueba";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { DataProvider } from './DataContext';
+import { Breadcrumbs } from "./components/Breadcrumbs";
 import { Home } from "./views/Home/Home";
 import { FirstElection } from "./views/FirstElection/FirstElection";
 import { Calendar } from "./views/Calendar/Calendar";
@@ -16,6 +17,7 @@ function App() {
     return (
         <DataProvider>
             <Router>
+                <Breadcrumbs />
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/FirstElection" element={<FirstElection />} />
