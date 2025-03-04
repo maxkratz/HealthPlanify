@@ -9,7 +9,7 @@ type AssignedPatient = {
     requiredSkill: number;
 };
 
-export const Nurses: React.FC = () => {
+export const NursesInfo: React.FC = () => {
     const { branch, dayIndex, shiftType } = useParams<{ branch: string, dayIndex: string, shiftType: string }>();
     const data = useData();
     const dayNumber = Number(dayIndex);
@@ -74,7 +74,7 @@ export const Nurses: React.FC = () => {
                 return (
                     <Link
                         key={nurse.id}
-                        to={`/FirstElection/${branch}/Calendar/${dayIndex}/Shifts/${shiftType}/Nurses/${nurse.id}`}
+                        to={`/FirstElection/${branch}/Calendar/${dayIndex}/Shifts/${shiftType}/NursesInfo/${nurse.id}`}
                         state={{nurseData}} // Necessary for NurseDetails
                     >
                         <Nurse

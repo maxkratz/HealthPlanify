@@ -1,0 +1,1 @@
+export { NursesInfo } from './NursesInfo'
