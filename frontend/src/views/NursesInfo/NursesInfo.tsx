@@ -68,7 +68,8 @@ export const NursesInfo: React.FC = () => {
                     nurseId: nurse.id,
                     skillLevel: nurse.skill_level,
                     maxLoad,
-                    assignedPatients
+                    assignedPatients,
+                    rooms: assignedRooms,
                 };
 
                 return (
