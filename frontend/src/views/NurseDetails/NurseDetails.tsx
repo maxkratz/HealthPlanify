@@ -12,7 +12,7 @@ type NurseData = {
     skillLevel: number;
     maxLoad: number;
     assignedPatients: AssignedPatient[];
-    rooms: string[];
+    assignedRooms: string[];
 };
 
 export const NurseDetails: React.FC = () => {
@@ -23,7 +23,7 @@ export const NurseDetails: React.FC = () => {
         return <div>No nurse data available.</div>;
     }
 
-    const { assignedPatients, rooms } = nurseData;
+    const { assignedPatients, assignedRooms } = nurseData;
 
     const maxRequiredSkill = assignedPatients.reduce((max, patient) => {
         return patient.requiredSkill > max ? patient.requiredSkill : max;
@@ -43,9 +43,9 @@ export const NurseDetails: React.FC = () => {
 
             <section>
                 <h2>Assigned Rooms</h2>
-                {rooms.length > 0 ? (
+                {assignedRooms.length > 0 ? (
                     <ul>
-                        {rooms.map(room => (
+                        {assignedRooms.map(room => (
                             <li key={room}>Room: {room}</li>
                         ))}
                     </ul>

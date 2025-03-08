@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Nurse } from '../../components/Nurse/Nurse';
 import { useData } from "../../DataContext";
 
@@ -10,7 +10,7 @@ type AssignedPatient = {
 };
 
 export const NursesInfo: React.FC = () => {
-    const { branch, dayIndex, shiftType } = useParams<{ branch: string, dayIndex: string, shiftType: string }>();
+    const { dayIndex, shiftType } = useParams<{ branch: string, dayIndex: string, shiftType: string }>();
     const data = useData();
     const dayNumber = Number(dayIndex);
 
@@ -64,27 +64,15 @@ export const NursesInfo: React.FC = () => {
                     } as AssignedPatient;
                 }).filter(Boolean) as AssignedPatient[];
 
-                const nurseData = {
-                    nurseId: nurse.id,
-                    skillLevel: nurse.skill_level,
-                    maxLoad,
-                    assignedPatients,
-                    rooms: assignedRooms,
-                };
-
                 return (
-                    <Link
+                    <Nurse
                         key={nurse.id}
-                        to={`/FirstElection/${branch}/Calendar/${dayIndex}/Shifts/${shiftType}/NursesInfo/${nurse.id}`}
-                        state={{nurseData}} // Necessary for NurseDetails
-                    >
-                        <Nurse
-                            nurseId={nurse.id}
-                            skillLevel={nurse.skill_level}
-                            maxLoad={maxLoad}
-                            assignedPatients={assignedPatients}
-                        />
-                    </Link>
+                        nurseId={nurse.id}
+                        skillLevel={nurse.skill_level}
+                        maxLoad={maxLoad}
+                        assignedPatients={assignedPatients}
+                        assignedRooms={assignedRooms}
+                    />
                 );
             })}
         </div>
