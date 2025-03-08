@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Room } from '../../components/Room/Room';
 import { useData } from "../../DataContext";
 
 export const Rooms: React.FC = () => {
-    const { branch, dayIndex } = useParams();
+    const { dayIndex } = useParams();
     const data = useData();
     const rooms = data.inputData?.rooms || [];
     const dayNumber = Number(dayIndex);
@@ -28,26 +28,14 @@ export const Rooms: React.FC = () => {
                         dayNumber < occupant.length_of_stay
                 ) || [];
 
-                const roomData = {
-                    roomId: room.id,
-                    capacity: room.capacity,
-                    patients: patientsAssigned,
-                    occupants: occupantsAssigned,
-                };
-
                 return (
-                    <Link
+                    <Room
                         key={room.id}
-                        to={`/FirstElection/${branch}/Calendar/${dayIndex}/Rooms/${room.id}`}
-                        state={{ roomData }} // Necessary for RoomDetails
-                    >
-                        <Room
-                            roomId={room.id}
-                            capacity={room.capacity}
-                            patients={patientsAssigned}
-                            occupants={occupantsAssigned}
-                        />
-                    </Link>
+                        roomId={room.id}
+                        capacity={room.capacity}
+                        patients={patientsAssigned}
+                        occupants={occupantsAssigned}
+                    />
                 );
             })}
         </div>
