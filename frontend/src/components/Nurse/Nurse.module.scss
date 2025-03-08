@@ -2,25 +2,24 @@
     border: 2px solid var(--color-white);
     padding: 20px;
     box-sizing: border-box; // Para incluir el padding en el cálculo del ancho
-    width: 210px;
+    width: 175px;
     aspect-ratio: 1 / 1;
-  
+
     display: flex;
     flex-direction: column;
     justify-content: center; // Centra verticalmente (en caso de columna)
     align-items: center; // Centra horizontalmente
     gap: 10px;
-  
+
     &--free {
-      background-color: rgb(19, 97, 0);
+        background-color: var(--color-code-green);
     }
-  
+
     &--half {
-      background-color: rgb(255, 123, 0);
+        background-color: var(--color-code-orange);
     }
-  
+
     &--full {
-      background-color: rgb(138, 0, 0);
+        background-color: var(--color-code-red);
     }
-  }
-  
+}

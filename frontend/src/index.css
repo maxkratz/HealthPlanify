@@ -14,9 +14,15 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+    /* Main color palette */
     --color-white: #ffffff;
     --color-black: #252525;
     --color-green: #009c0d;
+
+    /* Code color palette */
+    --color-code-green: rgb(19, 97, 0);
+    --color-code-orange: rgb(255, 123, 0);
+    --color-code-red: rgb(138, 0, 0);
 }
 
 body {

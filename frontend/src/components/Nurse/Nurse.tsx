@@ -23,10 +23,6 @@ export const Nurse: React.FC<NurseComponentProps> = ({
 }) => {
     const actualLoad = assignedPatients.reduce((sum, patient) => sum + patient.workload, 0);
 
-    const maxRequiredSkill = assignedPatients.reduce((max, patient) => {
-        return patient.requiredSkill > max ? patient.requiredSkill : max;
-    }, 0);
-
     let modifier = 'free';
     if (actualLoad >= maxLoad) {
         modifier = 'full';
@@ -39,8 +35,6 @@ export const Nurse: React.FC<NurseComponentProps> = ({
     return (
         <div className={containerClassName}>
             <span {...props}>Nurse: {nurseId}</span>
-            <span {...props}>Skill Level: {skillLevel}</span>
-            <span {...props}>Required Skill: {maxRequiredSkill}</span>
             <span {...props}>Max Load: {maxLoad}</span>
             <span {...props}>Actual Load: {actualLoad}</span>
         </div>

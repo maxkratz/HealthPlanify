@@ -25,10 +25,20 @@ export const NurseDetails: React.FC = () => {
 
     const { assignedPatients, rooms } = nurseData;
 
+    const maxRequiredSkill = assignedPatients.reduce((max, patient) => {
+        return patient.requiredSkill > max ? patient.requiredSkill : max;
+    }, 0);
+
     return (
         <div className='flex flex-col items-center gap-8'>
             <section>
                 <h1>Nurse Details: {nurseData.nurseId}</h1>
+                <p>
+                    <strong>Skill Level:</strong> {nurseData.skillLevel}
+                </p>
+                <p>
+                    <strong>Required Skill:</strong> {maxRequiredSkill}
+                </p>
             </section>
 
             <section>
