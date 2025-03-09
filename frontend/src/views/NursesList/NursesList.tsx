@@ -9,7 +9,7 @@ type AssignedPatient = {
     requiredSkill: number;
 };
 
-export const NursesInfo: React.FC = () => {
+export const NursesList: React.FC = () => {
     const { dayIndex, shiftType } = useParams<{ branch: string, dayIndex: string, shiftType: string }>();
     const data = useData();
     const dayNumber = Number(dayIndex);

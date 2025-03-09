@@ -13,7 +13,7 @@ export const Shifts: React.FC = () => {
             {shift_types.map((shiftType: string) => (
                 <Link
                     key={shiftType}
-                    to={`/FirstElection/${branch}/Calendar/${dayIndex}/Shifts/${shiftType}/NursesInfo`}
+                    to={`/FirstElection/${branch}/Calendar/${dayIndex}/Shifts/${shiftType}/NursesList`}
                 >
                     <Shift shiftType={shiftType as 'early' | 'late' | 'night'}>
                         {`${shiftType.charAt(0).toUpperCase()}${shiftType.slice(1)} Shift`}

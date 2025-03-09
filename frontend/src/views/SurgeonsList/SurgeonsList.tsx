@@ -8,7 +8,7 @@ export interface PatientFullDataSurgeon extends PatientFullData {
     operatingTheaterAvailability: number;
 }
 
-export const Surgeons: React.FC = () => {
+export const SurgeonsList: React.FC = () => {
     const { dayIndex } = useParams();
     const data = useData();
     const dayNumber = Number(dayIndex);

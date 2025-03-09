@@ -7,7 +7,7 @@ export const Breadcrumbs: React.FC = () => {
     const { pathname } = location;
     const pathnames = pathname.split('/').filter(x => x);
 
-    const allowedSegments = ["FirstElection", "Calendar", "RoomsList", "Shifts", "NursesInfo"];
+    const allowedSegments = ["FirstElection", "Calendar", "RoomsList", "Shifts", "NursesList", "SurgeonsList"];
 
     return (
         <nav className={`flex justify-center mb-16 ${BreadcrumbsStyle.container}`}>

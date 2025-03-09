@@ -14,7 +14,7 @@ export const Calendar: React.FC = () => {
         } else if (branch === 'Nurses') {
             return `/FirstElection/${branch}/Calendar/${dayIndex}/Shifts`;
         } else if (branch === 'Surgeons') {
-            return `/FirstElection/${branch}/Calendar/${dayIndex}/Surgeons`;
+            return `/FirstElection/${branch}/Calendar/${dayIndex}/SurgeonsList`;
         } else {
             return `/FirstElection/${branch}/Calendar/${dayIndex}`;
         }

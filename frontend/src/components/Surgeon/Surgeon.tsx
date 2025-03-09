@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import SurgeonStyle from './Surgeon.module.scss';
-import { PatientFullDataSurgeon } from '../../views/Surgeons/Surgeons';
+import { PatientFullDataSurgeon } from '../../views/SurgeonsList/SurgeonsList';
 
 export type SurgeonComponentProps = {
     surgeonId: string;
@@ -37,7 +37,7 @@ export const Surgeon: React.FC<SurgeonComponentProps> = ({
     return (
         <div>
             <Link
-                to={`/FirstElection/${branch}/Calendar/${dayIndex}/Surgeons/${surgeonId}`}
+                to={`/FirstElection/${branch}/Calendar/${dayIndex}/SurgeonsList/${surgeonId}`}
                 state={{ surgeonData }} // Necessary for SurgeonDetails
             >
                 <div className={containerClassName}>
