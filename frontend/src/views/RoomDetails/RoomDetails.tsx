@@ -1,13 +1,12 @@
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { useData } from "../../DataContext";
-import { PatientOutput } from '../../types/SolutionFile';
+import { PatientFullData } from '../../types/Combined';
 import { Occupant } from '../../types/InputFile';
 
 type RoomData = {
     roomId: string;
     capacity: number;
-    patients: PatientOutput[];
+    patients: PatientFullData[];
     occupants: Occupant[];
 };
 
@@ -15,7 +14,6 @@ export const RoomDetails: React.FC = () => {
     const location = useLocation();
     const { dayIndex } = useParams();
     const currentDay = Number(dayIndex);
-    const data = useData();
     const roomData = location.state?.roomData as RoomData;
 
     if (!roomData) {
@@ -43,17 +41,14 @@ export const RoomDetails: React.FC = () => {
                     <p>No patients assigned.</p>
                 ) : (
                     <ul>
-                        {roomData.patients.map((patient: PatientOutput) => {
-                            const inputPatient = data.inputData?.patients.find(p => p.id === patient.id);
-                            const daysLeft = inputPatient
-                                ? (patient.admission_day + inputPatient.length_of_stay) - currentDay
-                                : 'N/A';
+                        {roomData.patients.map((patient: PatientFullData) => {
+                            const daysLeft = (patient.admission_day + patient.length_of_stay) - currentDay;
                             return (
                                 <li key={patient.id}>
                                     <strong>ID:</strong> {patient.id} -{' '}
                                     <strong>Admission Day:</strong> {patient.admission_day} -{' '}
-                                    <strong>Gender:</strong> {inputPatient?.gender || 'Unknown'} -{' '}
-                                    <strong>Age Group:</strong> {inputPatient?.age_group || 'Unknown'} -{' '}
+                                    <strong>Gender:</strong> {patient.gender || 'Unknown'} -{' '}
+                                    <strong>Age Group:</strong> {patient.age_group || 'Unknown'} -{' '}
                                     <strong>Days Left:</strong> {daysLeft}
                                 </li>
                             );

@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Room } from '../../components/Room/Room';
 import { useData } from "../../DataContext";
+import { PatientFullData } from '../../types/Combined';
 
 export const Rooms: React.FC = () => {
     const { dayIndex } = useParams();
@@ -12,7 +13,7 @@ export const Rooms: React.FC = () => {
     return (
         <div className="flex items-center justify-center flex-row flex-wrap m-4 gap-4">
             {rooms.map((room) => {
-                const patientsAssigned = data.solutionData?.patients.filter((patient) => {
+                const patientsAssigned: PatientFullData[] = (data.solutionData?.patients.filter((patient) => {
                     const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
                     if (!patientInput) return false;
                     return (
@@ -20,7 +21,10 @@ export const Rooms: React.FC = () => {
                         patient.admission_day <= dayNumber &&
                         dayNumber < patient.admission_day + patientInput.length_of_stay
                     );
-                }) || [];
+                }) || []).map((patient) => {
+                    const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
+                    return { ...patientInput, ...patient } as PatientFullData;
+                });
 
                 const occupantsAssigned = data.inputData?.occupants.filter(
                     (occupant) =>

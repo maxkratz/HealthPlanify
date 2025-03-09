@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import RoomStyle from './Room.module.scss';
-import { PatientOutput } from '../../types/SolutionFile';
+import { PatientFullData } from '../../types/Combined';
 import { Occupant } from '../../types/InputFile';
 
 export type RoomComponentProps = {
     roomId: string;
     capacity: number;
-    patients: PatientOutput[];
+    patients: PatientFullData[];
     occupants: Occupant[];
 };
 
