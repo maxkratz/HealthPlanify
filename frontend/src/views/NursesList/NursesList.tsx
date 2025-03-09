@@ -23,7 +23,7 @@ export const NursesList: React.FC = () => {
     ) || [];
 
     return (
-        <div className="flex items-center justify-center flex-row flex-wrap m-4 gap-4">
+        <div className="flex items-center justify-center flex-row flex-wrap gap-4">
             {availableNurses.map(nurse => {
                 // Obtenemos el turno correspondiente en el input para extraer el max_load
                 const workingShift = nurse.working_shifts.find(ws => ws.day === dayNumber && ws.shift === shiftType);

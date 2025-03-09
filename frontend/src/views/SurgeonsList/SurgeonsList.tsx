@@ -15,7 +15,7 @@ export const SurgeonsList: React.FC = () => {
     const surgeons = data.inputData?.surgeons || [];
 
     return (
-        <div className="flex items-center justify-center flex-row flex-wrap m-4 gap-4">
+        <div className="flex items-center justify-center flex-row flex-wrap gap-4">
             {surgeons.map((surgeon) => {
                 // Filters patients assigned to this surgeon on the day (surgery is only performed on the day of admission)
                 const patientsAssigned = (data.solutionData?.patients.filter((patient) => {

@@ -32,6 +32,7 @@ body {
     align-items: center;
     min-width: 320px;
     min-height: 100vh;
+    padding: 30px; /* "General margins" */
 }
 
 h1 {
