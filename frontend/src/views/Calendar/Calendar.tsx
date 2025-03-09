@@ -9,8 +9,8 @@ export const Calendar: React.FC = () => {
     const days = data.inputData?.days || 0;
 
     const generateLink = (dayIndex: number) => {
-        if (branch === 'Patients') {
-            return `/FirstElection/${branch}/Calendar/${dayIndex}/Rooms`;
+        if (branch === 'Rooms') {
+            return `/FirstElection/${branch}/Calendar/${dayIndex}/RoomsList`;
         } else if (branch === 'Nurses') {
             return `/FirstElection/${branch}/Calendar/${dayIndex}/Shifts`;
         } else if (branch === 'Surgeons') {

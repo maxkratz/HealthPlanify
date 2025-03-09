@@ -4,7 +4,7 @@ import { Room } from '../../components/Room/Room';
 import { useData } from "../../DataContext";
 import { PatientFullData } from '../../types/Combined';
 
-export const Rooms: React.FC = () => {
+export const RoomsList: React.FC = () => {
     const { dayIndex } = useParams();
     const data = useData();
     const rooms = data.inputData?.rooms || [];

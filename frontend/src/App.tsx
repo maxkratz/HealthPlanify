@@ -7,7 +7,7 @@ import { Breadcrumbs } from "./components/Breadcrumbs";
 import { Home } from "./views/Home/Home";
 import { FirstElection } from "./views/FirstElection/FirstElection";
 import { Calendar } from "./views/Calendar/Calendar";
-import { Rooms } from "./views/Rooms/Rooms";
+import { RoomsList } from "./views/RoomsList/RoomsList";
 import { RoomDetails } from "./views/RoomDetails/RoomDetails";
 import { Shifts } from "./views/Shifts/Shifts";
 import { NursesInfo } from "./views/NursesInfo/NursesInfo";
@@ -25,8 +25,8 @@ function App() {
                     <Route path="/FirstElection" element={<FirstElection />} />
                     <Route path="/FirstElection/:branch/Calendar" element={<Calendar />} />
 
-                    <Route path="/FirstElection/:branch/Calendar/:dayIndex/Rooms" element={<Rooms />} />
-                    <Route path="/FirstElection/:branch/Calendar/:dayIndex/Rooms/:roomId" element={<RoomDetails />} />
+                    <Route path="/FirstElection/:branch/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
+                    <Route path="/FirstElection/:branch/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
 
                     <Route path="/FirstElection/:branch/Calendar/:dayIndex/Shifts" element={<Shifts />} />
                     <Route path="/FirstElection/:branch/Calendar/:dayIndex/Shifts/:shiftType/NursesInfo" element={<NursesInfo />} />

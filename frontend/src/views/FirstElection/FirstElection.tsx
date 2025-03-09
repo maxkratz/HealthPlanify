@@ -10,7 +10,7 @@ export const FirstElection: React.FC = () => {
         <div className="flex flex-row gap-4">
             <First>
                 <nav>
-                    <Link to="/FirstElection/Patients/Calendar">Patients</Link>
+                    <Link to="/FirstElection/Rooms/Calendar">Rooms</Link>
                 </nav>
             </First>
             
