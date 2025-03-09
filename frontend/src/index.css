@@ -20,9 +20,9 @@
     --color-green: #009c0d;
 
     /* Code color palette */
-    --color-code-green: rgb(19, 97, 0);
-    --color-code-orange: rgb(255, 123, 0);
-    --color-code-red: rgb(138, 0, 0);
+    --color-code-green: #009c0d;
+    --color-code-orange: #ff9100;
+    --color-code-red: #a00000;
 }
 
 body {
