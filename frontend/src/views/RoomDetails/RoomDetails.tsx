@@ -4,12 +4,19 @@ import { useData } from "../../DataContext";
 import { PatientOutput } from '../../types/SolutionFile';
 import { Occupant } from '../../types/InputFile';
 
+type RoomData = {
+    roomId: string;
+    capacity: number;
+    patients: PatientOutput[];
+    occupants: Occupant[];
+};
+
 export const RoomDetails: React.FC = () => {
     const location = useLocation();
     const { dayIndex } = useParams();
     const currentDay = Number(dayIndex);
     const data = useData();
-    const roomData = location.state?.roomData;
+    const roomData = location.state?.roomData as RoomData;
 
     if (!roomData) {
         return <div>No room data available.</div>;

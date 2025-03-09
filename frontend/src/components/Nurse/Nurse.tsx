@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import NurseStyle from './Nurse.module.scss';
 
-type AssignedPatient = {
+export type AssignedPatient = {
     patientId: string;
     workload: number;
     requiredSkill: number;
@@ -24,6 +24,8 @@ export const Nurse: React.FC<NurseComponentProps> = ({
     assignedRooms,
     ...props
 }) => {
+    const { branch, dayIndex, shiftType } = useParams<{ branch: string, dayIndex: string, shiftType: string }>();
+
     const actualLoad = assignedPatients.reduce((sum, patient) => sum + patient.workload, 0);
     let modifier = 'free';
     if (actualLoad >= maxLoad) {
@@ -33,7 +35,6 @@ export const Nurse: React.FC<NurseComponentProps> = ({
     }
     const containerClassName = `${NurseStyle.container} ${NurseStyle[`container--${modifier}`]}`;
 
-    const { branch, dayIndex, shiftType } = useParams<{ branch: string, dayIndex: string, shiftType: string }>();
     const nurseData = {
         nurseId: nurseId,
         skillLevel: skillLevel,

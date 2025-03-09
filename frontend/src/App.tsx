@@ -13,6 +13,7 @@ import { Shifts } from "./views/Shifts/Shifts";
 import { NursesInfo } from "./views/NursesInfo/NursesInfo";
 import { NurseDetails } from "./views/NurseDetails";
 import { Surgeons } from "./views/Surgeons/Surgeons";
+import { SurgeonDetails } from "./views/SurgeonDetails";
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function App() {
                     <Route path="/FirstElection/:branch/Calendar/:dayIndex/Shifts/:shiftType/NursesInfo/:nurseId" element={<NurseDetails />} />
 
                     <Route path="/FirstElection/:branch/Calendar/:dayIndex/Surgeons" element={<Surgeons />} />
+                    <Route path="/FirstElection/:branch/Calendar/:dayIndex/Surgeons/:surgeonId" element={<SurgeonDetails />} />
                 </Routes>
             </Router>
         </DataProvider>

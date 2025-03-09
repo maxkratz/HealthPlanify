@@ -11,6 +11,10 @@
     align-items: center; // Centra horizontalmente
     gap: 10px;
 
+    &--none {
+        background-color: transparent;
+    }
+
     &--free {
         background-color: var(--color-code-green);
     }

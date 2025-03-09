@@ -18,7 +18,7 @@ export const Room: React.FC<RoomComponentProps> = ({
     occupants,
     ...props
 }) => {
-    const { branch, dayIndex } = useParams();
+    const { branch, dayIndex } = useParams<{ branch: string, dayIndex: string }>();
 
     const totalAssigned = patients.length + occupants.length;
     let modifier = 'free';

@@ -1,11 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-
-type AssignedPatient = {
-    patientId: string;
-    workload: number;
-    requiredSkill: number;
-};
+import { AssignedPatient } from '../../components/Nurse/Nurse';
 
 type NurseData = {
     nurseId: string;
@@ -17,7 +12,7 @@ type NurseData = {
 
 export const NurseDetails: React.FC = () => {
     const location = useLocation();
-    const nurseData = (location.state as { nurseData?: NurseData })?.nurseData;
+    const nurseData = location.state?.nurseData as NurseData;
 
     if (!nurseData) {
         return <div>No nurse data available.</div>;

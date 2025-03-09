@@ -19,7 +19,9 @@ export const Surgeon: React.FC<SurgeonComponentProps> = ({
 
     const totalAssigned = patients.reduce((acc, patient) => acc + patient.surgery_duration, 0);
     let modifier = 'free';
-    if (totalAssigned >= maxSurgeryTime) {
+    if (totalAssigned == 0 && maxSurgeryTime == 0) {
+        modifier = 'none';
+    } else if (totalAssigned >= maxSurgeryTime) {
         modifier = 'full';
     } else if (totalAssigned >= maxSurgeryTime * 0.5) {
         modifier = 'half';
