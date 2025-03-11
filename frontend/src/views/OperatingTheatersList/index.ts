@@ -1,0 +1,1 @@
+export { OperatingTheatersList } from './OperatingTheatersList'

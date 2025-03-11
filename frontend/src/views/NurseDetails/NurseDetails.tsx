@@ -41,7 +41,7 @@ export const NurseDetails: React.FC = () => {
                 {assignedRooms.length > 0 ? (
                     <ul>
                         {assignedRooms.map(room => (
-                            <li key={room}>Room: {room}</li>
+                            <li key={room}><strong>Room:</strong> {room}</li>
                         ))}
                     </ul>
                 ) : (
@@ -55,7 +55,9 @@ export const NurseDetails: React.FC = () => {
                     <ul>
                         {assignedPatients.map((patient) => (
                             <li key={patient.patientId}>
-                                ID: {patient.patientId} - Workload: {patient.workload} - Required Skill: {patient.requiredSkill}
+                                <strong>ID:</strong> {patient.patientId} -{' '}
+                                <strong>Workload:</strong> {patient.workload} -{' '}
+                                <strong>Required Skill:</strong> {patient.requiredSkill}
                             </li>
                         ))}
                     </ul>

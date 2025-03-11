@@ -1,44 +1,45 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Surgeon } from '../../components/Surgeon/Surgeon';
+import { OperatingTheater } from '../../components/OperatingTheater/OperatingTheater';
 import { useData } from '../../DataContext';
 import { PatientFullData } from '../../types/Combined';
 
-export interface PatientFullDataSurgeon extends PatientFullData {
-    operatingTheaterAvailability: number; // Not used in Surgeon flow, not deleted just in case
+export interface PatientFullDataOperatingTheater extends PatientFullData {
+    operatingTheaterAvailability: number; // Not used in OperatingTheater flow, not deleted just in case
 }
 
-export const SurgeonsList: React.FC = () => {
+export const OperatingTheatersList: React.FC = () => {
     const { dayIndex } = useParams();
     const data = useData();
     const dayNumber = Number(dayIndex);
-    const surgeons = data.inputData?.surgeons || [];
+    const operatingTheaters = data.inputData?.operating_theaters || [];
 
     return (
         <div className="flex items-center justify-center flex-row flex-wrap gap-4">
-            {surgeons.map((surgeon) => {
+            {operatingTheaters.map((ot) => {
                 const patientsAssigned = (data.solutionData?.patients.filter((patient) => {
                     const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
                     if (!patientInput) return false;
                     return (
                         patient.admission_day === dayNumber &&
-                        patientInput.surgeon_id === surgeon.id
+                        patient.operating_theater === ot.id
                     );
                 }) || []).map((patient) => {
                     const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
-                    const theater = data.inputData?.operating_theaters.find(
-                        ot => ot.id === patient.operating_theater
-                    );
-                    const operatingTheaterAvailability = theater ? theater.availability[dayNumber] : 0;
-                    return { ...patientInput, ...patient, operatingTheaterAvailability } as PatientFullDataSurgeon;
+                    const maxAvailableTime = ot.availability[dayNumber];
+                    return { 
+                        ...patientInput, 
+                        ...patient, 
+                        operatingTheaterAvailability: maxAvailableTime 
+                    } as PatientFullDataOperatingTheater;
                 });
 
                 return (
-                    <Surgeon
-                        key={surgeon.id}
-                        surgeonId={surgeon.id}
+                    <OperatingTheater
+                        key={ot.id}
+                        operatingTheaterId={ot.id}
                         patients={patientsAssigned}
-                        maxSurgeryTime={surgeon.max_surgery_time[dayNumber]}
+                        maxAvailableTime={ot.availability[dayNumber]}
                     />
                 );
             })}

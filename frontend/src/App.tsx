@@ -1,6 +1,5 @@
 import "./App.css";
 
-// import { Prueba } from "./views/Prueba";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { DataProvider } from './DataContext';
 import { Breadcrumbs } from "./components/Breadcrumbs";
@@ -14,6 +13,8 @@ import { NursesList } from "./views/NursesList/NursesList";
 import { NurseDetails } from "./views/NurseDetails";
 import { SurgeonsList } from "./views/SurgeonsList/SurgeonsList";
 import { SurgeonDetails } from "./views/SurgeonDetails";
+import { OperatingTheatersList } from "./views/OperatingTheatersList/OperatingTheatersList";
+import { OperatingTheaterDetails } from "./views/OperatingTheaterDetails";
 
 function App() {
     return (
@@ -34,6 +35,9 @@ function App() {
 
                     <Route path="/FirstElection/:branch/Calendar/:dayIndex/SurgeonsList" element={<SurgeonsList />} />
                     <Route path="/FirstElection/:branch/Calendar/:dayIndex/SurgeonsList/:surgeonId" element={<SurgeonDetails />} />
+
+                    <Route path="/FirstElection/:branch/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
+                    <Route path="/FirstElection/:branch/Calendar/:dayIndex/OperatingTheatersList/:operatingTheaterId" element={<OperatingTheaterDetails />} />
                 </Routes>
             </Router>
         </DataProvider>

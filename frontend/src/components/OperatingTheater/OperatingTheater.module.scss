@@ -1,0 +1,29 @@
+.container {
+    border: 2px solid var(--color-white);
+    padding: 20px;
+    box-sizing: border-box; // Para incluir el padding en el cálculo del ancho
+    width: 200px; // Más ancho que el resto de contenedores del mismo estilo
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center; // Centra verticalmente (en caso de columna)
+    align-items: center; // Centra horizontalmente
+    gap: 10px;
+
+    &--none {
+        background-color: transparent;
+    }
+
+    &--free {
+        background-color: var(--color-code-green);
+    }
+
+    &--half {
+        background-color: var(--color-code-orange);
+    }
+
+    &--full {
+        background-color: var(--color-code-red);
+    }
+}

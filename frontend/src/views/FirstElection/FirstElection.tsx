@@ -25,6 +25,12 @@ export const FirstElection: React.FC = () => {
                     <Link to="/FirstElection/Surgeons/Calendar">Surgeons</Link>
                 </nav>
             </First>
+
+            <First>
+                <nav>
+                    <Link to="/FirstElection/OperatingTheaters/Calendar">Operating Theaters</Link>
+                </nav>
+            </First>
         </div>
     );
 };
