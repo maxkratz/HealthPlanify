@@ -2,6 +2,7 @@ import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { DataProvider } from './DataContext';
+import { PageNotFound } from "./views/PageNotFound";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { Home } from "./views/Home/Home";
 import { FirstElection } from "./views/FirstElection/FirstElection";
@@ -22,6 +23,8 @@ function App() {
             <Router>
                 <Breadcrumbs />
                 <Routes>
+                    <Route path="*" element={<PageNotFound />} />
+
                     <Route path="/" element={<Home />} />
                     <Route path="/FirstElection" element={<FirstElection />} />
                     <Route path="/FirstElection/:branch/Calendar" element={<Calendar />} />
