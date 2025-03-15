@@ -23,7 +23,9 @@ export const Nurse: React.FC<NurseComponentProps> = ({
 
     const actualLoad = assignedPatients.reduce((sum, patient) => sum + patient.workload, 0);
     let modifier = 'free';
-    if (actualLoad >= maxLoad) {
+    if (actualLoad > maxLoad) {
+        modifier = 'overfull';
+    } else if (actualLoad == maxLoad) {
         modifier = 'full';
     } else if (actualLoad >= maxLoad * 0.5) {
         modifier = 'half';

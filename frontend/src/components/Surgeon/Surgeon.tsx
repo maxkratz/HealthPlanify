@@ -7,23 +7,24 @@ export type SurgeonComponentProps = {
     surgeonId: string;
     patients: PatientFullDataSurgeon[];
     maxSurgeryTime: number;
+    totalTimeAssigned: number;
 };
 
 export const Surgeon: React.FC<SurgeonComponentProps> = ({
     surgeonId,
     patients,
     maxSurgeryTime,
+    totalTimeAssigned,
     ...props
 }) => {
     const { branch, dayIndex } = useParams();
 
-    const totalAssigned = patients.reduce((acc, patient) => acc + patient.surgery_duration, 0);
     let modifier = 'free';
-    if (totalAssigned == 0 && maxSurgeryTime == 0) {
-        modifier = 'none';
-    } else if (totalAssigned >= maxSurgeryTime) {
+    if (totalTimeAssigned > maxSurgeryTime) {
+        modifier = 'overfull';
+    } else if (totalTimeAssigned == maxSurgeryTime) {
         modifier = 'full';
-    } else if (totalAssigned >= maxSurgeryTime * 0.5) {
+    } else if (totalTimeAssigned >= maxSurgeryTime * 0.5) {
         modifier = 'half';
     }
     const containerClassName = `${SurgeonStyle.container} ${SurgeonStyle[`container--${modifier}`]}`;
@@ -43,7 +44,7 @@ export const Surgeon: React.FC<SurgeonComponentProps> = ({
                 <div className={containerClassName}>
                     <span {...props}>Surgeon: {surgeonId}</span>
                     <span {...props}>Max surgery time: {maxSurgeryTime}</span>
-                    <span {...props}>Actual surgery time: {totalAssigned}</span>
+                    <span {...props}>Actual surgery time: {totalTimeAssigned}</span>
                 </div>
             </Link>
         </div>

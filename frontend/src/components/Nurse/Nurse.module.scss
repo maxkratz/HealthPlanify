@@ -22,4 +22,8 @@
     &--full {
         background-color: var(--color-code-red);
     }
+
+    &--overfull {
+        background-color: var(--color-code-black);
+    }
 }

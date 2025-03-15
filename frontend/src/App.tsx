@@ -26,9 +26,10 @@ function App() {
                 <Breadcrumbs />
                 <Routes>
                     <Route path="*" element={<PageNotFound />} />
-
+                    
                     <Route path="/" element={<Home />} />
                     <Route path="/FirstElection" element={<FirstElection />} />
+                    <Route path="/FirstElection/GeneralConstraints" element={<h1>IN PROGRESS</h1>} />
                     <Route path="/FirstElection/:branch/SecondElection" element={<SecondElection />} />
                     <Route path="/FirstElection/:branch/SecondElection/Calendar" element={<Calendar />} />
 

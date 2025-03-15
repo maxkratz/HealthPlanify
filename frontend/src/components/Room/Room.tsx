@@ -22,7 +22,9 @@ export const Room: React.FC<RoomComponentProps> = ({
 
     const totalAssigned = patients.length + occupants.length;
     let modifier = 'free';
-    if (totalAssigned >= capacity) {
+    if (totalAssigned > capacity) {
+        modifier = 'overfull';
+    } else if (totalAssigned == capacity) {
         modifier = 'full';
     } else if (totalAssigned >= capacity * 0.5) {
         modifier = 'half';

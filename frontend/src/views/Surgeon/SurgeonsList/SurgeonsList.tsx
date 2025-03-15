@@ -37,14 +37,22 @@ export const SurgeonsList: React.FC = () => {
                         return { ...patientInput, ...patient, operatingTheaterAvailability } as PatientFullDataSurgeon;
                     });
 
-                    return (
-                        <Surgeon
-                            key={surgeon.id}
-                            surgeonId={surgeon.id}
-                            patients={patientsAssigned}
-                            maxSurgeryTime={surgeon.max_surgery_time[dayNumber]}
-                        />
-                    );
+                    const totalTimeAssigned = patientsAssigned.reduce((acc, patient) => acc + patient.surgery_duration, 0);
+                    const maxSurgeryTime = surgeon.max_surgery_time[dayNumber]
+
+                    if (totalTimeAssigned !== 0 && maxSurgeryTime !== 0) {
+                        return (
+                            <Surgeon
+                                key={surgeon.id}
+                                surgeonId={surgeon.id}
+                                patients={patientsAssigned}
+                                maxSurgeryTime={surgeon.max_surgery_time[dayNumber]}
+                                totalTimeAssigned={totalTimeAssigned}
+                            />
+                        );
+                    }
+
+                    return null;
                 })}
             </div>
         </div>

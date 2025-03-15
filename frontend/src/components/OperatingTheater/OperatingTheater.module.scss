@@ -11,10 +11,6 @@
     align-items: center; // Centra horizontalmente
     gap: 10px;
 
-    &--none {
-        background-color: transparent;
-    }
-
     &--free {
         background-color: var(--color-code-green);
     }
@@ -25,5 +21,9 @@
 
     &--full {
         background-color: var(--color-code-red);
+    }
+
+    &--overfull {
+        background-color: var(--color-code-black);
     }
 }

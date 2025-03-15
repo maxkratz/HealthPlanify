@@ -38,14 +38,22 @@ export const OperatingTheatersList: React.FC = () => {
                         } as PatientFullDataOperatingTheater;
                     });
 
-                    return (
-                        <OperatingTheater
-                            key={ot.id}
-                            operatingTheaterId={ot.id}
-                            patients={patientsAssigned}
-                            maxAvailableTime={ot.availability[dayNumber]}
-                        />
-                    );
+                    const totalTimeAssigned = patientsAssigned.reduce((acc, patient) => acc + patient.surgery_duration, 0);
+                    const maxAvailableTime = ot.availability[dayNumber]
+
+                    if (totalTimeAssigned !== 0 && maxAvailableTime !== 0) {
+                        return (
+                            <OperatingTheater
+                                key={ot.id}
+                                operatingTheaterId={ot.id}
+                                patients={patientsAssigned}
+                                maxAvailableTime={maxAvailableTime}
+                                totalTimeAssigned={totalTimeAssigned}
+                            />
+                        );
+                    }
+
+                    return null;
                 })}
             </div>
         </div>

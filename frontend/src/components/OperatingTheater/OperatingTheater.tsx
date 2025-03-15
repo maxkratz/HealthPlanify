@@ -7,23 +7,24 @@ export type OperatingTheaterComponentProps = {
     operatingTheaterId: string;
     patients: PatientFullDataOperatingTheater[];
     maxAvailableTime: number;
+    totalTimeAssigned: number;
 };
 
 export const OperatingTheater: React.FC<OperatingTheaterComponentProps> = ({
     operatingTheaterId,
     patients,
     maxAvailableTime,
+    totalTimeAssigned,
     ...props
 }) => {
     const { branch, dayIndex } = useParams();
 
-    const totalAssigned = patients.reduce((acc, patient) => acc + patient.surgery_duration, 0);
     let modifier = 'free';
-    if (totalAssigned == 0 && maxAvailableTime == 0) {
-        modifier = 'none';
-    } else if (totalAssigned >= maxAvailableTime) {
+    if (totalTimeAssigned > maxAvailableTime) {
+        modifier = 'overfull';
+    } else if (totalTimeAssigned == maxAvailableTime) {
         modifier = 'full';
-    } else if (totalAssigned >= maxAvailableTime * 0.5) {
+    } else if (totalTimeAssigned >= maxAvailableTime * 0.5) {
         modifier = 'half';
     }
     const containerClassName = `${OperatingTheaterStyle.container} ${OperatingTheaterStyle[`container--${modifier}`]}`;
@@ -43,7 +44,7 @@ export const OperatingTheater: React.FC<OperatingTheaterComponentProps> = ({
                 <div className={containerClassName}>
                     <span {...props}>OperatingTheater: {operatingTheaterId}</span>
                     <span {...props}>Max available time: {maxAvailableTime}</span>
-                    <span {...props}>Actual used time: {totalAssigned}</span>
+                    <span {...props}>Actual used time: {totalTimeAssigned}</span>
                 </div>
             </Link>
         </div>
