@@ -7,13 +7,13 @@ export const Breadcrumbs: React.FC = () => {
     const { pathname } = location;
     const pathnames = pathname.split('/').filter(x => x);
 
-    const allowedSegments = ["FirstElection", "Calendar", "RoomsList", "Shifts", "NursesList", "SurgeonsList", "OperatingTheatersList"];
+    const allowedSegments = ["FirstElection", "SecondElection", "Calendar" ,"RoomsList", "Shifts", "NursesList", "SurgeonsList", "OperatingTheatersList"];
 
     return (
         <nav className={`flex justify-center mb-16 ${BreadcrumbsStyle.container}`}>
             <ul className="flex flex-row items-center gap-2">
                 <li>
-                    <Link to="/Home">Home</Link>
+                    <Link to="/">Home</Link>
                 </li>
                 {pathnames.map((segment, index) => {
                     if (!allowedSegments.includes(segment)) return null;

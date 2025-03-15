@@ -1,12 +1,7 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import NurseStyle from './Nurse.module.scss';
-
-export type AssignedPatient = {
-    patientId: string;
-    workload: number;
-    requiredSkill: number;
-};
+import { AssignedPatient } from '../../views/Nurse/NursesList/NursesList';
 
 export type NurseComponentProps = {
     nurseId: string;
@@ -46,7 +41,7 @@ export const Nurse: React.FC<NurseComponentProps> = ({
     return (
         <div>
             <Link
-                to={`/FirstElection/${branch}/Calendar/${dayIndex}/Shifts/${shiftType}/NursesList/${nurseId}`}
+                to={`/FirstElection/${branch}/SecondElection/Calendar/${dayIndex}/Shifts/${shiftType}/NursesList/${nurseId}`}
                 state={{ nurseData }} // Necessary for NurseDetails
             >
                 <div className={containerClassName}>

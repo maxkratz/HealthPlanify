@@ -9,17 +9,22 @@ export const Shifts: React.FC = () => {
     const shift_types = data.inputData?.shift_types || [];
 
     return (
-        <div className="flex items-center justify-center flex-row flex-wrap m-4 gap-4">
-            {shift_types.map((shiftType: string) => (
-                <Link
-                    key={shiftType}
-                    to={`/FirstElection/${branch}/Calendar/${dayIndex}/Shifts/${shiftType}/NursesList`}
-                >
-                    <Shift shiftType={shiftType as 'early' | 'late' | 'night'}>
-                        {`${shiftType.charAt(0).toUpperCase()}${shiftType.slice(1)} Shift`}
-                    </Shift>
-                </Link>
-            ))}
+        <div>
+            <div className='mb-16'>
+                <h1>Nurses Shifts</h1>
+            </div>
+            <div className="flex items-center justify-center flex-row flex-wrap m-4 gap-4">
+                {shift_types.map((shiftType: string) => (
+                    <Link
+                        key={shiftType}
+                        to={`/FirstElection/${branch}/SecondElection/Calendar/${dayIndex}/Shifts/${shiftType}/NursesList`}
+                    >
+                        <Shift shiftType={shiftType as 'early' | 'late' | 'night'}>
+                            {`${shiftType.charAt(0).toUpperCase()}${shiftType.slice(1)} Shift`}
+                        </Shift>
+                    </Link>
+                ))}
+            </div>
         </div>
     );
 };

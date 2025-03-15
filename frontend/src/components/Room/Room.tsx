@@ -39,7 +39,7 @@ export const Room: React.FC<RoomComponentProps> = ({
     return (
         <div>
             <Link
-                to={`/FirstElection/${branch}/Calendar/${dayIndex}/RoomsList/${roomId}`}
+                to={`/FirstElection/${branch}/SecondElection/Calendar/${dayIndex}/RoomsList/${roomId}`}
                 state={{ roomData }} // Necessary for RoomDetails
             >
                 <div className={containerClassName}>

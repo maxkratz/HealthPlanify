@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { AssignedPatient } from '../../../components/Nurse/Nurse';
+import { AssignedPatient } from '../NursesList/NursesList';
 
 type NurseData = {
     nurseId: string;
@@ -62,7 +62,7 @@ export const NurseDetails: React.FC = () => {
                         ))}
                     </ul>
                 ) : (
-                    <h2>No patients assigned</h2>
+                    <p>No patients assigned</p>
                 )}
             </section>
         </div>

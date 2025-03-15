@@ -15,33 +15,38 @@ export const SurgeonsList: React.FC = () => {
     const surgeons = data.inputData?.surgeons || [];
 
     return (
-        <div className="flex items-center justify-center flex-row flex-wrap gap-4">
-            {surgeons.map((surgeon) => {
-                const patientsAssigned = (data.solutionData?.patients.filter((patient) => {
-                    const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
-                    if (!patientInput) return false;
-                    return (
-                        patient.admission_day === dayNumber &&
-                        patientInput.surgeon_id === surgeon.id
-                    );
-                }) || []).map((patient) => {
-                    const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
-                    const theater = data.inputData?.operating_theaters.find(
-                        ot => ot.id === patient.operating_theater
-                    );
-                    const operatingTheaterAvailability = theater ? theater.availability[dayNumber] : 0;
-                    return { ...patientInput, ...patient, operatingTheaterAvailability } as PatientFullDataSurgeon;
-                });
+        <div>
+            <div className='mb-16'>
+                <h1>Surgeons List</h1>
+            </div>
+            <div className="flex items-center justify-center flex-row flex-wrap gap-4">
+                {surgeons.map((surgeon) => {
+                    const patientsAssigned = (data.solutionData?.patients.filter((patient) => {
+                        const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
+                        if (!patientInput) return false;
+                        return (
+                            patient.admission_day === dayNumber &&
+                            patientInput.surgeon_id === surgeon.id
+                        );
+                    }) || []).map((patient) => {
+                        const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
+                        const theater = data.inputData?.operating_theaters.find(
+                            ot => ot.id === patient.operating_theater
+                        );
+                        const operatingTheaterAvailability = theater ? theater.availability[dayNumber] : 0;
+                        return { ...patientInput, ...patient, operatingTheaterAvailability } as PatientFullDataSurgeon;
+                    });
 
-                return (
-                    <Surgeon
-                        key={surgeon.id}
-                        surgeonId={surgeon.id}
-                        patients={patientsAssigned}
-                        maxSurgeryTime={surgeon.max_surgery_time[dayNumber]}
-                    />
-                );
-            })}
+                    return (
+                        <Surgeon
+                            key={surgeon.id}
+                            surgeonId={surgeon.id}
+                            patients={patientsAssigned}
+                            maxSurgeryTime={surgeon.max_surgery_time[dayNumber]}
+                        />
+                    );
+                })}
+            </div>
         </div>
     );
 };

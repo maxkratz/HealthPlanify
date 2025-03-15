@@ -15,34 +15,39 @@ export const OperatingTheatersList: React.FC = () => {
     const operatingTheaters = data.inputData?.operating_theaters || [];
 
     return (
-        <div className="flex items-center justify-center flex-row flex-wrap gap-4">
-            {operatingTheaters.map((ot) => {
-                const patientsAssigned = (data.solutionData?.patients.filter((patient) => {
-                    const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
-                    if (!patientInput) return false;
-                    return (
-                        patient.admission_day === dayNumber &&
-                        patient.operating_theater === ot.id
-                    );
-                }) || []).map((patient) => {
-                    const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
-                    const maxAvailableTime = ot.availability[dayNumber];
-                    return { 
-                        ...patientInput, 
-                        ...patient, 
-                        operatingTheaterAvailability: maxAvailableTime 
-                    } as PatientFullDataOperatingTheater;
-                });
+        <div>
+            <div className='mb-16'>
+                <h1>Surgeons List</h1>
+            </div>
+            <div className="flex items-center justify-center flex-row flex-wrap gap-4">
+                {operatingTheaters.map((ot) => {
+                    const patientsAssigned = (data.solutionData?.patients.filter((patient) => {
+                        const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
+                        if (!patientInput) return false;
+                        return (
+                            patient.admission_day === dayNumber &&
+                            patient.operating_theater === ot.id
+                        );
+                    }) || []).map((patient) => {
+                        const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
+                        const maxAvailableTime = ot.availability[dayNumber];
+                        return {
+                            ...patientInput,
+                            ...patient,
+                            operatingTheaterAvailability: maxAvailableTime
+                        } as PatientFullDataOperatingTheater;
+                    });
 
-                return (
-                    <OperatingTheater
-                        key={ot.id}
-                        operatingTheaterId={ot.id}
-                        patients={patientsAssigned}
-                        maxAvailableTime={ot.availability[dayNumber]}
-                    />
-                );
-            })}
+                    return (
+                        <OperatingTheater
+                            key={ot.id}
+                            operatingTheaterId={ot.id}
+                            patients={patientsAssigned}
+                            maxAvailableTime={ot.availability[dayNumber]}
+                        />
+                    );
+                })}
+            </div>
         </div>
     );
 };

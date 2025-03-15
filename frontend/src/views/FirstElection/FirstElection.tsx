@@ -7,28 +7,28 @@ import { First } from '../../components/First/First';
 export const FirstElection: React.FC = () => {
 
     return (
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row justify-center gap-4">
             <First>
                 <nav>
-                    <Link to="/FirstElection/Rooms/Calendar">Rooms</Link>
-                </nav>
-            </First>
-            
-            <First>
-                <nav>
-                    <Link to="/FirstElection/Nurses/Calendar">Nurses</Link>
+                    <Link to="/FirstElection/Rooms/SecondElection">Rooms</Link>
                 </nav>
             </First>
 
             <First>
                 <nav>
-                    <Link to="/FirstElection/Surgeons/Calendar">Surgeons</Link>
+                    <Link to="/FirstElection/Nurses/SecondElection">Nurses</Link>
                 </nav>
             </First>
 
             <First>
                 <nav>
-                    <Link to="/FirstElection/OperatingTheaters/Calendar">Operating Theaters</Link>
+                    <Link to="/FirstElection/Surgeons/SecondElection">Surgeons</Link>
+                </nav>
+            </First>
+
+            <First>
+                <nav>
+                    <Link to="/FirstElection/OperatingTheaters/SecondElection">Operating Theaters</Link>
                 </nav>
             </First>
         </div>
