@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Nurse } from '../../components/Nurse/Nurse';
-import { useData } from "../../DataContext";
+import { Nurse } from '../../../components/Nurse/Nurse';
+import { useData } from "../../../DataContext";
 
 type AssignedPatient = {
     patientId: string;

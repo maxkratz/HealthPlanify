@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import SurgeonStyle from './Surgeon.module.scss';
-import { PatientFullDataSurgeon } from '../../views/SurgeonsList/SurgeonsList';
+import { PatientFullDataSurgeon } from '../../views/Surgeon/SurgeonsList/SurgeonsList';
 
 export type SurgeonComponentProps = {
     surgeonId: string;

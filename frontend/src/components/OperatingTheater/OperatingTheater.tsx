@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import OperatingTheaterStyle from './OperatingTheater.module.scss';
-import { PatientFullDataOperatingTheater } from '../../views/OperatingTheatersList/OperatingTheatersList';
+import { PatientFullDataOperatingTheater } from '../../views/OperatingTheater/OperatingTheatersList/OperatingTheatersList';
 
 export type OperatingTheaterComponentProps = {
     operatingTheaterId: string;

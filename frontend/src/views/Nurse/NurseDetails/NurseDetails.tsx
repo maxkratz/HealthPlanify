@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { AssignedPatient } from '../../components/Nurse/Nurse';
+import { AssignedPatient } from '../../../components/Nurse/Nurse';
 
 type NurseData = {
     nurseId: string;

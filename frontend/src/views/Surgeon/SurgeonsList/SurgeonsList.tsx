@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Surgeon } from '../../components/Surgeon/Surgeon';
-import { useData } from '../../DataContext';
-import { PatientFullData } from '../../types/Combined';
+import { Surgeon } from '../../../components/Surgeon/Surgeon';
+import { useData } from '../../../DataContext';
+import { PatientFullData } from '../../../types/Combined';
 
 export interface PatientFullDataSurgeon extends PatientFullData {
     operatingTheaterAvailability: number; // Not used in Surgeon flow, not deleted just in case

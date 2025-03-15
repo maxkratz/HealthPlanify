@@ -13,7 +13,7 @@ export const Breadcrumbs: React.FC = () => {
         <nav className={`flex justify-center mb-16 ${BreadcrumbsStyle.container}`}>
             <ul className="flex flex-row items-center gap-2">
                 <li>
-                    <Link to="/">Home</Link>
+                    <Link to="/Home">Home</Link>
                 </li>
                 {pathnames.map((segment, index) => {
                     if (!allowedSegments.includes(segment)) return null;

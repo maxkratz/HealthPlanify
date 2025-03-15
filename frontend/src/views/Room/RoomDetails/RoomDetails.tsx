@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { PatientFullData } from '../../types/Combined';
-import { Occupant } from '../../types/InputFile';
+import { PatientFullData } from '../../../types/Combined';
+import { Occupant } from '../../../types/InputFile';
 
 type RoomData = {
     roomId: string;

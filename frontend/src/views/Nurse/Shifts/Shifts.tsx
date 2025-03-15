@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Shift } from '../../components/Shift';
-import { useData } from "../../DataContext";
+import { Shift } from '../../../components/Shift';
+import { useData } from "../../../DataContext";
 
 export const Shifts: React.FC = () => {
     const { branch, dayIndex } = useParams();

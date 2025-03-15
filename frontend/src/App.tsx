@@ -7,15 +7,15 @@ import { Breadcrumbs } from "./components/Breadcrumbs";
 import { Home } from "./views/Home/Home";
 import { FirstElection } from "./views/FirstElection/FirstElection";
 import { Calendar } from "./views/Calendar/Calendar";
-import { RoomsList } from "./views/RoomsList/RoomsList";
-import { RoomDetails } from "./views/RoomDetails/RoomDetails";
-import { Shifts } from "./views/Shifts/Shifts";
-import { NursesList } from "./views/NursesList/NursesList";
-import { NurseDetails } from "./views/NurseDetails";
-import { SurgeonsList } from "./views/SurgeonsList/SurgeonsList";
-import { SurgeonDetails } from "./views/SurgeonDetails";
-import { OperatingTheatersList } from "./views/OperatingTheatersList/OperatingTheatersList";
-import { OperatingTheaterDetails } from "./views/OperatingTheaterDetails";
+import { RoomsList } from "./views/Room/RoomsList/RoomsList";
+import { RoomDetails } from "./views/Room/RoomDetails/RoomDetails";
+import { Shifts } from "./views/Nurse/Shifts/Shifts";
+import { NursesList } from "./views/Nurse/NursesList/NursesList";
+import { NurseDetails } from "./views/Nurse/NurseDetails";
+import { SurgeonsList } from "./views/Surgeon/SurgeonsList/SurgeonsList";
+import { SurgeonDetails } from "./views/Surgeon/SurgeonDetails";
+import { OperatingTheatersList } from "./views/OperatingTheater/OperatingTheatersList/OperatingTheatersList";
+import { OperatingTheaterDetails } from "./views/OperatingTheater/OperatingTheaterDetails";
 
 function App() {
     return (
@@ -25,7 +25,7 @@ function App() {
                 <Routes>
                     <Route path="*" element={<PageNotFound />} />
 
-                    <Route path="/" element={<Home />} />
+                    <Route path="/Home" element={<Home />} />
                     <Route path="/FirstElection" element={<FirstElection />} />
                     <Route path="/FirstElection/:branch/Calendar" element={<Calendar />} />
 

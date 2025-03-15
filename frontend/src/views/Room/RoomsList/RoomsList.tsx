@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Room } from '../../components/Room/Room';
-import { useData } from "../../DataContext";
-import { PatientFullData } from '../../types/Combined';
+import { Room } from '../../../components/Room/Room';
+import { useData } from "../../../DataContext";
+import { PatientFullData } from '../../../types/Combined';
 
 export const RoomsList: React.FC = () => {
     const { dayIndex } = useParams();
