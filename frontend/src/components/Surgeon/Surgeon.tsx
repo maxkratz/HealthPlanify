@@ -42,9 +42,9 @@ export const Surgeon: React.FC<SurgeonComponentProps> = ({
                 state={{ surgeonData }} // Necessary for SurgeonDetails
             >
                 <div className={containerClassName}>
-                    <span {...props}>Surgeon: {surgeonId}</span>
-                    <span {...props}>Max surgery time: {maxSurgeryTime}</span>
-                    <span {...props}>Actual surgery time: {totalTimeAssigned}</span>
+                    <span {...props}><strong>Surgeon: </strong>{surgeonId}</span>
+                    <span {...props}><strong>Max surgery time: </strong>{maxSurgeryTime}</span>
+                    <span {...props}><strong>Actual surgery time: </strong>{totalTimeAssigned}</span>
                 </div>
             </Link>
         </div>

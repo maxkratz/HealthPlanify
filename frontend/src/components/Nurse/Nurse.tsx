@@ -47,9 +47,9 @@ export const Nurse: React.FC<NurseComponentProps> = ({
                 state={{ nurseData }} // Necessary for NurseDetails
             >
                 <div className={containerClassName}>
-                    <span {...props}>Nurse: {nurseId}</span>
-                    <span {...props}>Max Load: {maxLoad}</span>
-                    <span {...props}>Actual Load: {actualLoad}</span>
+                    <span {...props}><strong>Nurse: </strong>{nurseId}</span>
+                    <span {...props}><strong>Max Load: </strong>{maxLoad}</span>
+                    <span {...props}><strong>Actual Load: </strong>{actualLoad}</span>
                 </div>
             </Link>
         </div>

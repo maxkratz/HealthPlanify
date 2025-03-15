@@ -45,9 +45,9 @@ export const Room: React.FC<RoomComponentProps> = ({
                 state={{ roomData }} // Necessary for RoomDetails
             >
                 <div className={containerClassName}>
-                    <span {...props}>Room: {roomId}</span>
-                    <span {...props}>Capacity: {capacity}</span>
-                    <span {...props}>Assigned: {totalAssigned}</span>
+                    <span {...props}><strong>Room: </strong>{roomId}</span>
+                    <span {...props}><strong>Capacity: </strong>{capacity}</span>
+                    <span {...props}><strong>Assigned: </strong>{totalAssigned}</span>
                 </div>
             </Link>
         </div>

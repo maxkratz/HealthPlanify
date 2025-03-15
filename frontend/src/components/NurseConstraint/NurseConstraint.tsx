@@ -1,4 +1,5 @@
 import React from 'react';
+import { FlagBanner, Heart, BatteryFull } from 'phosphor-react';
 import NurseConstraintStyle from './NurseConstraint.module.scss';
 
 export type NurseConstraintComponentProps = {
@@ -18,12 +19,29 @@ export const NurseConstraint: React.FC<NurseConstraintComponentProps> = ({
 
     return (
         <div>
-
             <div className={NurseConstraintStyle.container}>
-                <span {...props}>Nurse: {nurseId}</span>
-                <span {...props}>S2: {S2_Minimum_skill_level}</span>
-                <span {...props}>S3: {S3_Continuity_of_care}</span>
-                <span {...props}>S4: {S4_Maximum_workload}</span>
+                <span {...props}><strong>Nurse: </strong>{nurseId}</span>
+
+                {S2_Minimum_skill_level !== 0 && (
+                    <div className={`flex items-center justify-center flex-row gap-2`}>
+                        <FlagBanner size={24} weight="fill" color="var(--color-white)" />
+                        <span {...props}>S2: {S2_Minimum_skill_level}</span>
+                    </div>
+                )}
+
+                {S3_Continuity_of_care !== 0 && (
+                    <div className={`flex items-center justify-center flex-row gap-2`}>
+                        <Heart size={24} weight="fill" color="var(--color-white)" />
+                        <span {...props}>S3: {S3_Continuity_of_care}</span>
+                    </div>
+                )}
+
+                {S4_Maximum_workload !== 0 && (
+                    <div className={`flex items-center justify-center flex-row gap-2`}>
+                        <BatteryFull size={24} weight="fill" color="var(--color-white)" />
+                        <span {...props}>S4: {S4_Maximum_workload}</span>
+                    </div>
+                )}
             </div>
         </div>
     );
