@@ -18,6 +18,7 @@ import { SurgeonsList } from "./views/Surgeon/SurgeonsList/SurgeonsList";
 import { SurgeonDetails } from "./views/Surgeon/SurgeonDetails";
 import { OperatingTheatersList } from "./views/OperatingTheater/OperatingTheatersList/OperatingTheatersList";
 import { OperatingTheaterDetails } from "./views/OperatingTheater/OperatingTheaterDetails";
+import { OperatingTheaterConstraints } from "./views/OperatingTheater/OperatingTheaterConstraints";
 
 function App() {
     return (
@@ -26,7 +27,7 @@ function App() {
                 <Breadcrumbs />
                 <Routes>
                     <Route path="*" element={<PageNotFound />} />
-                    
+
                     <Route path="/" element={<Home />} />
                     <Route path="/FirstElection" element={<FirstElection />} />
                     <Route path="/FirstElection/GeneralConstraints" element={<h1>IN PROGRESS</h1>} />
@@ -49,7 +50,7 @@ function App() {
 
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList/:operatingTheaterId" element={<OperatingTheaterDetails />} />
-                    <Route path="/FirstElection/:branch/SecondElection/OperatingTheatersConstraints" element={<h1>IN PROGRESS</h1>} />
+                    <Route path="/FirstElection/:branch/SecondElection/OperatingTheatersConstraints" element={<OperatingTheaterConstraints />} />
                 </Routes>
             </Router>
         </DataProvider>
