@@ -4,16 +4,16 @@ import NurseConstraintStyle from './NurseConstraint.module.scss';
 
 export type NurseConstraintComponentProps = {
     nurseId: string;
-    S2_Minimum_skill_level: number;
-    S3_Continuity_of_care: number;
-    S4_Maximum_workload: number;
+    s2MinimumSkillLevel: number;
+    s3CareContinuity: number;
+    s4MaximumWorkload: number;
 };
 
 export const NurseConstraint: React.FC<NurseConstraintComponentProps> = ({
     nurseId,
-    S2_Minimum_skill_level,
-    S3_Continuity_of_care,
-    S4_Maximum_workload,
+    s2MinimumSkillLevel,
+    s3CareContinuity,
+    s4MaximumWorkload,
     ...props
 }) => {
 
@@ -22,24 +22,24 @@ export const NurseConstraint: React.FC<NurseConstraintComponentProps> = ({
             <div className={NurseConstraintStyle.container}>
                 <span {...props}><strong>Nurse: </strong>{nurseId}</span>
 
-                {S2_Minimum_skill_level !== 0 && (
+                {s2MinimumSkillLevel !== 0 && (
                     <div className={`flex items-center justify-center flex-row gap-2`}>
                         <FlagBanner size={24} weight="fill" color="var(--color-white)" />
-                        <span {...props}>S2: {S2_Minimum_skill_level}</span>
+                        <span {...props}><strong>S2: </strong>{s2MinimumSkillLevel}</span>
                     </div>
                 )}
 
-                {S3_Continuity_of_care !== 0 && (
+                {s3CareContinuity !== 0 && (
                     <div className={`flex items-center justify-center flex-row gap-2`}>
                         <Heart size={24} weight="fill" color="var(--color-white)" />
-                        <span {...props}>S3: {S3_Continuity_of_care}</span>
+                        <span {...props}><strong>S3: </strong>{s3CareContinuity}</span>
                     </div>
                 )}
 
-                {S4_Maximum_workload !== 0 && (
+                {s4MaximumWorkload !== 0 && (
                     <div className={`flex items-center justify-center flex-row gap-2`}>
                         <BatteryFull size={24} weight="fill" color="var(--color-white)" />
-                        <span {...props}>S4: {S4_Maximum_workload}</span>
+                        <span {...props}><strong>S4: </strong>{s4MaximumWorkload}</span>
                     </div>
                 )}
             </div>

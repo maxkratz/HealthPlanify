@@ -3,12 +3,14 @@ import { Link, useParams } from 'react-router-dom';
 import RoomStyle from './Room.module.scss';
 import { PatientFullData } from '../../types/Combined';
 import { Occupant } from '../../types/InputFile';
+import { Heart } from 'phosphor-react';
 
 export type RoomComponentProps = {
     roomId: string;
     capacity: number;
     patients: PatientFullData[];
     occupants: Occupant[];
+    s1AgeDifference: number;
 };
 
 export const Room: React.FC<RoomComponentProps> = ({
@@ -16,6 +18,7 @@ export const Room: React.FC<RoomComponentProps> = ({
     capacity,
     patients,
     occupants,
+    s1AgeDifference,
     ...props
 }) => {
     const { branch, dayIndex } = useParams<{ branch: string, dayIndex: string }>();
@@ -48,6 +51,14 @@ export const Room: React.FC<RoomComponentProps> = ({
                     <span {...props}><strong>Room: </strong>{roomId}</span>
                     <span {...props}><strong>Capacity: </strong>{capacity}</span>
                     <span {...props}><strong>Assigned: </strong>{totalAssigned}</span>
+                    {s1AgeDifference > 0 && (
+                        <div className={`flex items-center justify-center flex-row gap-2`}>
+                            <Heart size={24} weight="fill" color="var(--color-white)" />
+                            <span {...props}>
+                                <strong>S1: </strong>{s1AgeDifference}
+                            </span>
+                        </div>
+                    )}
                 </div>
             </Link>
         </div>

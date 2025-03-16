@@ -174,9 +174,9 @@ export const NursesConstraints: React.FC = () => {
                     <NurseConstraint
                         key={nurseId}
                         nurseId={nurseId}
-                        S2_Minimum_skill_level={S2 * weights.room_nurse_skill}
-                        S3_Continuity_of_care={S3 * weights.continuity_of_care}
-                        S4_Maximum_workload={S4 * weights.nurse_eccessive_workload}
+                        s2MinimumSkillLevel={S2 * weights.room_nurse_skill}
+                        s3CareContinuity={S3 * weights.continuity_of_care}
+                        s4MaximumWorkload={S4 * weights.nurse_eccessive_workload}
                     />
                 ))}
             </div>
