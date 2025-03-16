@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import RoomStyle from './Room.module.scss';
 import { PatientFullData } from '../../types/Combined';
 import { Occupant } from '../../types/InputFile';
-import { Heart } from 'phosphor-react';
+import Elderly from '@mui/icons-material/Elderly';
 
 export type RoomComponentProps = {
     roomId: string;
@@ -53,7 +53,7 @@ export const Room: React.FC<RoomComponentProps> = ({
                     <span {...props}><strong>Assigned: </strong>{totalAssigned}</span>
                     {s1AgeDifference > 0 && (
                         <div className={`flex items-center justify-center flex-row gap-2`}>
-                            <Heart size={24} weight="fill" color="var(--color-white)" />
+                            <Elderly sx={{ color: 'var(--color-white)', fontSize: 24 }} />
                             <span {...props}>
                                 <strong>S1: </strong>{s1AgeDifference}
                             </span>
