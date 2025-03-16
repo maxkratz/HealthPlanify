@@ -16,6 +16,7 @@ import { NurseDetails } from "./views/Nurse/NurseDetails";
 import { NursesConstraints } from "./views/Nurse/NursesConstraints";
 import { SurgeonsList } from "./views/Surgeon/SurgeonsList/SurgeonsList";
 import { SurgeonDetails } from "./views/Surgeon/SurgeonDetails";
+import { SurgeonsConstraints } from "./views/Surgeon/SurgeonsConstraints";
 import { OperatingTheatersList } from "./views/OperatingTheater/OperatingTheatersList/OperatingTheatersList";
 import { OperatingTheaterDetails } from "./views/OperatingTheater/OperatingTheaterDetails";
 import { OperatingTheaterConstraints } from "./views/OperatingTheater/OperatingTheaterConstraints";
@@ -45,7 +46,7 @@ function App() {
 
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/SurgeonsList" element={<SurgeonsList />} />
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/SurgeonsList/:surgeonId" element={<SurgeonDetails />} />
-                    <Route path="/FirstElection/:branch/SecondElection/SurgeonsConstraints" element={<h1>IN PROGRESS</h1>} />
+                    <Route path="/FirstElection/:branch/SecondElection/SurgeonsConstraints" element={<SurgeonsConstraints />} />
 
 
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
