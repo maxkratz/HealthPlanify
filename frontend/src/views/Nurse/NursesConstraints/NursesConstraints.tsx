@@ -2,6 +2,7 @@ import React from 'react';
 import { NurseConstraint } from '../../../components/NurseConstraint';
 import { useData } from "../../../DataContext";
 import { PatientFullData } from '../../../types/Combined';
+import { FlagBanner, Heart, BatteryFull } from 'phosphor-react';
 
 type ConstraintPatient = {
     patientId: string;
@@ -158,15 +159,18 @@ export const NursesConstraints: React.FC = () => {
 
             <div className='mb-16'>
                 <h2>Global Costs of Restrictions</h2>
-                <p>
-                    <strong>S2 - Minimum Skill Level</strong> (Weight: {weights.room_nurse_skill}): {globalS2Weighted}
-                </p>
-                <p>
-                    <strong>S3 - Continuity of Care</strong> (Weight: {weights.continuity_of_care}): {globalS3Weighted}
-                </p>
-                <p>
-                    <strong>S4 - Maximum Workload</strong> (Weight: {weights.nurse_eccessive_workload}): {globalS4Weighted}
-                </p>
+                <div className={`flex items-center justify-center flex-row gap-2`}>
+                    <FlagBanner size={24} weight="fill" color="var(--color-white)" />
+                    <span><strong>S2 - Minimum Skill Level</strong></span> (Weight: {weights.room_nurse_skill}): {globalS2Weighted}
+                </div>
+                <div className={`flex items-center justify-center flex-row gap-2`}>
+                    <Heart size={24} weight="fill" color="var(--color-white)" />
+                    <span><strong>S3 - Continuity of Care</strong></span> (Weight: {weights.continuity_of_care}): {globalS3Weighted}
+                </div>
+                <div className={`flex items-center justify-center flex-row gap-2`}>
+                    <BatteryFull size={24} weight="fill" color="var(--color-white)" />
+                    <span><strong>S4 - Maximum Workload</strong></span> (Weight: {weights.nurse_eccessive_workload}): {globalS4Weighted}
+                </div>
             </div>
 
             <div className="flex items-center justify-center flex-row flex-wrap gap-4">

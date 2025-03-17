@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Nurse } from '../../../components/Nurse/Nurse';
 import { useData } from "../../../DataContext";
+import { FlagBanner } from 'phosphor-react';
 
 export type AssignedPatient = {
     patientId: string;
@@ -27,6 +28,15 @@ export const NursesList: React.FC = () => {
             <div className='mb-16'>
                 <h1>Nurses List</h1>
             </div>
+
+            <div className='mb-16'>
+                <h2>Global Cost of Restriction</h2>
+                <div className={`flex items-center justify-center flex-row gap-2`}>
+                    <FlagBanner size={24} weight="fill" color="var(--color-white)" />
+                    <span><strong>S2 - Minimum Skill Level</strong></span>
+                </div>
+            </div>
+
             <div className="flex items-center justify-center flex-row flex-wrap gap-4">
                 {availableNurses.map(nurse => {
                     // Obtenemos el turno correspondiente en el input para extraer el max_load

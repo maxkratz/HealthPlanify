@@ -46,7 +46,7 @@ export const SurgeonsConstraints: React.FC = () => {
             <div className="mb-16">
                 <h2>Global Cost of Restriction</h2>
                 <p>
-                    <strong>S6 - Surgeon Transfer</strong> (Weight: {weightS6}): {costS6}
+                    <strong>S6 - Number of different OTs a surgeon is assigned to per day</strong> (Weight: {weightS6}): {costS6}
                 </p>
             </div>
             <ResponsiveContainer width={1300} height={600}>

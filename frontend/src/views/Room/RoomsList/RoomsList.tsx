@@ -4,6 +4,7 @@ import { Room } from '../../../components/Room/Room';
 import { useData } from "../../../DataContext";
 import { PatientFullData } from '../../../types/Combined';
 import { AgeGroup } from '../../../types/types';
+import Elderly from '@mui/icons-material/Elderly';
 
 export const RoomsList: React.FC = () => {
     const { dayIndex } = useParams();
@@ -62,9 +63,10 @@ export const RoomsList: React.FC = () => {
 
             <div className='mb-16'>
                 <h2>Global Cost of Restriction</h2>
-                <p>
-                    <strong>S1 - Age Groups Difference</strong> (Weight: {globalS1Weighted}): {calculateGlobalS1AgeDifference()}
-                </p>
+                <div className={`flex items-center justify-center flex-row gap-2`}>
+                    <Elderly sx={{ color: 'var(--color-white)', fontSize: 24 }} />
+                    <span><strong>S1 - Age Groups Difference</strong></span> (Weight: {globalS1Weighted}): {calculateGlobalS1AgeDifference()}
+                </div>
             </div>
 
             <div className="flex items-center justify-center flex-row flex-wrap gap-4">

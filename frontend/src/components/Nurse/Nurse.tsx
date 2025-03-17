@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import NurseStyle from './Nurse.module.scss';
 import { AssignedPatient } from '../../views/Nurse/NursesList/NursesList';
+import { FlagBanner } from 'phosphor-react';
 
 export type NurseComponentProps = {
     nurseId: string;
@@ -32,6 +33,11 @@ export const Nurse: React.FC<NurseComponentProps> = ({
     }
     const containerClassName = `${NurseStyle.container} ${NurseStyle[`container--${modifier}`]}`;
 
+    const maxRequiredSkill = assignedPatients.reduce((max, patient) => {
+        return patient.requiredSkill > max ? patient.requiredSkill : max;
+    }, 0);
+    const skillLevelDiff = maxRequiredSkill - skillLevel;
+
     const nurseData = {
         nurseId: nurseId,
         skillLevel: skillLevel,
@@ -50,6 +56,12 @@ export const Nurse: React.FC<NurseComponentProps> = ({
                     <span {...props}><strong>Nurse: </strong>{nurseId}</span>
                     <span {...props}><strong>Max Load: </strong>{maxLoad}</span>
                     <span {...props}><strong>Actual Load: </strong>{actualLoad}</span>
+                    {skillLevelDiff > 0 && (
+                        <div className={`flex items-center justify-center flex-row gap-2`}>
+                            <FlagBanner size={24} weight="fill" color="var(--color-white)" />
+                            {/* <span {...props}><strong>S2: </strong>{skillLevelDiff}</span> */}
+                        </div>
+                    )}
                 </div>
             </Link>
         </div>
