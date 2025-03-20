@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NurseConstraint } from '../../../components/NurseConstraint';
 import { useData } from "../../../DataContext";
 import { PatientFullData } from '../../../types/Combined';
-import { FlagBanner, Heart, BatteryFull } from 'phosphor-react';
+import { SortButton } from '../../../components/SortButton';
+import { FlagBanner, Heart, BatteryFull, SortDescending } from 'phosphor-react';
 
 type ConstraintPatient = {
     patientId: string;
@@ -12,6 +13,7 @@ type ConstraintPatient = {
 
 export const NursesConstraints: React.FC = () => {
     const data = useData();
+    const [sortCriteria, setSortCriteria] = useState<"S2" | "S3" | "S4" | "total">("total");
 
     if (!data.inputData || !data.solutionData) {
         return <div>Loading...</div>;
@@ -62,7 +64,6 @@ export const NursesConstraints: React.FC = () => {
         });
     });
 
-
     // Preparación de la lista completa de pacientes para S2 y S4
     const allPatients = [
         ...(data.solutionData.patients || []),
@@ -79,7 +80,7 @@ export const NursesConstraints: React.FC = () => {
     let globalS2 = 0;
     let globalS4 = 0;
 
-    // Para cada enfermera, se recorren todas sus asignaciones en la solución para calcular S2 y S4
+    // Se calculan los penalizadores para cada enfermera
     const nursePenalties = data.inputData.nurses.map(nurse => {
         let S2_total = 0;
         let S4_total = 0;
@@ -88,19 +89,14 @@ export const NursesConstraints: React.FC = () => {
             nurseSolution.assignments.forEach(assignment => {
                 const currentDay = assignment.day;
                 const currentShift = assignment.shift;
-                // Se busca la información del turno en los datos de entrada de la enfermera para obtener el max_load
                 const workingShift = nurse.working_shifts.find(ws => ws.day === currentDay && ws.shift === currentShift);
                 const maxLoad = workingShift ? workingShift.max_load : 0;
 
-                // Se filtran los pacientes asignados en esta asignación de la lista completa (programados y occupants)
                 const assignedPatients: ConstraintPatient[] = allPatients
                     .filter(patient => {
-                        // Para los pacientes programados, patient.admission_day está definido.
-                        // Para occupants, hemos fijado admission_day = 0.
                         if (typeof patient.admission_day !== 'number') return false;
                         if (patient.admission_day > currentDay) return false;
                         const inputPatient = (data.inputData?.patients.find(p => p.id === patient.id) ||
-                            // Si no se encuentra en los pacientes programados, se asume que es un occupant (ya transformado)
                             patient) as PatientFullData;
                         if (!inputPatient) return false;
                         if (currentDay >= patient.admission_day + inputPatient.length_of_stay) return false;
@@ -108,10 +104,8 @@ export const NursesConstraints: React.FC = () => {
                     })
                     .map(patient => {
                         const inputPatient = (data.inputData?.patients.find(p => p.id === patient.id) ||
-                            // Para occupants, usamos el propio objeto transformado
                             patient) as PatientFullData;
                         if (!inputPatient) return null;
-                        // Se calcula el índice del turno: (currentDay - admission_day) * 3 + (índice del turno)
                         const shiftOrder: Record<string, number> = { early: 0, late: 1, night: 2 };
                         const shiftOrdinal = shiftOrder[currentShift];
                         const dayOffset = currentDay - patient.admission_day;
@@ -122,14 +116,14 @@ export const NursesConstraints: React.FC = () => {
                     })
                     .filter(Boolean) as ConstraintPatient[];
 
-                // S2: Por cada paciente, si la enfermera no alcanza el nivel requerido, se suma la diferencia
+                // S2: penalización si la enfermera no alcanza el nivel requerido
                 const S2_assignment = assignedPatients.reduce(
                     (sum, p) => sum + Math.max(0, p.requiredSkill - nurse.skill_level),
                     0
                 );
                 S2_total += S2_assignment;
 
-                // S4: Se suma el workload total y, si supera el max_load, se suma la diferencia
+                // S4: penalización si el workload supera el máximo permitido
                 const totalWorkload = assignedPatients.reduce((sum, p) => sum + p.workload, 0);
                 const S4_assignment = totalWorkload > maxLoad ? totalWorkload - maxLoad : 0;
                 S4_total += S4_assignment;
@@ -151,6 +145,28 @@ export const NursesConstraints: React.FC = () => {
     const globalS3Weighted = Object.values(patientContinuityContributions).reduce((sum, val) => sum + val, 0) * weights.continuity_of_care;
     const globalS4Weighted = globalS4 * weights.nurse_eccessive_workload;
 
+    // Ordenamos el array de nursePenalties según el criterio seleccionado
+    const sortedNursePenalties = [...nursePenalties].sort((a, b) => {
+        const weightedA_S2 = a.S2 * weights.room_nurse_skill;
+        const weightedA_S3 = a.S3 * weights.continuity_of_care;
+        const weightedA_S4 = a.S4 * weights.nurse_eccessive_workload;
+        const weightedB_S2 = b.S2 * weights.room_nurse_skill;
+        const weightedB_S3 = b.S3 * weights.continuity_of_care;
+        const weightedB_S4 = b.S4 * weights.nurse_eccessive_workload;
+
+        if (sortCriteria === 'S2') {
+            return weightedB_S2 - weightedA_S2;
+        } else if (sortCriteria === 'S3') {
+            return weightedB_S3 - weightedA_S3;
+        } else if (sortCriteria === 'S4') {
+            return weightedB_S4 - weightedA_S4;
+        } else {
+            const totalA = weightedA_S2 + weightedA_S3 + weightedA_S4;
+            const totalB = weightedB_S2 + weightedB_S3 + weightedB_S4;
+            return totalB - totalA;
+        }
+    });
+
     return (
         <div>
             <div className='mb-16'>
@@ -160,21 +176,54 @@ export const NursesConstraints: React.FC = () => {
             <div className='mb-16'>
                 <h2>Global Costs of Restrictions</h2>
                 <div className={`flex items-center justify-center flex-row gap-2`}>
-                    <FlagBanner size={24} weight="fill" color="var(--color-white)" />
-                    <span><strong>S2 - Minimum Skill Level</strong></span> (Weight: {weights.room_nurse_skill}): {globalS2Weighted}
+                    <FlagBanner size={24} weight="fill" color="var(--color-icon-flagBanner)" />
+                    <span>
+                        <strong>S2 - Minimum Skill Level</strong>
+                    </span> (Weight: {weights.room_nurse_skill}): {globalS2Weighted}
                 </div>
                 <div className={`flex items-center justify-center flex-row gap-2`}>
-                    <Heart size={24} weight="fill" color="var(--color-white)" />
-                    <span><strong>S3 - Continuity of Care</strong></span> (Weight: {weights.continuity_of_care}): {globalS3Weighted}
+                    <Heart size={24} weight="fill" color="var(--color-icon-heart)" />
+                    <span>
+                        <strong>S3 - Continuity of Care</strong>
+                    </span> (Weight: {weights.continuity_of_care}): {globalS3Weighted}
                 </div>
                 <div className={`flex items-center justify-center flex-row gap-2`}>
-                    <BatteryFull size={24} weight="fill" color="var(--color-white)" />
-                    <span><strong>S4 - Maximum Workload</strong></span> (Weight: {weights.nurse_eccessive_workload}): {globalS4Weighted}
+                    <BatteryFull size={24} weight="fill" color="var(--color-icon-batteryFull)" />
+                    <span>
+                        <strong>S4 - Maximum Workload</strong>
+                    </span> (Weight: {weights.nurse_eccessive_workload}): {globalS4Weighted}
                 </div>
             </div>
 
+            <div className="mb-16 flex items-center justify-center flex-row gap-4">
+                <SortButton
+                    onClick={() => setSortCriteria("total")}
+                    active={sortCriteria === "total"}
+                    icon={<SortDescending size={20} weight="fill" color="var(--color-white)" />}
+                    label="Sort by Total"
+                />
+                <SortButton
+                    onClick={() => setSortCriteria("S2")}
+                    active={sortCriteria === "S2"}
+                    icon={<FlagBanner size={20} weight="fill" color="var(--color-white)" />}
+                    label="Sort by S2"
+                />
+                <SortButton
+                    onClick={() => setSortCriteria("S3")}
+                    active={sortCriteria === "S3"}
+                    icon={<Heart size={20} weight="fill" color="var(--color-white)" />}
+                    label="Sort by S3"
+                />
+                <SortButton
+                    onClick={() => setSortCriteria("S4")}
+                    active={sortCriteria === "S4"}
+                    icon={<BatteryFull size={20} weight="fill" color="var(--color-white)" />}
+                    label="Sort by S4"
+                />
+            </div>
+
             <div className="flex items-center justify-center flex-row flex-wrap gap-4">
-                {nursePenalties.map(({ nurseId, S2, S3, S4 }) => (
+                {sortedNursePenalties.map(({ nurseId, S2, S3, S4 }) => (
                     <NurseConstraint
                         key={nurseId}
                         nurseId={nurseId}

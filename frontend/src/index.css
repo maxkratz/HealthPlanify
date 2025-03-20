@@ -18,12 +18,18 @@
     --color-white: #ffffff;
     --color-black: #252525;
     --color-green: #009c0d;
+    --color-rose: rgb(255, 127, 127);
 
     /* Code color palette */
     --color-code-green: #009c0dc7;
     --color-code-orange: #ff9100be;
     --color-code-red: #a00000a6;
     --color-code-black: #000000;
+
+    /* Icon color palette */
+    --color-icon-heart: #ff0000;
+    --color-icon-batteryFull: #ffd000;
+    --color-icon-flagBanner: #5900ff;
 }
 
 body {
