@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { First } from '../../components/First/First';
+import { Election } from '../../components/Election/Election';
 
 export const SecondElection: React.FC = () => {
     const { branch } = useParams();
@@ -13,16 +13,11 @@ export const SecondElection: React.FC = () => {
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
-                        <First>
+                        <Election>
                             <nav>
                                 <Link to="/FirstElection/Rooms/SecondElection/Calendar">Calendar</Link>
                             </nav>
-                        </First>
-                        <First>
-                            <nav>
-                                <Link to="/FirstElection/Rooms/SecondElection/RoomsConstraints">Constraints</Link>
-                            </nav>
-                        </First>
+                        </Election>
                     </div>
                 </div>
             )}
@@ -33,16 +28,16 @@ export const SecondElection: React.FC = () => {
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
-                        <First>
+                        <Election>
                             <nav>
                                 <Link to="/FirstElection/Nurses/SecondElection/Calendar">Calendar</Link>
                             </nav>
-                        </First>
-                        <First>
+                        </Election>
+                        <Election>
                             <nav>
                                 <Link to="/FirstElection/Nurses/SecondElection/NursesConstraints">Constraints</Link>
                             </nav>
-                        </First>
+                        </Election>
                     </div>
                 </div>
             )}
@@ -53,16 +48,16 @@ export const SecondElection: React.FC = () => {
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
-                        <First>
+                        <Election>
                             <nav>
                                 <Link to="/FirstElection/Surgeons/SecondElection/Calendar">Calendar</Link>
                             </nav>
-                        </First>
-                        <First>
+                        </Election>
+                        <Election>
                             <nav>
                                 <Link to="/FirstElection/Surgeons/SecondElection/SurgeonsConstraints">Constraints</Link>
                             </nav>
-                        </First>
+                        </Election>
                     </div>
                 </div>
             )}
@@ -73,16 +68,16 @@ export const SecondElection: React.FC = () => {
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
-                        <First>
+                        <Election>
                             <nav>
                                 <Link to="/FirstElection/OperatingTheaters/SecondElection/Calendar">Calendar</Link>
                             </nav>
-                        </First>
-                        <First>
+                        </Election>
+                        <Election>
                             <nav>
                                 <Link to="/FirstElection/OperatingTheaters/SecondElection/OperatingTheatersConstraints">Constraints</Link>
                             </nav>
-                        </First>
+                        </Election>
                     </div>
                 </div>
             )}

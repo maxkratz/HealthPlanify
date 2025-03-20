@@ -24,21 +24,21 @@ export const NurseConstraint: React.FC<NurseConstraintComponentProps> = ({
             {s2MinimumSkillLevel !== 0 && (
                 <div className={`flex items-center justify-center flex-row gap-2`}>
                     <FlagBanner size={24} weight="fill" color="var(--color-white)" />
-                    <span {...props}><strong>S2: </strong>{s2MinimumSkillLevel}</span>
+                    <span {...props}>{s2MinimumSkillLevel}</span>
                 </div>
             )}
 
             {s3CareContinuity !== 0 && (
                 <div className={`flex items-center justify-center flex-row gap-2`}>
                     <Heart size={24} weight="fill" color="var(--color-white)" />
-                    <span {...props}><strong>S3: </strong>{s3CareContinuity}</span>
+                    <span {...props}>{s3CareContinuity}</span>
                 </div>
             )}
 
             {s4MaximumWorkload !== 0 && (
                 <div className={`flex items-center justify-center flex-row gap-2`}>
                     <BatteryFull size={24} weight="fill" color="var(--color-white)" />
-                    <span {...props}><strong>S4: </strong>{s4MaximumWorkload}</span>
+                    <span {...props}>{s4MaximumWorkload}</span>
                 </div>
             )}
         </div>

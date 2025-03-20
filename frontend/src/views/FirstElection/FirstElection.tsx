@@ -2,41 +2,41 @@
 
 import React from 'react';
 import { Link } from "react-router-dom";
-import { First } from '../../components/First/First';
+import { Election } from '../../components/Election/Election';
 
 export const FirstElection: React.FC = () => {
 
     return (
         <div className="flex flex-row justify-center gap-4">
-            <First>
+            <Election>
                 <nav>
                     <Link to="/FirstElection/Rooms/SecondElection">Rooms</Link>
                 </nav>
-            </First>
+            </Election>
 
-            <First>
+            <Election>
                 <nav>
                     <Link to="/FirstElection/Nurses/SecondElection">Nurses</Link>
                 </nav>
-            </First>
+            </Election>
 
-            <First>
+            <Election>
                 <nav>
                     <Link to="/FirstElection/Surgeons/SecondElection">Surgeons</Link>
                 </nav>
-            </First>
+            </Election>
 
-            <First>
+            <Election>
                 <nav>
                     <Link to="/FirstElection/OperatingTheaters/SecondElection">Operating Theaters</Link>
                 </nav>
-            </First>
+            </Election>
 
-            <First>
+            <Election>
                 <nav>
                     <Link to="/FirstElection/GeneralConstraints">General Constraints</Link>
                 </nav>
-            </First>
+            </Election>
         </div>
     );
 };

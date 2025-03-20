@@ -1,3 +1,5 @@
+# Validator Outputs
+
 ## ../solution/toy_solution1.json
 
 VIOLATIONS: 
