@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useData } from "../../../DataContext";
 import { PatientFullData } from '../../../types/Combined';
 import { Patient } from '../../../components/Patient';
+import { SortButton } from '../../../components/SortButton';
+
+type SortCriteria = "surgeryReleaseDay" | "surgeryDueDay" | "admissionDay" | "delay";
 
 export const PatientsList: React.FC = () => {
     const data = useData();
     const { inputData, solutionData } = data;
+
+    const [sortCriteria, setSortCriteria] = useState<SortCriteria>("delay");
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+
+    const handleSort = (criteria: SortCriteria) => {
+        if (criteria === sortCriteria) {
+            setSortDirection(prev => prev === "asc" ? "desc" : "asc");
+        } else {
+            setSortCriteria(criteria);
+            setSortDirection("desc");
+        }
+    };
 
     if (!inputData || !solutionData) {
         return <div>Loading...</div>;
@@ -18,19 +33,69 @@ export const PatientsList: React.FC = () => {
         })
         .filter((p): p is PatientFullData => p !== undefined);
 
+    // Ordenación de pacientes según el criterio seleccionado.
+    const sortedPatients = [...patientsFullData].sort((a, b) => {
+        // Para cada paciente se calculan los valores:
+        const admissionA = a.admission_day === "none" ? Infinity : Number(a.admission_day);
+        const admissionB = b.admission_day === "none" ? Infinity : Number(b.admission_day);
+        const dueA = a.surgery_due_day ?? Infinity;
+        const dueB = b.surgery_due_day ?? Infinity;
+        const delayA = admissionA === Infinity ? Infinity : admissionA - a.surgery_release_day;
+        const delayB = admissionB === Infinity ? Infinity : admissionB - b.surgery_release_day;
+
+        let diff = 0;
+        if (sortCriteria === "surgeryReleaseDay") {
+            diff = a.surgery_release_day - b.surgery_release_day;
+        } else if (sortCriteria === "surgeryDueDay") {
+            diff = dueA - dueB;
+        } else if (sortCriteria === "admissionDay") {
+            diff = admissionA - admissionB;
+        } else if (sortCriteria === "delay") {
+            diff = delayA - delayB;
+        }
+        return sortDirection === "asc" ? diff : -diff;
+    });
+
     return (
         <div>
             <div className="mb-16">
                 <h1>Patients List</h1>
             </div>
 
+            <div className="mb-16 flex items-center justify-center flex-row gap-4">
+                <SortButton
+                    onClick={() => handleSort("surgeryReleaseDay")}
+                    active={sortCriteria === "surgeryReleaseDay"}
+                    label="Sort by Release Day"
+                    sortDirection={sortCriteria === "surgeryReleaseDay" ? sortDirection : undefined}
+                />
+                <SortButton
+                    onClick={() => handleSort("surgeryDueDay")}
+                    active={sortCriteria === "surgeryDueDay"}
+                    label="Sort by Due Day"
+                    sortDirection={sortCriteria === "surgeryDueDay" ? sortDirection : undefined}
+                />
+                <SortButton
+                    onClick={() => handleSort("admissionDay")}
+                    active={sortCriteria === "admissionDay"}
+                    label="Sort by Admission Day"
+                    sortDirection={sortCriteria === "admissionDay" ? sortDirection : undefined}
+                />
+                <SortButton
+                    onClick={() => handleSort("delay")}
+                    active={sortCriteria === "delay"}
+                    label="Sort by Delay"
+                    sortDirection={sortCriteria === "delay" ? sortDirection : undefined}
+                />
+            </div>
+
             <div className="flex items-center justify-center flex-row flex-wrap gap-4">
-                {patientsFullData.map((patient) => {
-                    // Optional patient
+                {sortedPatients.map((patient) => {
+                    // Para pacientes opcionales puede ocurrir que no se tenga defined surgery_due_day
                     const surgeryDueDay = patient.surgery_due_day ?? Infinity;
-                    // Patient not scheduled
+                    // Si admission_day es "none", se representa como infinito positivo.
                     const admissionDay = patient.admission_day === "none" ? Infinity : Number(patient.admission_day);
-                    // If patient is not scheduled, delay is infinite
+                    // Si el paciente no está programado (admissionDay Infinity), delay es Infinity.
                     const delay = admissionDay === Infinity ? Infinity : admissionDay - patient.surgery_release_day;
 
                     return (
@@ -48,3 +113,5 @@ export const PatientsList: React.FC = () => {
         </div>
     );
 };
+
+export default PatientsList;
