@@ -10,4 +10,20 @@
     justify-content: center; // Centra verticalmente (en caso de columna)
     align-items: center; // Centra horizontalmente
     gap: 10px;
+
+    &--free {
+        background-color: var(--color-code-green);
+    }
+
+    &--semifree {
+        background-color: var(--color-code-yellow);
+    }
+
+    &--half {
+        background-color: var(--color-code-orange);
+    }
+
+    &--full {
+        background-color: var(--color-code-red);
+    }
 }

@@ -14,6 +14,17 @@ type ConstraintPatient = {
 export const NursesConstraints: React.FC = () => {
     const data = useData();
     const [sortCriteria, setSortCriteria] = useState<"S2" | "S3" | "S4" | "total">("total");
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+
+    const handleSort = (criteria: "S2" | "S3" | "S4" | "total") => {
+        if (criteria === sortCriteria) {
+            setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortCriteria(criteria);
+            setSortDirection("desc"); // o "asc", según prefieras como default
+        }
+    };
+
 
     if (!data.inputData || !data.solutionData) {
         return <div>Loading...</div>;
@@ -145,27 +156,21 @@ export const NursesConstraints: React.FC = () => {
     const globalS3Weighted = Object.values(patientContinuityContributions).reduce((sum, val) => sum + val, 0) * weights.continuity_of_care;
     const globalS4Weighted = globalS4 * weights.nurse_eccessive_workload;
 
-    // Ordenamos el array de nursePenalties según el criterio seleccionado
     const sortedNursePenalties = [...nursePenalties].sort((a, b) => {
-        const weightedA_S2 = a.S2 * weights.room_nurse_skill;
-        const weightedA_S3 = a.S3 * weights.continuity_of_care;
-        const weightedA_S4 = a.S4 * weights.nurse_eccessive_workload;
-        const weightedB_S2 = b.S2 * weights.room_nurse_skill;
-        const weightedB_S3 = b.S3 * weights.continuity_of_care;
-        const weightedB_S4 = b.S4 * weights.nurse_eccessive_workload;
-
+        let diff = 0;
         if (sortCriteria === 'S2') {
-            return weightedB_S2 - weightedA_S2;
+            diff = a.S2 - b.S2;
         } else if (sortCriteria === 'S3') {
-            return weightedB_S3 - weightedA_S3;
+            diff = a.S3 - b.S3;
         } else if (sortCriteria === 'S4') {
-            return weightedB_S4 - weightedA_S4;
+            diff = a.S4 - b.S4;
         } else {
-            const totalA = weightedA_S2 + weightedA_S3 + weightedA_S4;
-            const totalB = weightedB_S2 + weightedB_S3 + weightedB_S4;
-            return totalB - totalA;
+            diff = (a.S2 + a.S3 + a.S4) - (b.S2 + b.S3 + b.S4);
         }
+        return sortDirection === 'asc' ? diff : -diff;
     });
+
+    const maxTotal = Math.max(...nursePenalties.map(nurse => nurse.S2 + nurse.S3 + nurse.S4));
 
     return (
         <div>
@@ -197,25 +202,25 @@ export const NursesConstraints: React.FC = () => {
 
             <div className="mb-16 flex items-center justify-center flex-row gap-4">
                 <SortButton
-                    onClick={() => setSortCriteria("total")}
+                    onClick={() => handleSort("total")}
                     active={sortCriteria === "total"}
                     icon={<SortDescending size={20} weight="fill" color="var(--color-white)" />}
                     label="Sort by Total"
                 />
                 <SortButton
-                    onClick={() => setSortCriteria("S2")}
+                    onClick={() => handleSort("S2")}
                     active={sortCriteria === "S2"}
                     icon={<FlagBanner size={20} weight="fill" color="var(--color-white)" />}
                     label="Sort by S2"
                 />
                 <SortButton
-                    onClick={() => setSortCriteria("S3")}
+                    onClick={() => handleSort("S3")}
                     active={sortCriteria === "S3"}
                     icon={<Heart size={20} weight="fill" color="var(--color-white)" />}
                     label="Sort by S3"
                 />
                 <SortButton
-                    onClick={() => setSortCriteria("S4")}
+                    onClick={() => handleSort("S4")}
                     active={sortCriteria === "S4"}
                     icon={<BatteryFull size={20} weight="fill" color="var(--color-white)" />}
                     label="Sort by S4"
@@ -227,9 +232,10 @@ export const NursesConstraints: React.FC = () => {
                     <NurseConstraint
                         key={nurseId}
                         nurseId={nurseId}
-                        s2MinimumSkillLevel={S2 * weights.room_nurse_skill}
-                        s3CareContinuity={S3 * weights.continuity_of_care}
-                        s4MaximumWorkload={S4 * weights.nurse_eccessive_workload}
+                        s2MinimumSkillLevel={S2}
+                        s3CareContinuity={S3}
+                        s4MaximumWorkload={S4}
+                        maxTotal={maxTotal}
                     />
                 ))}
             </div>

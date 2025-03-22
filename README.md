@@ -18,6 +18,7 @@
 2. Execute the validator with the required files:
    ```bash
    ./validator/IHTP_Validator <instance_file> <solution_file> [verbose]
+   ./validator/IHTP_Validator test_instances/test10.json test_solutions/sol_test10.json verbose
    ```
    - Replace `<instance_file>` with the input instance file.
    - Replace `<solution_file>` with the solution file.
