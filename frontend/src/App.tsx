@@ -32,7 +32,6 @@ function App() {
 
                     <Route path="/" element={<Home />} />
                     <Route path="/FirstElection" element={<FirstElection />} />
-                    <Route path="/FirstElection/GeneralConstraints" element={<PatientsList />} />
                     <Route path="/FirstElection/:branch/SecondElection" element={<SecondElection />} />
                     <Route path="/FirstElection/:branch/SecondElection/Calendar" element={<Calendar />} />
 
@@ -52,6 +51,8 @@ function App() {
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList/:operatingTheaterId" element={<OperatingTheaterDetails />} />
                     <Route path="/FirstElection/:branch/SecondElection/OperatingTheatersConstraints" element={<OperatingTheaterConstraints />} />
+
+                    <Route path="/FirstElection/Patients" element={<PatientsList />} />
                 </Routes>
             </Router>
         </DataProvider>

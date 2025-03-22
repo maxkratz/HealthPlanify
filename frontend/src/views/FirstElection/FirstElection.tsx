@@ -34,7 +34,7 @@ export const FirstElection: React.FC = () => {
 
             <Election>
                 <nav>
-                    <Link to="/FirstElection/GeneralConstraints">General Constraints</Link>
+                    <Link to="/FirstElection/Patients">Patients</Link>
                 </nav>
             </Election>
         </div>
