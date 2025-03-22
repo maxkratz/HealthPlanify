@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { PatientFullData } from '../../../types/Combined';
 import { Occupant } from '../../../types/InputFile';
+import { Details } from '../../../components/Details';
 
 type RoomData = {
     roomId: string;
@@ -21,8 +22,8 @@ export const RoomDetails: React.FC = () => {
     }
 
     return (
-        <div className='flex flex-col items-center gap-8'>
-            <section>
+        <div className='flex flex-col items-center'>
+            <div className='mb-16'>
                 <h1>Room Details: {roomData.roomId}</h1>
                 <p>
                     <strong>Capacity:</strong> {roomData.capacity}
@@ -33,51 +34,55 @@ export const RoomDetails: React.FC = () => {
                 <p>
                     <strong>Occupants:</strong> {roomData.occupants.length}
                 </p>
-            </section>
+            </div>
 
-            <section>
-                <h2>Patient List</h2>
+            <div className='mb-16'>
+                <div className='mb-4'>
+                    <h2>Patient List</h2>
+                </div>
                 {roomData.patients.length === 0 ? (
                     <p>No patients assigned.</p>
                 ) : (
-                    <ul>
+                    <div className="flex items-center justify-center flex-row flex-wrap gap-4">
                         {roomData.patients.map((patient: PatientFullData) => {
                             if (typeof patient.admission_day !== 'number') return false;
                             const daysLeft = (patient.admission_day + patient.length_of_stay) - currentDay;
                             return (
-                                <li key={patient.id}>
-                                    <strong>ID:</strong> {patient.id} -{' '}
-                                    <strong>Admission Day:</strong> {patient.admission_day} -{' '}
-                                    <strong>Gender:</strong> {patient.gender || 'Unknown'} -{' '}
-                                    <strong>Age Group:</strong> {patient.age_group || 'Unknown'} -{' '}
-                                    <strong>Days Left:</strong> {daysLeft}
-                                </li>
+                                <Details key={patient.id}>
+                                    <span>{patient.id}</span>
+                                    <span>{patient.gender || 'Unknown'}</span>
+                                    <span>{patient.age_group || 'Unknown'}</span>
+                                    <span><strong>Admission Day:</strong> {patient.admission_day}</span>
+                                    <span><strong>Days Left:</strong> {daysLeft}</span>
+                                </Details>
                             );
                         })}
-                    </ul>
+                    </div>
                 )}
-            </section>
+            </div>
 
-            <section>
-                <h2>Occupant List</h2>
+            <div>
+                <div className='mb-4'>
+                    <h2>Occupant List</h2>
+                </div>
                 {roomData.occupants.length === 0 ? (
                     <p>No occupants assigned.</p>
                 ) : (
-                    <ul>
+                    <div className="flex items-center justify-center flex-row flex-wrap gap-4">
                         {roomData.occupants.map((occupant: Occupant) => {
                             const daysLeft = occupant.length_of_stay - currentDay;
                             return (
-                                <li key={occupant.id}>
-                                    <strong>ID:</strong> {occupant.id} -{' '}
-                                    <strong>Gender:</strong> {occupant.gender} -{' '}
-                                    <strong>Age Group:</strong> {occupant.age_group} -{' '}
-                                    <strong>Days Left:</strong> {daysLeft}
-                                </li>
+                                <Details key={occupant.id}>
+                                    <span>{occupant.id}</span>
+                                    <span>{occupant.gender || 'Unknown'}</span>
+                                    <span>{occupant.age_group || 'Unknown'}</span>
+                                    <span><strong>Days Left:</strong> {daysLeft}</span>
+                                </Details>
                             );
                         })}
-                    </ul>
+                    </div>
                 )}
-            </section>
+            </div>
         </div>
     );
 };
