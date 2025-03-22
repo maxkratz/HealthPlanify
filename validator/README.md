@@ -1,7 +1,7 @@
 # Validator Outputs
 
 ## ../solution/toy_solution1.json
-
+```
 VIOLATIONS: 
 RoomGenderMix.....................2
 PatientRoomCompatibility..........0
@@ -24,12 +24,12 @@ SurgeonTransfer........................0 (  5 X   0)
 PatientDelay...........................0 ( 10 X   0)
 ElectiveUnscheduledPatients............0 (300 X   0)
 Total cost = 329
-
+```
 
 
 
 ## ../solution/toy_solution2.json
-
+```
 VIOLATIONS: 
 RoomGenderMix.....................1
 PatientRoomCompatibility..........0
@@ -52,12 +52,12 @@ SurgeonTransfer........................0 (  5 X   0)
 PatientDelay...........................0 ( 10 X   0)
 ElectiveUnscheduledPatients............0 (300 X   0)
 Total cost = 329
-
+```
 
 
 
 ## ../ihtc2024_test_solutions/sol_test10.json 
-
+```
 VIOLATIONS: 
 RoomGenderMix.....................0
 PatientRoomCompatibility..........0
@@ -80,3 +80,4 @@ SurgeonTransfer......................490 ( 10 X  49)
 PatientDelay.......................10240 ( 10 X 1024)
 ElectiveUnscheduledPatients........18000 (300 X  60)
 Total cost = 49444
+```
