@@ -42,6 +42,7 @@ export const RoomDetails: React.FC = () => {
                 ) : (
                     <ul>
                         {roomData.patients.map((patient: PatientFullData) => {
+                            if (typeof patient.admission_day !== 'number') return false;
                             const daysLeft = (patient.admission_day + patient.length_of_stay) - currentDay;
                             return (
                                 <li key={patient.id}>

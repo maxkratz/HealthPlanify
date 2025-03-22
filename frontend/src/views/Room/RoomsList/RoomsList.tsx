@@ -19,20 +19,19 @@ export const RoomsList: React.FC = () => {
         if (!inputData || !solutionData) return 0;
         const { rooms, age_groups, patients, occupants, days } = inputData;
         let totalAgeDifference = 0;
-        // Mapas para acceso rápido
         const patientAgeMap = new Map(patients.map(p => [p.id, p.age_group]));
         const occupantAgeMap = new Map(occupants.map(o => [o.id, o.age_group]));
-        const patientStayMap = new Map(patients.map(p => [p.id, p.length_of_stay || 0])); // Acceso rápido a length_of_stay
-        // Recorremos todas las habitaciones y días
+        const patientStayMap = new Map(patients.map(p => [p.id, p.length_of_stay || 0]));
         rooms.forEach(room => {
             for (let day = 0; day < days; day++) {
-                // Obtener pacientes en la habitación ese día
-                const patientsInRoom = solutionData.patients.filter(p =>
-                    p.room === room.id &&
-                    p.admission_day <= day &&
-                    day < p.admission_day + (patientStayMap.get(p.id) ?? 0) // Acceso O(1)
-                );
-                // Obtener occupants en la habitación ese día
+                const patientsInRoom = solutionData.patients.filter(p => {
+                    if (typeof p.admission_day !== 'number') return false;
+                    return (
+                        p.room === room.id &&
+                        p.admission_day <= day &&
+                        day < p.admission_day + (patientStayMap.get(p.id) ?? 0)
+                    );
+                });
                 const occupantsInRoom = occupants.filter(o =>
                     o.room_id === room.id && day < o.length_of_stay
                 );
@@ -42,8 +41,7 @@ export const RoomsList: React.FC = () => {
                         const ageGroup = patientAgeMap.get(person.id) || occupantAgeMap.get(person.id);
                         return ageGroup ? age_groups.indexOf(ageGroup as AgeGroup) : -1;
                     })
-                    .filter(index => index !== -1); // Filtrar valores inválidos
-                // Calcular diferencia máxima de edad y acumularla
+                    .filter(index => index !== -1);
                 if (ageIndices.length > 0) {
                     const minAge = Math.min(...ageIndices);
                     const maxAge = Math.max(...ageIndices);
@@ -70,9 +68,9 @@ export const RoomsList: React.FC = () => {
             </div>
 
             <div className="flex items-center justify-center flex-row flex-wrap gap-4">
-
                 {rooms.map((room) => {
                     const patientsAssigned: PatientFullData[] = (data.solutionData?.patients.filter((patient) => {
+                        if (typeof patient.admission_day !== 'number') return false;
                         const patientInput = data.inputData?.patients.find(p => p.id === patient.id);
                         if (!patientInput) return false;
                         return (

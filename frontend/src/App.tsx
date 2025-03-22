@@ -20,6 +20,7 @@ import { SurgeonsConstraints } from "./views/Surgeon/SurgeonsConstraints";
 import { OperatingTheatersList } from "./views/OperatingTheater/OperatingTheatersList/OperatingTheatersList";
 import { OperatingTheaterDetails } from "./views/OperatingTheater/OperatingTheaterDetails";
 import { OperatingTheaterConstraints } from "./views/OperatingTheater/OperatingTheaterConstraints";
+import { PatientsList } from "./views/Patient/PatientsList";
 
 function App() {
     return (
@@ -31,13 +32,12 @@ function App() {
 
                     <Route path="/" element={<Home />} />
                     <Route path="/FirstElection" element={<FirstElection />} />
-                    <Route path="/FirstElection/GeneralConstraints" element={<h1>IN PROGRESS</h1>} />
+                    <Route path="/FirstElection/GeneralConstraints" element={<PatientsList />} />
                     <Route path="/FirstElection/:branch/SecondElection" element={<SecondElection />} />
                     <Route path="/FirstElection/:branch/SecondElection/Calendar" element={<Calendar />} />
 
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
-                    <Route path="/FirstElection/:branch/SecondElection/RoomsConstraints" element={<h1>IN PROGRESS</h1>} />
 
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/Shifts" element={<Shifts />} />
                     <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/Shifts/:shiftType/NursesList" element={<NursesList />} />

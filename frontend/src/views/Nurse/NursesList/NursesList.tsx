@@ -67,6 +67,7 @@ export const NursesList: React.FC = () => {
                         // El índice se calcula como:
                         //   (dayNumber - admission_day) * 3 + (shift ordinal)
                         const shiftOrdinal = shiftType ? shiftOrder[shiftType] : 0;
+                        if (typeof patient.admission_day !== 'number') return false;
                         const dayOffset = dayNumber - patient.admission_day;
                         const shiftIndex = dayOffset * 3 + shiftOrdinal;
                         const workload = inputPatient.workload_produced[shiftIndex] ?? 0;

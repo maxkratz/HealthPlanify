@@ -119,6 +119,7 @@ export const NursesConstraints: React.FC = () => {
                         if (!inputPatient) return null;
                         const shiftOrder: Record<string, number> = { early: 0, late: 1, night: 2 };
                         const shiftOrdinal = shiftOrder[currentShift];
+                        if (typeof patient.admission_day !== 'number') return false;
                         const dayOffset = currentDay - patient.admission_day;
                         const shiftIndex = dayOffset * 3 + shiftOrdinal;
                         const requiredSkill = inputPatient.skill_level_required[shiftIndex] ?? 0;
@@ -210,21 +211,21 @@ export const NursesConstraints: React.FC = () => {
                 <SortButton
                     onClick={() => handleSort("S2")}
                     active={sortCriteria === "S2"}
-                    icon={<FlagBanner size={20} weight="fill" color="var(--color-white)" />}
+                    icon={<FlagBanner size={20} weight="fill" color="var(--color-icon-flagBanner)" />}
                     label="Sort by S2"
                     sortDirection={sortCriteria === "S2" ? sortDirection : undefined}
                 />
                 <SortButton
                     onClick={() => handleSort("S3")}
                     active={sortCriteria === "S3"}
-                    icon={<Heart size={20} weight="fill" color="var(--color-white)" />}
+                    icon={<Heart size={20} weight="fill" color="var(--color-icon-heart)" />}
                     label="Sort by S3"
                     sortDirection={sortCriteria === "S3" ? sortDirection : undefined}
                 />
                 <SortButton
                     onClick={() => handleSort("S4")}
                     active={sortCriteria === "S4"}
-                    icon={<BatteryFull size={20} weight="fill" color="var(--color-white)" />}
+                    icon={<BatteryFull size={20} weight="fill" color="var(--color-icon-batteryFull)" />}
                     label="Sort by S4"
                     sortDirection={sortCriteria === "S4" ? sortDirection : undefined}
                 />
