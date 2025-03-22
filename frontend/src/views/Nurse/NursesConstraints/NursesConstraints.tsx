@@ -3,7 +3,7 @@ import { NurseConstraint } from '../../../components/NurseConstraint';
 import { useData } from "../../../DataContext";
 import { PatientFullData } from '../../../types/Combined';
 import { SortButton } from '../../../components/SortButton';
-import { FlagBanner, Heart, BatteryFull, SortDescending } from 'phosphor-react';
+import { FlagBanner, Heart, BatteryFull } from 'phosphor-react';
 
 type ConstraintPatient = {
     patientId: string;
@@ -21,7 +21,7 @@ export const NursesConstraints: React.FC = () => {
             setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
         } else {
             setSortCriteria(criteria);
-            setSortDirection("desc"); // o "asc", según prefieras como default
+            setSortDirection("desc");
         }
     };
 
@@ -204,28 +204,32 @@ export const NursesConstraints: React.FC = () => {
                 <SortButton
                     onClick={() => handleSort("total")}
                     active={sortCriteria === "total"}
-                    icon={<SortDescending size={20} weight="fill" color="var(--color-white)" />}
                     label="Sort by Total"
+                    sortDirection={sortCriteria === "total" ? sortDirection : undefined}
                 />
                 <SortButton
                     onClick={() => handleSort("S2")}
                     active={sortCriteria === "S2"}
                     icon={<FlagBanner size={20} weight="fill" color="var(--color-white)" />}
                     label="Sort by S2"
+                    sortDirection={sortCriteria === "S2" ? sortDirection : undefined}
                 />
                 <SortButton
                     onClick={() => handleSort("S3")}
                     active={sortCriteria === "S3"}
                     icon={<Heart size={20} weight="fill" color="var(--color-white)" />}
                     label="Sort by S3"
+                    sortDirection={sortCriteria === "S3" ? sortDirection : undefined}
                 />
                 <SortButton
                     onClick={() => handleSort("S4")}
                     active={sortCriteria === "S4"}
                     icon={<BatteryFull size={20} weight="fill" color="var(--color-white)" />}
                     label="Sort by S4"
+                    sortDirection={sortCriteria === "S4" ? sortDirection : undefined}
                 />
             </div>
+
 
             <div className="flex items-center justify-center flex-row flex-wrap gap-4">
                 {sortedNursePenalties.map(({ nurseId, S2, S3, S4 }) => (

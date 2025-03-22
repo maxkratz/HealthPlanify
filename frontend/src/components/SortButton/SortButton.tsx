@@ -1,21 +1,30 @@
 import React from 'react';
 import SortButtonStyle from './SortButton.module.scss';
+import { SortAscending, SortDescending } from 'phosphor-react';
 
 interface SortButtonProps {
     onClick: () => void;
     active: boolean;
-    icon: React.ReactNode;
+    icon?: React.ReactNode;
     label: string;
+    sortDirection?: "asc" | "desc";
 }
 
-export const SortButton: React.FC<SortButtonProps> = ({ onClick, active, icon, label }) => {
+export const SortButton: React.FC<SortButtonProps> = ({ onClick, active, icon, label, sortDirection }) => {
     return (
         <button
             onClick={onClick}
             className={`flex items-center gap-1 p-2 rounded ${active ? SortButtonStyle.active : SortButtonStyle.inactive}`}
         >
-            {icon}
+            {sortDirection !== undefined && (
+                sortDirection === 'asc' ? (
+                    <SortAscending size={20} weight="fill" color="var(--color-white)" />
+                ) : (
+                    <SortDescending size={20} weight="fill" color="var(--color-white)" />
+                )
+            )}
             <span>{label}</span>
+            {icon}
         </button>
     );
 };
