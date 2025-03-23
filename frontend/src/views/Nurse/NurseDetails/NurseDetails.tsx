@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { AssignedPatient } from '../NursesList/NursesList';
+import { Details } from '../../../components/Details';
 
 type NurseData = {
     nurseId: string;
@@ -25,8 +26,8 @@ export const NurseDetails: React.FC = () => {
     }, 0);
 
     return (
-        <div className='flex flex-col items-center gap-8'>
-            <section>
+        <div className='flex flex-col items-center'>
+            <div className='mb-16'>
                 <h1>Nurse Details: {nurseData.nurseId}</h1>
                 <p>
                     <strong>Skill Level:</strong> {nurseData.skillLevel}
@@ -34,9 +35,9 @@ export const NurseDetails: React.FC = () => {
                 <p>
                     <strong>Required Skill:</strong> {maxRequiredSkill}
                 </p>
-            </section>
+            </div>
 
-            <section>
+            <div className='mb-16'>
                 <h2>Assigned Rooms</h2>
                 {assignedRooms.length > 0 ? (
                     <ul>
@@ -47,24 +48,26 @@ export const NurseDetails: React.FC = () => {
                 ) : (
                     <p>No rooms assigned</p>
                 )}
-            </section>
+            </div>
 
-            <section>
-                <h2>Assigned Patients</h2>
-                {assignedPatients.length > 0 ? (
-                    <ul>
-                        {assignedPatients.map((patient) => (
-                            <li key={patient.patientId}>
-                                <strong>ID:</strong> {patient.patientId} -{' '}
-                                <strong>Workload:</strong> {patient.workload} -{' '}
-                                <strong>Required Skill:</strong> {patient.requiredSkill}
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
+            <div>
+                <div className='mb-8'>
+                    <h2>Assigned Patients</h2>
+                </div>
+                {assignedPatients.length === 0 ? (
                     <p>No patients assigned</p>
+                ) : (
+                    <div className="flex items-center justify-center flex-row flex-wrap gap-4">
+                        {assignedPatients.map((patient) => (
+                            <Details key={patient.patientId}>
+                                <span><strong>ID:</strong> {patient.patientId}</span>
+                                <span><strong>Workload:</strong> {patient.workload}</span>
+                                <span><strong>Required Skill:</strong> {patient.requiredSkill}</span>
+                            </Details>
+                        ))}
+                    </div>
                 )}
-            </section>
+            </div>
         </div>
     );
 };

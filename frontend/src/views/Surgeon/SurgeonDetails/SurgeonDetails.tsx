@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { PatientFullDataSurgeon } from '../SurgeonsList/SurgeonsList';
+import { Details } from '../../../components/Details';
 
 type SurgeonData = {
     surgeonId: string;
@@ -17,32 +18,34 @@ export const SurgeonDetails: React.FC = () => {
     }
 
     return (
-        <div className="flex flex-col items-center gap-8">
-            <section>
+        <div className="flex flex-col items-center">
+            <div className='mb-16'>
                 <h1>Surgeon Details: {surgeonData.surgeonId}</h1>
                 <p>
                     <strong>Max Surgery Time:</strong> {surgeonData.maxSurgeryTime}
                 </p>
-            </section>
+            </div>
 
-            <section>
-                <h2>Patient List</h2>
+            <div>
+                <div className='mb-8'>
+                    <h2>Patient List</h2>
+                </div>
                 {surgeonData.patients.length === 0 ? (
                     <p>No patients assigned.</p>
                 ) : (
-                    <ul>
+                    <div className="flex items-center justify-center flex-row flex-wrap gap-4">
                         {surgeonData.patients.map((patient: PatientFullDataSurgeon) => (
-                            <li key={patient.id}>
-                                <strong>ID:</strong> {patient.id} -{' '}
-                                <strong>Gender:</strong> {patient.gender || 'Unknown'} -{' '}
-                                <strong>Age Group:</strong> {patient.age_group || 'Unknown'} -{' '}
-                                <strong>Operating Theater:</strong> {patient.operating_theater || 'N/A'} -{' '}
-                                <strong>Surgery Duration:</strong> {patient.surgery_duration}
-                            </li>
+                            <Details key={patient.id}>
+                                <span><strong>ID:</strong> {patient.id}</span>
+                                <span><strong>Gender:</strong> {patient.gender || 'Unknown'}</span>
+                                <span><strong>Age Group:</strong> {patient.age_group || 'Unknown'}</span>
+                                <span><strong>Operating Theater:</strong> {patient.operating_theater || 'N/A'}</span>
+                                <span><strong>Surgery Duration:</strong> {patient.surgery_duration}</span>
+                            </Details>
                         ))}
-                    </ul>
+                    </div>
                 )}
-            </section>
+            </div>
         </div>
     );
 };

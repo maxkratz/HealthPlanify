@@ -1,14 +1,18 @@
 .container {
     border: 2px solid var(--color-white);
-    border-radius: 999px;
-    padding: 5px;
-    box-sizing: border-box; // Para incluir el padding en el cálculo del ancho
-    width: 190px;
-    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    padding: 40px;
+    box-sizing: border-box;
 
-    display: flex;
+    /* Permite que el ancho se ajuste al contenido */
+    display: inline-flex;
+    width: fit-content;
+
+    /* Forzamos la relación 1:1 para obtener un círculo */
+    aspect-ratio: 1;
+
     flex-direction: column;
-    justify-content: center; // Centra verticalmente (en caso de columna)
-    align-items: center; // Centra horizontalmente
+    justify-content: center;
+    align-items: center;
     gap: 10px;
 }

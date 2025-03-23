@@ -37,7 +37,7 @@ export const RoomDetails: React.FC = () => {
             </div>
 
             <div className='mb-16'>
-                <div className='mb-4'>
+                <div className='mb-8'>
                     <h2>Patient List</h2>
                 </div>
                 {roomData.patients.length === 0 ? (
@@ -49,11 +49,11 @@ export const RoomDetails: React.FC = () => {
                             const daysLeft = (patient.admission_day + patient.length_of_stay) - currentDay;
                             return (
                                 <Details key={patient.id}>
-                                    <span>{patient.id}</span>
-                                    <span>{patient.gender || 'Unknown'}</span>
-                                    <span>{patient.age_group || 'Unknown'}</span>
-                                    <span><strong>Admission Day:</strong> {patient.admission_day}</span>
-                                    <span><strong>Days Left:</strong> {daysLeft}</span>
+                                    <span><strong>ID:</strong> {patient.id}</span>
+                                    <span><strong>Gender:</strong> {patient.gender || 'Unknown'}</span>
+                                    <span><strong>Age group:</strong> {patient.age_group || 'Unknown'}</span>
+                                    <span><strong>Admission day:</strong> {patient.admission_day}</span>
+                                    <span><strong>Days left:</strong> {daysLeft}</span>
                                 </Details>
                             );
                         })}
@@ -62,7 +62,7 @@ export const RoomDetails: React.FC = () => {
             </div>
 
             <div>
-                <div className='mb-4'>
+                <div className='mb-8'>
                     <h2>Occupant List</h2>
                 </div>
                 {roomData.occupants.length === 0 ? (
@@ -73,10 +73,10 @@ export const RoomDetails: React.FC = () => {
                             const daysLeft = occupant.length_of_stay - currentDay;
                             return (
                                 <Details key={occupant.id}>
-                                    <span>{occupant.id}</span>
-                                    <span>{occupant.gender || 'Unknown'}</span>
-                                    <span>{occupant.age_group || 'Unknown'}</span>
-                                    <span><strong>Days Left:</strong> {daysLeft}</span>
+                                    <span><strong>ID:</strong> {occupant.id}</span>
+                                    <span><strong>Gender:</strong> {occupant.gender || 'Unknown'}</span>
+                                    <span><strong>Age group:</strong>{occupant.age_group || 'Unknown'}</span>
+                                    <span><strong>Days left:</strong> {daysLeft}</span>
                                 </Details>
                             );
                         })}
