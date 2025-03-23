@@ -16,7 +16,9 @@ export const RoomsList: React.FC = () => {
     const { inputData, solutionData } = data;
     const globalS1Weighted = inputData?.weights.room_mixed_age
     const calculateGlobalS1AgeDifference = () => {
-        if (!inputData || !solutionData) return 0;
+        if (!inputData || !solutionData) {
+            return <div>Ups, something went wrong! There is no loaded data</div>;
+        }
         const { rooms, age_groups, patients, occupants, days } = inputData;
         let totalAgeDifference = 0;
         const patientAgeMap = new Map(patients.map(p => [p.id, p.age_group]));

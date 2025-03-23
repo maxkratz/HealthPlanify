@@ -23,7 +23,7 @@ export const PatientsList: React.FC = () => {
     };
 
     if (!inputData || !solutionData) {
-        return <div>Loading...</div>;
+        return <div>Ups, something went wrong! There is no loaded data</div>;
     }
 
     const patientsFullData: PatientFullData[] = solutionData.patients

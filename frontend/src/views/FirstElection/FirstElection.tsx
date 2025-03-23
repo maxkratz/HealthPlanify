@@ -37,6 +37,12 @@ export const FirstElection: React.FC = () => {
                     <Link to="/FirstElection/Patients">Patients</Link>
                 </nav>
             </Election>
+
+            <Election>
+                <nav>
+                    <Link to="/FirstElection/Test">Test</Link>
+                </nav>
+            </Election>
         </div>
     );
 };

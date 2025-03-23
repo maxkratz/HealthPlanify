@@ -1,0 +1,40 @@
+import React from 'react';
+import { useDrop } from 'react-dnd';
+import { PatientOutput } from '../../../types/SolutionFile'
+import PatientCard from '../PatientCard/PatientCard';
+
+interface RoomCellProps {
+    day: number;
+    roomId: string;
+    patients: PatientOutput[];
+    onDropPatient: (patientId: string, newDay: number, newRoom: string) => void;
+}
+
+const RoomCell: React.FC<RoomCellProps> = ({ day, roomId, patients, onDropPatient }) => {
+    const [{ isOver }, drop] = useDrop(() => ({
+        accept: 'PATIENT',
+        drop: (item: { id: string }) => {
+            onDropPatient(item.id, day, roomId);
+        },
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver(),
+        }),
+    }), [day, roomId, onDropPatient]);
+
+    return (
+        <div
+            ref={drop as any}
+            style={{
+                minHeight: '50px',
+                padding: '4px',
+                border: isOver ? '2px dashed green' : '1px solid #ccc',
+            }}
+        >
+            {patients.map((patient) => (
+                <PatientCard key={patient.id} patient={patient} />
+            ))}
+        </div>
+    );
+};
+
+export default RoomCell;

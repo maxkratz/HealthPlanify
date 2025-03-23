@@ -22,39 +22,46 @@ import { OperatingTheaterDetails } from "./views/OperatingTheater/OperatingTheat
 import { OperatingTheaterConstraints } from "./views/OperatingTheater/OperatingTheaterConstraints";
 import { PatientsList } from "./views/Patient/PatientsList";
 
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { SolutionGrid } from "./views/GraphicSolutionModifier/SolutionGrid/SolutionGrid";
+
 function App() {
     return (
         <DataProvider>
-            <Router>
-                <Breadcrumbs />
-                <Routes>
-                    <Route path="*" element={<PageNotFound />} />
+            <DndProvider backend={HTML5Backend}>
+                <Router>
+                    <Breadcrumbs />
+                    <Routes>
+                        <Route path="*" element={<PageNotFound />} />
 
-                    <Route path="/" element={<Home />} />
-                    <Route path="/FirstElection" element={<FirstElection />} />
-                    <Route path="/FirstElection/:branch/SecondElection" element={<SecondElection />} />
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar" element={<Calendar />} />
+                        <Route path="/" element={<Home />} />
+                        <Route path="/FirstElection" element={<FirstElection />} />
+                        <Route path="/FirstElection/:branch/SecondElection" element={<SecondElection />} />
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar" element={<Calendar />} />
 
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
 
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/Shifts" element={<Shifts />} />
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/Shifts/:shiftType/NursesList" element={<NursesList />} />
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/Shifts/:shiftType/NursesList/:nurseId" element={<NurseDetails />} />
-                    <Route path="/FirstElection/:branch/SecondElection/NursesConstraints" element={<NursesConstraints />} />
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/Shifts" element={<Shifts />} />
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/Shifts/:shiftType/NursesList" element={<NursesList />} />
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/Shifts/:shiftType/NursesList/:nurseId" element={<NurseDetails />} />
+                        <Route path="/FirstElection/:branch/SecondElection/NursesConstraints" element={<NursesConstraints />} />
 
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/SurgeonsList" element={<SurgeonsList />} />
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/SurgeonsList/:surgeonId" element={<SurgeonDetails />} />
-                    <Route path="/FirstElection/:branch/SecondElection/SurgeonsConstraints" element={<SurgeonsConstraints />} />
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/SurgeonsList" element={<SurgeonsList />} />
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/SurgeonsList/:surgeonId" element={<SurgeonDetails />} />
+                        <Route path="/FirstElection/:branch/SecondElection/SurgeonsConstraints" element={<SurgeonsConstraints />} />
 
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
+                        <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList/:operatingTheaterId" element={<OperatingTheaterDetails />} />
+                        <Route path="/FirstElection/:branch/SecondElection/OperatingTheatersConstraints" element={<OperatingTheaterConstraints />} />
 
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
-                    <Route path="/FirstElection/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList/:operatingTheaterId" element={<OperatingTheaterDetails />} />
-                    <Route path="/FirstElection/:branch/SecondElection/OperatingTheatersConstraints" element={<OperatingTheaterConstraints />} />
+                        <Route path="/FirstElection/Patients" element={<PatientsList />} />
 
-                    <Route path="/FirstElection/Patients" element={<PatientsList />} />
-                </Routes>
-            </Router>
+                        <Route path="/FirstElection/Test" element={<SolutionGrid />} />
+                    </Routes>
+                </Router>
+            </DndProvider>
         </DataProvider>
     );
 }
