@@ -26,6 +26,7 @@ const RoomCell: React.FC<RoomCellProps> = ({ day, roomId, patients, onDropPatien
             ref={drop as any}
             style={{
                 minHeight: '50px',
+                minWidth: '50px',
                 padding: '4px',
                 border: isOver ? '2px dashed green' : '1px solid #ccc',
             }}

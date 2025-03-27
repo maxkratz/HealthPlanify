@@ -2,6 +2,7 @@ import React from 'react';
 import { useData } from '../../../DataContext';
 import RoomCell from '../RoomCell/RoomCell';
 import { PatientOutput } from '../../../types/SolutionFile'
+import { checkHardConstraints } from '../../../utils/checkHardConstraints';
 
 export const SolutionGrid: React.FC = () => {
     const { inputData, solutionData, setSolutionData } = useData();
@@ -35,6 +36,11 @@ export const SolutionGrid: React.FC = () => {
             }
             return patient;
         });
+        const errors = checkHardConstraints(inputData, { ...solutionData, patients: updatedPatients });
+        if (errors.length > 0) {
+            console.log(errors);
+            return;
+        }
         setSolutionData({ ...solutionData, patients: updatedPatients });
     };
 
@@ -45,7 +51,7 @@ export const SolutionGrid: React.FC = () => {
                     <h3>Day {day}</h3>
                     {rooms.map((room) => (
                         <div key={room.id} style={{ marginBottom: '10px' }}>
-                            <h4>Room {room.id}</h4>
+                            <h4>{room.id}</h4>
                             <RoomCell
                                 day={day}
                                 roomId={room.id}
