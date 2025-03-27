@@ -64,4 +64,26 @@ export const SolutionGrid: React.FC = () => {
             ))}
         </div>
     );
+    // return (
+    //     <div className="flex flex-col">
+    //         {rooms.map((room) => (
+    //             <div key={room.id} className="m-1">
+    //                 <h3>{room.id}</h3>
+    //                 <div className="flex flex-row">
+    //                     {Array.from({ length: days }).map((_, day) => (
+    //                         <div key={day} className="m-1">
+    //                             <h4>Day {day}</h4>
+    //                             <RoomCell
+    //                                 day={day}
+    //                                 roomId={room.id}
+    //                                 patients={gridData[day][room.id]}
+    //                                 onDropPatient={handleDropPatient}
+    //                             />
+    //                         </div>
+    //                     ))}
+    //                 </div>
+    //             </div>
+    //         ))}
+    //     </div>
+    // );
 };
