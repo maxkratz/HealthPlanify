@@ -45,12 +45,12 @@ export const SolutionGrid: React.FC = () => {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div className='flex flex-row'>
             {Array.from({ length: days }).map((_, day) => (
-                <div key={day} style={{ margin: '10px' }}>
+                <div key={day} className='m-1'>
                     <h3>Day {day}</h3>
                     {rooms.map((room) => (
-                        <div key={room.id} style={{ marginBottom: '10px' }}>
+                        <div key={room.id} className='m-1'>
                             <h4>{room.id}</h4>
                             <RoomCell
                                 day={day}

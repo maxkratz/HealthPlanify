@@ -28,7 +28,7 @@ const RoomCell: React.FC<RoomCellProps> = ({ day, roomId, patients, onDropPatien
                 minHeight: '50px',
                 minWidth: '50px',
                 padding: '4px',
-                border: isOver ? '2px dashed green' : '1px solid #ccc',
+                border: isOver ? '3px dashed var(--color-rose)' : '1px solid var(--color-white)',
             }}
         >
             {patients.map((patient) => (
