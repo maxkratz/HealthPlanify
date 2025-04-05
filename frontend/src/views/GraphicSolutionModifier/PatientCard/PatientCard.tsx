@@ -1,10 +1,29 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { PatientOutput } from '../../../types/SolutionFile'
+import { PatientFullData } from '../../../types/Combined';
 
 interface PatientCardProps {
-    patient: PatientOutput;
+    patient: PatientFullData;
 }
+
+const formatPatientId = (id: string, ageGroup: string): string => {
+    const numericId = id.startsWith('p') ? id.slice(1) : id;
+    let ageLetter = '';
+    switch (ageGroup) {
+        case "infant":
+            ageLetter = "i";
+            break;
+        case "adult":
+            ageLetter = "a";
+            break;
+        case "elderly":
+            ageLetter = "e";
+            break;
+        default:
+            ageLetter = "";
+    }
+    return `${numericId} (${ageLetter})`;
+};
 
 const PatientCard: React.FC<PatientCardProps> = ({ patient }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
@@ -15,20 +34,24 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient }) => {
         }),
     }), [patient]);
 
+    const backgroundColor = patient.gender === 'A' ? 'var(--color-blue)' : 'var(--color-rose)';
+
+    const borderStyle = patient.mandatory ? 'solid' : 'dashed';
+
     return (
         <div
             ref={drag as any}
             style={{
                 opacity: isDragging ? 0.5 : 1,
-                border: '1px solid var(--color-white)',
+                border: `3px ${borderStyle} var(--color-white)`,
                 padding: '4px',
                 margin: '2px',
-                backgroundColor: 'var(--color-rose)',
+                backgroundColor,
                 cursor: 'move',
                 textAlign: 'center',
             }}
         >
-            {patient.id}
+            {formatPatientId(patient.id, patient.age_group)}
         </div>
     );
 };

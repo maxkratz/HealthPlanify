@@ -1,12 +1,12 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { PatientOutput } from '../../../types/SolutionFile'
+import { PatientFullData } from '../../../types/Combined';
 import PatientCard from '../PatientCard/PatientCard';
 
 interface RoomCellProps {
     day: number;
     roomId: string;
-    patients: PatientOutput[];
+    patients: PatientFullData[];
     onDropPatient: (patientId: string, newDay: number, newRoom: string) => void;
 }
 
