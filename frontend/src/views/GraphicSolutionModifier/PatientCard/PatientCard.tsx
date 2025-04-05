@@ -4,6 +4,7 @@ import { PatientFullData } from '../../../types/Combined';
 
 interface PatientCardProps {
     patient: PatientFullData;
+    onClick?: (patientId: string) => void;
 }
 
 const formatPatientId = (id: string, ageGroup: string): string => {
@@ -25,7 +26,7 @@ const formatPatientId = (id: string, ageGroup: string): string => {
     return `${numericId} (${ageLetter})`;
 };
 
-const PatientCard: React.FC<PatientCardProps> = ({ patient }) => {
+const PatientCard: React.FC<PatientCardProps> = ({ patient, onClick }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'PATIENT',
         item: { id: patient.id },
@@ -35,8 +36,13 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient }) => {
     }), [patient]);
 
     const backgroundColor = patient.gender === 'A' ? 'var(--color-blue)' : 'var(--color-rose)';
-
     const borderStyle = patient.mandatory ? 'solid' : 'dashed';
+
+    const handleClick = () => {
+        if (onClick) {
+            onClick(patient.id);
+        }
+    };
 
     return (
         <div
@@ -50,6 +56,7 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient }) => {
                 cursor: 'move',
                 textAlign: 'center',
             }}
+            onClick={handleClick}
         >
             {formatPatientId(patient.id, patient.age_group)}
         </div>

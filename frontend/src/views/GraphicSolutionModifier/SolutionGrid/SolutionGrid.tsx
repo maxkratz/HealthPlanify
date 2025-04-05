@@ -6,7 +6,11 @@ import { PatientFullData } from '../../../types/Combined';
 import { checkHardConstraints } from '../../../utils/checkHardConstraints';
 import solutionGridStyles from './SolutionGrid.module.scss';
 
-export const SolutionGrid: React.FC = () => {
+interface SolutionGridProps {
+    onPatientClick: (patientId: string) => void;
+}
+
+export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick }) => {
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
 
@@ -63,16 +67,16 @@ export const SolutionGrid: React.FC = () => {
             <div className="flex flex-col">
                 <div className="flex flex-row gap-8.5 items-center">
                     {/* Celda vacía para alinear con el room.id */}
-                    <div className="w-5"></div>
+                    <div className="w-4"></div>
                     {Array.from({ length: days }).map((_, day) => (
                         <div key={day} className="min-w-[45px]">
-                            <h3>Day {day}</h3>
+                            <span>Day {day}</span>
                         </div>
                     ))}
                 </div>
                 {rooms.map((room) => (
                     <div key={room.id} className="flex flex-row m-1 items-center">
-                        <h4 className="w-5">{room.id}</h4>
+                        <span className="w-4">{room.id}</span>
                         {Array.from({ length: days }).map((_, day) => (
                             <div key={day} className="m-1">
                                 <RoomCell
@@ -81,6 +85,7 @@ export const SolutionGrid: React.FC = () => {
                                     capacity={room.capacity}
                                     patients={gridData[day][room.id]}
                                     onDropPatient={handleDropPatient}
+                                    onPatientClick={onPatientClick}
                                 />
                             </div>
                         ))}
@@ -89,6 +94,4 @@ export const SolutionGrid: React.FC = () => {
             </div>
         </div>
     );
-
-
 };

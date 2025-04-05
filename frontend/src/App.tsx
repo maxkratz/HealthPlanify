@@ -24,7 +24,7 @@ import { PatientsList } from "./views/Patient/PatientsList";
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { SolutionGrid } from "./views/GraphicSolutionModifier/SolutionGrid/SolutionGrid";
+import { GraphicSolutionModifier } from "./views/GraphicSolutionModifier/GraphicSolutionModifier";
 
 function App() {
     return (
@@ -58,7 +58,7 @@ function App() {
 
                         <Route path="/FirstElection/Patients" element={<PatientsList />} />
 
-                        <Route path="/FirstElection/Test" element={<SolutionGrid />} />
+                        <Route path="/FirstElection/Test" element={<GraphicSolutionModifier />} />
                     </Routes>
                 </Router>
             </DndProvider>

@@ -3,23 +3,16 @@ import { useDrop } from 'react-dnd';
 import { PatientFullData } from '../../../types/Combined';
 import PatientCard from '../PatientCard/PatientCard';
 
-interface RoomCellProps {
-    day: number;
-    roomId: string;
-    capacity: number;
-    patients: PatientFullData[]; // Se asume que el orden del arreglo corresponde a la cama asignada (índice)
-    onDropPatient: (patientId: string, newDay: number, newRoom: string, bedIndex: number) => void;
-}
-
 interface BedSlotProps {
     day: number;
     roomId: string;
     bedIndex: number;
     patient?: PatientFullData;
     onDropPatient: (patientId: string, newDay: number, newRoom: string, bedIndex: number) => void;
+    onPatientClick: (patientId: string) => void;
 }
 
-const BedSlot: React.FC<BedSlotProps> = ({ day, roomId, bedIndex, patient, onDropPatient }) => {
+const BedSlot: React.FC<BedSlotProps> = ({ day, roomId, bedIndex, patient, onDropPatient, onPatientClick }) => {
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'PATIENT',
         drop: (item: { id: string }) => {
@@ -42,12 +35,21 @@ const BedSlot: React.FC<BedSlotProps> = ({ day, roomId, bedIndex, patient, onDro
                 justifyContent: 'center',
             }}
         >
-            {patient ? <PatientCard patient={patient} /> : null}
+            {patient ? <PatientCard patient={patient} onClick={onPatientClick} /> : null}
         </div>
     );
 };
 
-const RoomCell: React.FC<RoomCellProps> = ({ day, roomId, capacity, patients, onDropPatient }) => {
+interface RoomCellProps {
+    day: number;
+    roomId: string;
+    capacity: number;
+    patients: PatientFullData[];
+    onDropPatient: (patientId: string, newDay: number, newRoom: string, bedIndex: number) => void;
+    onPatientClick: (patientId: string) => void;
+}
+
+const RoomCell: React.FC<RoomCellProps> = ({ day, roomId, capacity, patients, onDropPatient, onPatientClick }) => {
     const bedSlots = Array.from({ length: capacity }, (_, index) => ({
         bedIndex: index,
         patient: patients[index],
@@ -71,6 +73,7 @@ const RoomCell: React.FC<RoomCellProps> = ({ day, roomId, capacity, patients, on
                     bedIndex={bedIndex}
                     patient={patient}
                     onDropPatient={onDropPatient}
+                    onPatientClick={onPatientClick}
                 />
             ))}
         </div>

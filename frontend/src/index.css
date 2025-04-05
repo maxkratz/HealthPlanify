@@ -36,12 +36,11 @@
 
 body {
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 320px;
+    display: grid;
+    place-items: center;
+    min-width: 100vw;
     min-height: 100vh;
-    padding: 30px; /* "General margins" */
+    padding: 20px; /* "Margen general" */
 }
 
 h1 {
@@ -53,6 +52,13 @@ h1 {
 
 h2 {
     font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+}
+
+h3 {
+    font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.2;
     margin: 0;
