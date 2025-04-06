@@ -18,7 +18,7 @@ export const Legend: React.FC = () => {
                 <h4>Age Groups</h4>
                 {ageGroups.map((group) => (
                     <div key={group} className="flex items-center gap-2">
-                        <span>{group}:</span>
+                        <span><strong>{group}:  </strong></span>
                         <span>{group.charAt(0)}</span>
                     </div>
                 ))}
@@ -36,7 +36,7 @@ export const Legend: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-dashed"></div>
-                    <span>not mandatory</span>
+                    <span>Not mandatory</span>
                 </div>
             </div>
         </div>
