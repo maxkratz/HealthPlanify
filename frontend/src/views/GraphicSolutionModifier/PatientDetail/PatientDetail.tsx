@@ -1,7 +1,6 @@
 import React from 'react';
 import { useData } from '../../../DataContext';
 import { PatientFullData } from '../../../types/Combined';
-import patientDetailStyles from './PatientDetail.module.scss';
 
 interface PatientDetailProps {
     patientId: string;
@@ -19,7 +18,7 @@ export const PatientDetail: React.FC<PatientDetailProps> = ({ patientId }) => {
     const patientFull: PatientFullData = { ...patientSolution, ...patientInput };
 
     return (
-        <div className={`flex flex-col ${patientDetailStyles.container}`}>
+        <div className='flex flex-col gap-2'>
             <h3>{patientId} Patient Details</h3>
             <p><strong>Admission Day:</strong> {patientFull.admission_day}</p>
             <p><strong>Room:</strong> {patientFull.room}</p>

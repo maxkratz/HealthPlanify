@@ -1,6 +1,5 @@
 import React from 'react';
 import { useData } from '../../../DataContext';
-import dayDetailStyles from './DayDetail.module.scss';
 
 interface DayDetailProps {
     day: number;
@@ -14,10 +13,10 @@ export const DayDetail: React.FC<DayDetailProps> = ({ day }) => {
     }
 
     return (
-        <div className={`flex flex-col ${dayDetailStyles.container}`}>
+        <div className='flex flex-col gap-4'>
             <h3>Day {day} Details</h3>
 
-            <section className='mt-4 mb-4'>
+            <div className='flex flex-col gap-2'>
                 <h4>Surgeons</h4>
                 {inputData.surgeons.map((surgeon) => (
                     <div key={surgeon.id}>
@@ -27,9 +26,9 @@ export const DayDetail: React.FC<DayDetailProps> = ({ day }) => {
                             : 'N/A'}
                     </div>
                 ))}
-            </section>
+            </div>
 
-            <section>
+            <div className='flex flex-col gap-2'>
                 <h4>Operating Theaters</h4>
                 {inputData.operating_theaters.map((ot) => (
                     <div key={ot.id}>
@@ -39,7 +38,7 @@ export const DayDetail: React.FC<DayDetailProps> = ({ day }) => {
                             : 'N/A'}
                     </div>
                 ))}
-            </section>
+            </div>
         </div>
     );
 };
