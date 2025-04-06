@@ -8,9 +8,10 @@ import solutionGridStyles from './SolutionGrid.module.scss';
 
 interface SolutionGridProps {
     onPatientClick: (patientId: string) => void;
+    onDayClick: (day: number) => void;
 }
 
-export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick }) => {
+export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDayClick }) => {
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
 
@@ -70,7 +71,7 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick }) =>
                     <div className="w-4"></div>
                     {Array.from({ length: days }).map((_, day) => (
                         <div key={day} className="min-w-[45px]">
-                            <span>Day {day}</span>
+                            <span onClick={() => onDayClick(day)}>Day {day}</span>
                         </div>
                     ))}
                 </div>
