@@ -11,7 +11,7 @@ export const Legend: React.FC = () => {
     const ageGroups: string[] = inputData.age_groups;
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6">
             <h3>Legend</h3>
 
             <div className="flex flex-col gap-2">
