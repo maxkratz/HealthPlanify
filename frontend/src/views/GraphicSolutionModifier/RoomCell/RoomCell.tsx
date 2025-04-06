@@ -27,9 +27,9 @@ const BedSlot: React.FC<BedSlotProps> = ({ day, roomId, bedIndex, patient, onDro
         <div
             ref={drop as any}
             style={{
-                minHeight: '44px',
-                minWidth: '61px',
-                border: isOver ? '2px dashed var(--color-rose)' : '1px solid var(--color-white)',
+                minHeight: '2.75rem',
+                minWidth: '4.5rem',
+                border: isOver ? '0.125rem dashed var(--color-rose)' : '0.063rem solid var(--color-white)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

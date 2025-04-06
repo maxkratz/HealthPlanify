@@ -1,14 +1,14 @@
 .container {
-    border: 2px solid var(--color-white);
-    border-radius: 10px;
-    padding: 20px;
+    border: 0.125rem solid var(--color-white);
+    border-radius: 0.625rem;
+    padding: 1.25rem;
     box-sizing: border-box; // Para incluir el padding en el cálculo del ancho
-    width: 125px;
+    width: 7.813rem;
     aspect-ratio: 1 / 1;
 
     display: flex;
     flex-direction: column;
     justify-content: center; // Centra verticalmente (en caso de columna)
     align-items: center; // Centra horizontalmente
-    gap: 10px;
+    gap: 0.625rem;
 }

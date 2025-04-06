@@ -66,18 +66,21 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
                 </div>
             )}
             <div className="flex flex-col">
-                <div className="flex flex-row gap-8.5 items-center">
+                <div className="flex flex-row gap-2 items-center">
                     {/* Celda vacía para alinear con el room.id */}
-                    <div className="w-4"></div>
+                    {/* 5.167rem exactamente para coincidir con el tamaño de la RoomcCell */}
+                    <div className="min-w-[5.167rem]"></div>
                     {Array.from({ length: days }).map((_, day) => (
-                        <div key={day} className="min-w-[2.813rem]">
-                            <span onClick={() => onDayClick(day)}>Day {day}</span>
+                        <div key={day} className="min-w-[5.167rem]">
+                            <span onClick={() => onDayClick(day)} style={{ cursor: 'pointer' }}>
+                                Day {day}
+                            </span>
                         </div>
                     ))}
                 </div>
                 {rooms.map((room) => (
                     <div key={room.id} className="flex flex-row m-1 items-center">
-                        <span className="w-4">{room.id}</span>
+                        <span className="min-w-[5.167rem]">{room.id}</span>
                         {Array.from({ length: days }).map((_, day) => (
                             <div key={day} className="m-1">
                                 <RoomCell

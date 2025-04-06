@@ -1,15 +1,15 @@
 .container {
-    border: 2px solid var(--color-white);
-    padding: 20px;
+    border: 0.125rem solid var(--color-white);
+    padding: 1.25rem;
     box-sizing: border-box; // Para incluir el padding en el cálculo del ancho
-    width: 200px; // Más ancho que el resto de contenedores del mismo estilo
+    width: 12.5rem; // Más ancho que el resto de contenedores del mismo estilo
     aspect-ratio: 1 / 1;
 
     display: flex;
     flex-direction: column;
     justify-content: center; // Centra verticalmente (en caso de columna)
     align-items: center; // Centra horizontalmente
-    gap: 10px;
+    gap: 0.625rem;
 
     &--free {
         background-color: var(--color-code-green);

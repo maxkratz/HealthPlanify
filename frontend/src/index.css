@@ -40,7 +40,7 @@ body {
     place-items: center;
     min-width: 100vw;
     min-height: 100vh;
-    padding: 20px; /* "Margen general" */
+    padding: 1.25rem;
 }
 
 h1 {
@@ -77,6 +77,6 @@ strong {
 
 .link a {
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-underline-offset: 0.188rem;
     color: inherit;
 }

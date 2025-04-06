@@ -49,9 +49,9 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onClick }) => {
             ref={drag as any}
             style={{
                 opacity: isDragging ? 0.5 : 1,
-                border: `3px ${borderStyle} var(--color-white)`,
-                padding: '4px',
-                margin: '2px',
+                border: `0.188rem ${borderStyle} var(--color-white)`,
+                padding: '0.25rem',
+                margin: '0.125rem',
                 backgroundColor,
                 cursor: 'move',
                 textAlign: 'center',
