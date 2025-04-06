@@ -70,7 +70,7 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
                     {/* Celda vacía para alinear con el room.id */}
                     <div className="w-4"></div>
                     {Array.from({ length: days }).map((_, day) => (
-                        <div key={day} className="min-w-[45px]">
+                        <div key={day} className="min-w-[2.813rem]">
                             <span onClick={() => onDayClick(day)}>Day {day}</span>
                         </div>
                     ))}

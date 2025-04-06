@@ -60,9 +60,9 @@ const RoomCell: React.FC<RoomCellProps> = ({ day, roomId, capacity, patients, on
             style={{
                 display: 'grid',
                 gridTemplateColumns: "1fr",
-                gap: '4px',
-                padding: '4px',
-                border: '1px solid var(--color-white)',
+                gap: '0.25rem',
+                padding: '0.25rem',
+                border: '0.063rem solid var(--color-white)',
             }}
         >
             {bedSlots.map(({ bedIndex, patient }) => (

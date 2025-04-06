@@ -15,7 +15,31 @@ export const DayDetail: React.FC<DayDetailProps> = ({ day }) => {
 
     return (
         <div className={`flex flex-col ${dayDetailStyles.container}`}>
-            <h3>{day} Patient Details</h3>
+            <h3>Day {day} Details</h3>
+
+            <section className='mt-4 mb-4'>
+                <h4>Surgeons</h4>
+                {inputData.surgeons.map((surgeon) => (
+                    <div key={surgeon.id}>
+                        <strong>ID:</strong> {surgeon.id} - <strong>Max Surgery Time:</strong>{" "}
+                        {surgeon.max_surgery_time[day] !== undefined
+                            ? `${surgeon.max_surgery_time[day]} minutes`
+                            : 'N/A'}
+                    </div>
+                ))}
+            </section>
+
+            <section>
+                <h4>Operating Theaters</h4>
+                {inputData.operating_theaters.map((ot) => (
+                    <div key={ot.id}>
+                        <strong>ID:</strong> {ot.id} - <strong>Availability:</strong>{" "}
+                        {ot.availability[day] !== undefined
+                            ? `${ot.availability[day]} minutes`
+                            : 'N/A'}
+                    </div>
+                ))}
+            </section>
         </div>
     );
 };
