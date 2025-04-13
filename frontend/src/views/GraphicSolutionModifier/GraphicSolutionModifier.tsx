@@ -43,11 +43,11 @@ export const GraphicSolutionModifier = () => {
 
 
             <div className={styles.side}>
-                {selectedPatientId &&
+                {/* {selectedPatientId &&
                     <div className={`${styles.side_content} mb-8`}>
                         <PatientDetail patientId={selectedPatientId} />
                     </div>
-                }
+                } */}
             </div>
         </div>
     );

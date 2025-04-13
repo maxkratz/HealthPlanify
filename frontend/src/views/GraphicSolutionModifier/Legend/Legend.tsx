@@ -38,6 +38,10 @@ export const Legend: React.FC = () => {
                     <div className="w-4 h-4 border-2 border-dashed"></div>
                     <span>Not mandatory</span>
                 </div>
+                <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-0 border-dashed"></div>
+                    <span>Occupant</span>
+                </div>
             </div>
         </div>
     );
