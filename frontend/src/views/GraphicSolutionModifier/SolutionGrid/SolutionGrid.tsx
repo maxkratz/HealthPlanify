@@ -3,8 +3,14 @@ import { useData } from '../../../DataContext';
 import RoomCell from '../RoomCell/RoomCell';
 import { PatientOutput } from '../../../types/SolutionFile';
 import { PatientFullData } from '../../../types/Combined';
+import { Occupant } from '../../../types/InputFile';
 import { checkHardConstraints } from '../../../utils/checkHardConstraints';
 import solutionGridStyles from './SolutionGrid.module.scss';
+
+
+export type RoomPerson =
+    | (PatientFullData & { roomOccupantType: "admission" | "ongoing" })
+    | (Occupant & { roomOccupantType: "occupant" });
 
 interface SolutionGridProps {
     onPatientClick: (patientId: string) => void;
@@ -22,21 +28,37 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
     const days = inputData.days;
     const rooms = inputData.rooms;
 
-    const gridData: { [day: number]: { [roomId: string]: PatientFullData[] } } = {};
+    const gridData: { [day: number]: { [roomId: string]: RoomPerson[] } } = {};
     for (let d = 0; d < days; d++) {
         gridData[d] = {};
         rooms.forEach((room) => {
             gridData[d][room.id] = [];
+
+            const patientsAssigned: RoomPerson[] = (solutionData.patients.filter((patientOutput) => {
+                if (patientOutput.admission_day === "none") return false;
+                const patientInput = inputData.patients.find((pi) => pi.id === patientOutput.id);
+                if (!patientInput) return false;
+                return (
+                    patientOutput.room === room.id &&
+                    d >= patientOutput.admission_day &&
+                    d < patientOutput.admission_day + patientInput.length_of_stay
+                );
+            }) || []).map((p) => {
+                const patientInput = inputData.patients.find((pi) => pi.id === p.id)!;
+                const roomOccupantType: "admission" | "ongoing" = d === p.admission_day ? "admission" : "ongoing";
+                return { ...patientInput, ...p, roomOccupantType } as PatientFullData & { roomOccupantType: "admission" | "ongoing" };
+            });
+
+            const occupantsAssigned: RoomPerson[] = (inputData.occupants.filter(
+                (occupant) => occupant.room_id === room.id && d < occupant.length_of_stay
+            ) || []).map((occ) => ({
+                ...occ,
+                roomOccupantType: "occupant" as const
+            }));
+
+            gridData[d][room.id] = patientsAssigned.concat(occupantsAssigned);
         });
     }
-
-    solutionData.patients.forEach((patientOutput) => {
-        if (patientOutput.admission_day !== "none") {
-            const patientInput = inputData.patients.find((pi) => pi.id === patientOutput.id)!;
-            const patientFull: PatientFullData = { ...patientOutput, ...patientInput };
-            gridData[patientOutput.admission_day][patientOutput.room].push(patientFull);
-        }
-    });
 
     const handleDropPatient = (patientId: string, newDay: number, newRoom: string) => {
         const updatedPatients = solutionData.patients.map((patient: PatientOutput) => {
@@ -71,7 +93,7 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
                     <div className="min-w-[2rem]"></div>
                     {Array.from({ length: days }).map((_, day) => (
                         // 5.167rem exactamente para coincidir con el tamaño de la RoomCell
-                        <div key={day} className="min-w-[5.167rem]" >
+                        <div key={day} className="min-w-[5.167rem]">
                             <span onClick={() => onDayClick(day)} style={{ cursor: 'pointer' }}>
                                 Day {day}
                             </span>
@@ -96,6 +118,6 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
                     </div>
                 ))}
             </div>
-        </div >
+        </div>
     );
 };

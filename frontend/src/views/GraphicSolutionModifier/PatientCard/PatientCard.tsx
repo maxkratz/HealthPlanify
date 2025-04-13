@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { PatientFullData } from '../../../types/Combined';
+import { RoomPerson } from '../SolutionGrid/SolutionGrid';
 
 interface PatientCardProps {
-    patient: PatientFullData;
+    patient: RoomPerson;
     onClick?: (patientId: string) => void;
 }
 
@@ -27,19 +27,25 @@ const formatPatientId = (id: string, ageGroup: string): string => {
 };
 
 const PatientCard: React.FC<PatientCardProps> = ({ patient, onClick }) => {
+    const isInteractive = patient.roomOccupantType === "admission";
+
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'PATIENT',
         item: { id: patient.id },
+        canDrag: isInteractive,
         collect: (monitor) => ({
-            isDragging: !!monitor.isDragging(),
+            isDragging: monitor.isDragging(),
         }),
-    }), [patient]);
+    }), [patient, isInteractive]);
 
-    const backgroundColor = patient.gender === 'A' ? 'var(--color-blue)' : 'var(--color-rose)';
-    const borderStyle = patient.mandatory ? 'solid' : 'dashed';
+    const borderStyle = patient.roomOccupantType === "occupant"
+        ? "none"
+        : (('mandatory' in patient && patient.mandatory) ? "solid" : "dashed");
+
+    const finalOpacity = isInteractive ? (isDragging ? 0.3 : 1) : 0.3;
 
     const handleClick = () => {
-        if (onClick) {
+        if (isInteractive && onClick) {
             onClick(patient.id);
         }
     };
@@ -48,12 +54,12 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onClick }) => {
         <div
             ref={drag as any}
             style={{
-                opacity: isDragging ? 0.5 : 1,
+                opacity: finalOpacity,
                 border: `0.188rem ${borderStyle} var(--color-white)`,
                 padding: '0.25rem',
                 margin: '0.125rem',
-                backgroundColor,
-                cursor: 'move',
+                backgroundColor: patient.gender === 'A' ? 'var(--color-blue)' : 'var(--color-rose)',
+                cursor: isInteractive ? 'move' : 'default',
                 textAlign: 'center',
             }}
             onClick={handleClick}

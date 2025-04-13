@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { PatientFullData } from '../../../types/Combined';
 import PatientCard from '../PatientCard/PatientCard';
+import { RoomPerson } from '../SolutionGrid/SolutionGrid';
 
 interface BedSlotProps {
     day: number;
     roomId: string;
     bedIndex: number;
-    patient?: PatientFullData;
+    patient?: RoomPerson;
     onDropPatient: (patientId: string, newDay: number, newRoom: string, bedIndex: number) => void;
     onPatientClick: (patientId: string) => void;
 }
@@ -44,7 +44,7 @@ interface RoomCellProps {
     day: number;
     roomId: string;
     capacity: number;
-    patients: PatientFullData[];
+    patients: RoomPerson[];
     onDropPatient: (patientId: string, newDay: number, newRoom: string, bedIndex: number) => void;
     onPatientClick: (patientId: string) => void;
 }
