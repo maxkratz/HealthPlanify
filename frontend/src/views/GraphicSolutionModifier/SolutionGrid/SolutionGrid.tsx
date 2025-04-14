@@ -20,15 +20,42 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
 
-    const [history, setHistory] = React.useState<PatientOutput[][]>([]);
+    const [history, setHistory] = React.useState<PatientOutput[][]>(() => {
+        const persistedHistory = localStorage.getItem('solutionHistory');
+        if (persistedHistory) {
+            try {
+                return JSON.parse(persistedHistory);
+            } catch (error) {
+                console.error('Error parsing persisted history', error);
+            }
+        }
+        return [];
+    });
+    const MAX_HISTORY = 10;
+
+    React.useEffect(() => {
+        const persistedHistory = localStorage.getItem('solutionHistory');
+        if (persistedHistory) {
+            try {
+                const parsedHistory = JSON.parse(persistedHistory);
+                setHistory(parsedHistory);
+            } catch (error) {
+                console.error('Error parsing persisted history', error);
+            }
+        }
+    }, []);
+
+    React.useEffect(() => {
+        localStorage.setItem('solutionHistory', JSON.stringify(history));
+    }, [history]);
 
     if (!inputData || !solutionData) {
         return <div>Ups, something went wrong! There is no loaded data</div>;
     }
 
+
     const days = inputData.days;
     const rooms = inputData.rooms;
-
 
     const gridData: { [day: number]: { [roomId: string]: RoomPerson[] } } = {};
     for (let d = 0; d < days; d++) {
@@ -74,8 +101,13 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
 
 
     const handleDropPatient = (patientId: string, newDay: number | "none", newRoom: string) => {
-        setHistory(prevHistory => [...prevHistory, solutionData.patients]);
-
+        setHistory(prevHistory => {
+            const newHistory = [...prevHistory, solutionData.patients];
+            if (newHistory.length > MAX_HISTORY) {
+                newHistory.shift();
+            }
+            return newHistory;
+        });
         const updatedPatients = solutionData.patients.map((patient: PatientOutput) => {
             if (patient.id === patientId) {
                 return { ...patient, admission_day: newDay, room: newRoom };
@@ -89,7 +121,6 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
 
     const handleUndo = () => {
         if (history.length === 0) return;
-
         const previousPatients = history[history.length - 1];
         setHistory(prevHistory => prevHistory.slice(0, prevHistory.length - 1));
         setSolutionData({ ...solutionData, patients: previousPatients });
@@ -108,7 +139,6 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
                 </div>
             )}
 
-
             <div className='mb-16'>
                 <button
                     onClick={handleUndo}
@@ -118,7 +148,6 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
                     Undo changes
                 </button>
             </div>
-
 
             <div className="flex flex-row">
                 <div className="flex flex-col">
@@ -151,7 +180,6 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
                     ))}
                 </div>
 
-
                 <div className="flex flex-col ml-4">
                     <div className="flex flex-row gap-2 items-center">
                         <div className="min-w-[2rem]"></div>
@@ -165,7 +193,7 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
                             <RoomCell
                                 day={"none"}
                                 roomId="unscheduled"
-                                capacity={100}
+                                capacity={unscheduledPatients.length * 2}
                                 patients={unscheduledPatients}
                                 onDropPatient={(patientId, newDay, newRoom) => {
                                     handleDropPatient(patientId, "none", "");

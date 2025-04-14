@@ -12,7 +12,6 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
-    // Inicializa el estado leyendo desde localStorage, si existe
     const [inputData, setInputData] = useState<InputFile | null>(() => {
         const storedInput = localStorage.getItem("inputData");
         return storedInput ? JSON.parse(storedInput) : null;
@@ -23,7 +22,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         return storedSolution ? JSON.parse(storedSolution) : null;
     });
 
-    // Guarda inputData en localStorage cada vez que cambie
     useEffect(() => {
         if (inputData) {
             localStorage.setItem("inputData", JSON.stringify(inputData));
@@ -32,7 +30,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [inputData]);
 
-    // Guarda solutionData en localStorage cada vez que cambie
     useEffect(() => {
         if (solutionData) {
             localStorage.setItem("solutionData", JSON.stringify(solutionData));
