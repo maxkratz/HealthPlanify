@@ -61,6 +61,7 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onClick }) => {
                 backgroundColor: patient.gender === 'A' ? 'var(--color-blue)' : 'var(--color-rose)',
                 cursor: isInteractive ? 'move' : 'default',
                 textAlign: 'center',
+                minWidth: '4rem',
             }}
             onClick={handleClick}
         >

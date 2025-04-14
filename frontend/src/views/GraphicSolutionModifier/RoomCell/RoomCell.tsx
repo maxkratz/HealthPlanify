@@ -4,11 +4,11 @@ import PatientCard from '../PatientCard/PatientCard';
 import { RoomPerson } from '../SolutionGrid/SolutionGrid';
 
 interface BedSlotProps {
-    day: number;
+    day: number | "none";
     roomId: string;
     bedIndex: number;
     patient?: RoomPerson;
-    onDropPatient: (patientId: string, newDay: number, newRoom: string, bedIndex: number) => void;
+    onDropPatient: (patientId: string, newDay: number | "none", newRoom: string, bedIndex: number) => void;
     onPatientClick: (patientId: string) => void;
 }
 
@@ -41,11 +41,11 @@ const BedSlot: React.FC<BedSlotProps> = ({ day, roomId, bedIndex, patient, onDro
 };
 
 interface RoomCellProps {
-    day: number;
+    day: number | "none";
     roomId: string;
     capacity: number;
     patients: RoomPerson[];
-    onDropPatient: (patientId: string, newDay: number, newRoom: string, bedIndex: number) => void;
+    onDropPatient: (patientId: string, newDay: number | "none", newRoom: string, bedIndex: number) => void;
     onPatientClick: (patientId: string) => void;
 }
 

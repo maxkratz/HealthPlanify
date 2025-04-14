@@ -40,15 +40,6 @@ export const GraphicSolutionModifier = () => {
             <div className={styles.center}>
                 <SolutionGrid onPatientClick={handlePatientClick} onDayClick={handleDayClick} />
             </div>
-
-
-            <div className={styles.side}>
-                {/* {selectedPatientId &&
-                    <div className={`${styles.side_content} mb-8`}>
-                        <PatientDetail patientId={selectedPatientId} />
-                    </div>
-                } */}
-            </div>
         </div>
     );
 };
