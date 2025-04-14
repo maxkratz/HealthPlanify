@@ -20,6 +20,8 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
 
+    const [history, setHistory] = React.useState<PatientOutput[][]>([]);
+
     if (!inputData || !solutionData) {
         return <div>Ups, something went wrong! There is no loaded data</div>;
     }
@@ -72,7 +74,8 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
 
 
     const handleDropPatient = (patientId: string, newDay: number | "none", newRoom: string) => {
-        console.log("Dropped patient", patientId, "on day", newDay, "in room", newRoom);
+        setHistory(prevHistory => [...prevHistory, solutionData.patients]);
+
         const updatedPatients = solutionData.patients.map((patient: PatientOutput) => {
             if (patient.id === patientId) {
                 return { ...patient, admission_day: newDay, room: newRoom };
@@ -80,12 +83,16 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
             return patient;
         });
         const errors = checkHardConstraints(inputData, { ...solutionData, patients: updatedPatients });
-        if (errors.length > 0) {
-            setErrorMessages(errors);
-            return;
-        }
-        setErrorMessages([]);
+        setErrorMessages(errors);
         setSolutionData({ ...solutionData, patients: updatedPatients });
+    };
+
+    const handleUndo = () => {
+        if (history.length === 0) return;
+
+        const previousPatients = history[history.length - 1];
+        setHistory(prevHistory => prevHistory.slice(0, prevHistory.length - 1));
+        setSolutionData({ ...solutionData, patients: previousPatients });
     };
 
 
@@ -100,6 +107,17 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
                     ))}
                 </div>
             )}
+
+
+            <div className='mb-16'>
+                <button
+                    onClick={handleUndo}
+                    disabled={history.length === 0}
+                    className="border border-white rounded p-2"
+                >
+                    Undo changes
+                </button>
+            </div>
 
 
             <div className="flex flex-row">
