@@ -1,5 +1,5 @@
 import React from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 import { useData } from "../../../DataContext";
 
 export const SurgeonsConstraints: React.FC = () => {
@@ -49,14 +49,12 @@ export const SurgeonsConstraints: React.FC = () => {
                     <strong>S6 - Number of different OTs a surgeon is assigned to per day</strong> (Weight: {weightS6}): {costS6}
                 </p>
             </div>
-            <ResponsiveContainer width={1300} height={600}>
-                <BarChart data={chartData}>
-                    <XAxis dataKey="day" />
-                    <YAxis allowDecimals={false} />
-                    <Tooltip />
-                    <Bar dataKey="surgeonTransfers" fill="#8884d8" />
-                </BarChart>
-            </ResponsiveContainer>
+            <BarChart width={1300} height={600} data={chartData}>
+                <XAxis dataKey="day" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Bar dataKey="surgeonTransfers" fill="#8884d8" />
+            </BarChart>
         </div>
     );
 };

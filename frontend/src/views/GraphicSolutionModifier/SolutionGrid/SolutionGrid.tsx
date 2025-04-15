@@ -11,6 +11,12 @@ export type RoomPerson =
     | (PatientFullData & { roomOccupantType: "admission" | "ongoing" })
     | (Occupant & { roomOccupantType: "occupant" });
 
+interface PatientDelta {
+    patientId: string;
+    previousAdmissionDay: number | "none";
+    previousRoom: string;
+}
+
 interface SolutionGridProps {
     onPatientClick: (patientId: string) => void;
     onDayClick: (day: number) => void;
@@ -19,40 +25,27 @@ interface SolutionGridProps {
 export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDayClick }) => {
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
+    const MAX_HISTORY = 10;
 
-    const [history, setHistory] = React.useState<PatientOutput[][]>(() => {
-        const persistedHistory = localStorage.getItem('solutionHistory');
-        if (persistedHistory) {
+    const [deltaHistory, setDeltaHistory] = React.useState<PatientDelta[]>(() => {
+        const persistedDeltas = localStorage.getItem('deltaHistory');
+        if (persistedDeltas) {
             try {
-                return JSON.parse(persistedHistory);
+                return JSON.parse(persistedDeltas);
             } catch (error) {
-                console.error('Error parsing persisted history', error);
+                console.error('Error al parsear el historial persistido de deltas', error);
             }
         }
         return [];
     });
-    const MAX_HISTORY = 10;
 
     React.useEffect(() => {
-        const persistedHistory = localStorage.getItem('solutionHistory');
-        if (persistedHistory) {
-            try {
-                const parsedHistory = JSON.parse(persistedHistory);
-                setHistory(parsedHistory);
-            } catch (error) {
-                console.error('Error parsing persisted history', error);
-            }
-        }
-    }, []);
-
-    React.useEffect(() => {
-        localStorage.setItem('solutionHistory', JSON.stringify(history));
-    }, [history]);
+        localStorage.setItem('deltaHistory', JSON.stringify(deltaHistory));
+    }, [deltaHistory]);
 
     if (!inputData || !solutionData) {
-        return <div>Ups, something went wrong! There is no loaded data</div>;
+        return <div>Ups, something went wrong! No data loaded.</div>;
     }
-
 
     const days = inputData.days;
     const rooms = inputData.rooms;
@@ -101,12 +94,19 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
 
 
     const handleDropPatient = (patientId: string, newDay: number | "none", newRoom: string) => {
-        setHistory(prevHistory => {
-            const newHistory = [...prevHistory, solutionData.patients];
-            if (newHistory.length > MAX_HISTORY) {
-                newHistory.shift();
-            }
-            return newHistory;
+        const currentPatient = solutionData.patients.find((patient: PatientOutput) => patient.id === patientId);
+        if (!currentPatient) {
+            console.error("Paciente no encontrado:", patientId);
+            return;
+        }
+        const change: PatientDelta = {
+            patientId,
+            previousAdmissionDay: currentPatient.admission_day,
+            previousRoom: currentPatient.room,
+        };
+        setDeltaHistory(prevHistory => {
+            const newHistory = [...prevHistory, change];
+            return newHistory.length > MAX_HISTORY ? newHistory.slice(1) : newHistory;
         });
         const updatedPatients = solutionData.patients.map((patient: PatientOutput) => {
             if (patient.id === patientId) {
@@ -114,16 +114,25 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
             }
             return patient;
         });
+
         const errors = checkHardConstraints(inputData, { ...solutionData, patients: updatedPatients });
         setErrorMessages(errors);
         setSolutionData({ ...solutionData, patients: updatedPatients });
     };
 
     const handleUndo = () => {
-        if (history.length === 0) return;
-        const previousPatients = history[history.length - 1];
-        setHistory(prevHistory => prevHistory.slice(0, prevHistory.length - 1));
-        setSolutionData({ ...solutionData, patients: previousPatients });
+        if (deltaHistory.length === 0) return;
+        const lastChange = deltaHistory[deltaHistory.length - 1];
+        setDeltaHistory(prevHistory => prevHistory.slice(0, prevHistory.length - 1));
+        const updatedPatients = solutionData.patients.map((patient: PatientOutput) => {
+            if (patient.id === lastChange.patientId) {
+                return { ...patient, admission_day: lastChange.previousAdmissionDay, room: lastChange.previousRoom };
+            }
+            return patient;
+        });
+        setSolutionData({ ...solutionData, patients: updatedPatients });
+        const errors = checkHardConstraints(inputData, { ...solutionData, patients: updatedPatients });
+        setErrorMessages(errors);
     };
 
 
@@ -142,7 +151,7 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
             <div className='mb-16'>
                 <button
                     onClick={handleUndo}
-                    disabled={history.length === 0}
+                    disabled={deltaHistory.length === 0}
                     className="border border-white rounded p-2"
                 >
                     Undo changes
