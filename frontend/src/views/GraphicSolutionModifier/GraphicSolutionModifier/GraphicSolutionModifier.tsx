@@ -135,6 +135,17 @@ export const GraphicSolutionModifier = () => {
         setErrorMessages(errors);
     };
 
+    const handleDownloadSolution = () => {
+        const fileData = JSON.stringify(solutionData, null, 2);
+        const blob = new Blob([fileData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'solution.json';
+        link.click();
+        URL.revokeObjectURL(url);
+    };
+
 
     const onPatientClick = (patientId: string) => {
         setSelectedPatientId(patientId);
@@ -184,6 +195,14 @@ export const GraphicSolutionModifier = () => {
                         className={`${solutionGridStyles.undo_button}`}
                     >
                         Undo changes
+                    </button>
+
+                    <button
+                        onClick={handleDownloadSolution}
+                        className={`${solutionGridStyles.undo_button}`}
+                        style={{ marginLeft: '2rem' }}
+                    >
+                        Download solution
                     </button>
                 </div>
 
