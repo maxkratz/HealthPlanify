@@ -24,7 +24,7 @@ import { PatientsList } from "./views/Patient/PatientsList";
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { GraphicSolutionModifier } from "./views/GraphicSolutionModifier/GraphicSolutionModifier";
+import { GraphicSolutionModifier } from "./views/GraphicSolutionModifier/GraphicSolutionModifier/GraphicSolutionModifier";
 
 function App() {
     return (

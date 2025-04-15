@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { RoomPerson } from '../SolutionGrid/SolutionGrid';
+import { RoomPerson } from '../GraphicSolutionModifier/GraphicSolutionModifier';
 
 interface PatientCardProps {
     patient: RoomPerson;

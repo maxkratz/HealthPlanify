@@ -5,7 +5,10 @@ import { PatientOutput } from '../../../types/SolutionFile';
 import { PatientFullData } from '../../../types/Combined';
 import { Occupant } from '../../../types/InputFile';
 import { checkHardConstraints } from '../../../utils/checkHardConstraints';
-import solutionGridStyles from './SolutionGrid.module.scss';
+import { PatientDetail } from '../PatientDetail/PatientDetail';
+import { DayDetail } from '../DayDetail/DayDetail';
+import { Legend } from '../Legend/Legend';
+import solutionGridStyles from './GraphicSolutionModifier.module.scss';
 
 export type RoomPerson =
     | (PatientFullData & { roomOccupantType: "admission" | "ongoing" })
@@ -17,12 +20,9 @@ interface PatientDelta {
     previousRoom: string;
 }
 
-interface SolutionGridProps {
-    onPatientClick: (patientId: string) => void;
-    onDayClick: (day: number) => void;
-}
-
-export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDayClick }) => {
+export const GraphicSolutionModifier = () => {
+    const [selectedPatientId, setSelectedPatientId] = React.useState<string | null>(null);
+    const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
     const MAX_HISTORY = 10;
@@ -136,79 +136,109 @@ export const SolutionGrid: React.FC<SolutionGridProps> = ({ onPatientClick, onDa
     };
 
 
+    const onPatientClick = (patientId: string) => {
+        setSelectedPatientId(patientId);
+    };
+
+    const onDayClick = (day: number) => {
+        setSelectedDay(day);
+    };
+
+
     return (
-        <div>
-            {errorMessages.length > 0 && (
-                <div className="mb-16">
-                    {errorMessages.map((msg, index) => (
-                        <p key={index} className={solutionGridStyles.error_messages}>
-                            {msg}
-                        </p>
-                    ))}
+        <div className={solutionGridStyles.container}>
+            <div className={solutionGridStyles.side}>
+                <div className={`${solutionGridStyles.side_content} mb-8`}>
+                    <Legend />
                 </div>
-            )}
 
-            <div className='mb-16'>
-                <button
-                    onClick={handleUndo}
-                    disabled={deltaHistory.length === 0}
-                    className="border border-white rounded p-2"
-                >
-                    Undo changes
-                </button>
-            </div>
-
-            <div className="flex flex-row">
-                <div className="flex flex-col">
-                    <div className="flex flex-row gap-2 items-center">
-                        <div className="min-w-[2rem]"></div>
-                        {Array.from({ length: days }).map((_, day) => (
-                            <div key={day} className="min-w-[5.167rem]">
-                                <span onClick={() => onDayClick(day)} style={{ cursor: 'pointer' }}>
-                                    Day {day}
-                                </span>
-                            </div>
+                {errorMessages.length > 0 && (
+                    <div className={`${solutionGridStyles.side_content} mb-8`}>
+                        {errorMessages.map((msg, index) => (
+                            <p key={index} className={solutionGridStyles.error_messages}>
+                                {msg}
+                            </p>
                         ))}
                     </div>
-                    {rooms.map((room) => (
-                        <div key={room.id} className="flex flex-row m-1 items-center">
-                            <span className="min-w-[2rem]">{room.id}</span>
+                )}
+
+                {selectedPatientId &&
+                    <div className={`${solutionGridStyles.side_content} mb-8`}>
+                        <PatientDetail patientId={selectedPatientId} />
+                    </div>
+                }
+
+                {selectedDay &&
+                    <div className={`${solutionGridStyles.side_content}`}>
+                        <DayDetail day={selectedDay} />
+                    </div>
+                }
+            </div>
+
+
+            <div className={solutionGridStyles.center}>
+                <div className='mb-16'>
+                    <button
+                        onClick={handleUndo}
+                        disabled={deltaHistory.length === 0}
+                        className={`${solutionGridStyles.undo_button}`}
+                    >
+                        Undo changes
+                    </button>
+                </div>
+
+                <div className="flex flex-row">
+                    <div className="flex flex-col">
+                        <div className="flex flex-row gap-2 items-center">
+                            <div className="min-w-[2rem]"></div>
                             {Array.from({ length: days }).map((_, day) => (
-                                <div key={day} className="m-1">
-                                    <RoomCell
-                                        day={day}
-                                        roomId={room.id}
-                                        capacity={room.capacity}
-                                        patients={gridData[day][room.id]}
-                                        onDropPatient={handleDropPatient}
-                                        onPatientClick={onPatientClick}
-                                    />
+                                <div key={day} className="min-w-[5.167rem]">
+                                    <span onClick={() => onDayClick(day)} style={{ cursor: 'pointer' }}>
+                                        Day {day}
+                                    </span>
                                 </div>
                             ))}
                         </div>
-                    ))}
-                </div>
-
-                <div className="flex flex-col ml-4">
-                    <div className="flex flex-row gap-2 items-center">
-                        <div className="min-w-[2rem]"></div>
-                        <div className="min-w-[5.167rem]">
-                            <span>Unscheduled</span>
-                        </div>
+                        {rooms.map((room) => (
+                            <div key={room.id} className="flex flex-row m-1 items-center">
+                                <span className="min-w-[2rem]">{room.id}</span>
+                                {Array.from({ length: days }).map((_, day) => (
+                                    <div key={day} className="m-1">
+                                        <RoomCell
+                                            day={day}
+                                            roomId={room.id}
+                                            capacity={room.capacity}
+                                            patients={gridData[day][room.id]}
+                                            onDropPatient={handleDropPatient}
+                                            onPatientClick={onPatientClick}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
                     </div>
-                    <div className="flex flex-row m-1 items-center">
-                        <span className="min-w-[2rem]"></span>
-                        <div className="m-1">
-                            <RoomCell
-                                day={"none"}
-                                roomId="unscheduled"
-                                capacity={unscheduledPatients.length * 2}
-                                patients={unscheduledPatients}
-                                onDropPatient={(patientId, newDay, newRoom) => {
-                                    handleDropPatient(patientId, "none", "");
-                                }}
-                                onPatientClick={onPatientClick}
-                            />
+
+                    <div className="flex flex-col ml-4">
+                        <div className="flex flex-row gap-2 items-center">
+                            <div className="min-w-[2rem]"></div>
+                            <div className="min-w-[5.167rem]">
+                                <span>Unscheduled</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-row m-1 items-center">
+                            <span className="min-w-[2rem]"></span>
+                            <div className="m-1">
+                                <RoomCell
+                                    day={"none"}
+                                    roomId="unscheduled"
+                                    capacity={unscheduledPatients.length * 2}
+                                    patients={unscheduledPatients}
+                                    onDropPatient={(patientId, newDay, newRoom) => {
+                                        handleDropPatient(patientId, "none", "");
+                                    }}
+                                    onPatientClick={onPatientClick}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
