@@ -3,6 +3,8 @@ import { useData } from "../../../DataContext";
 import { PatientFullData } from '../../../types/Combined';
 import { Patient } from '../../../components/Patient';
 import { SortButton } from '../../../components/SortButton';
+import { calculateGlobalS7AdmissionDelayCost } from '../../../utils/SoftConstraints/calculateGlobalS7AdmissionDelayCost';
+import { calculateGlobalS8UnscheduledPatientsCost } from '../../../utils/SoftConstraints/calculateGlobalS8UnscheduledPatientsCost';
 
 type SortCriteria = "surgeryReleaseDay" | "surgeryDueDay" | "admissionDay" | "delay";
 
@@ -56,10 +58,28 @@ export const PatientsList: React.FC = () => {
         return sortDirection === "asc" ? diff : -diff;
     });
 
+    const { weights } = inputData;
+    const globalS7Weighted = calculateGlobalS7AdmissionDelayCost(inputData, solutionData);
+    const globalS8Weighted = calculateGlobalS8UnscheduledPatientsCost(inputData, solutionData);
+
     return (
         <div>
             <div className="mb-16">
                 <h1>Patients List</h1>
+            </div>
+
+            <div className='mb-16'>
+                <h2>Global Costs of Restrictions</h2>
+                <div className={`flex items-center justify-center flex-row gap-2`}>
+                    <span>
+                        <strong>S7 - Admission delay</strong>
+                    </span> (Weight: {weights.patient_delay}): {globalS7Weighted}
+                </div>
+                <div className={`flex items-center justify-center flex-row gap-2`}>
+                    <span>
+                        <strong>S8 - Unscheduled patients</strong>
+                    </span> (Weight: {weights.unscheduled_optional}): {globalS8Weighted}
+                </div>
             </div>
 
             <div className="mb-16 flex items-center justify-center flex-row gap-4">

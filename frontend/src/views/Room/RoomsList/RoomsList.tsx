@@ -4,6 +4,7 @@ import { Room } from '../../../components/Room/Room';
 import { useData } from "../../../DataContext";
 import { PatientFullData } from '../../../types/Combined';
 import { AgeGroup } from '../../../types/types';
+import { calculateGlobalS1AgeDifference } from '../../../utils/SoftConstraints/calculateGlobalS1AgeDifference';
 import Elderly from '@mui/icons-material/Elderly';
 
 export const RoomsList: React.FC = () => {
@@ -14,46 +15,11 @@ export const RoomsList: React.FC = () => {
 
 
     const { inputData, solutionData } = data;
-    const globalS1Weighted = inputData?.weights.room_mixed_age
-    const calculateGlobalS1AgeDifference = () => {
-        if (!inputData || !solutionData) {
-            return <div>Ups, something went wrong! There is no loaded data</div>;
-        }
-        const { rooms, age_groups, patients, occupants, days } = inputData;
-        let totalAgeDifference = 0;
-        const patientAgeMap = new Map(patients.map(p => [p.id, p.age_group]));
-        const occupantAgeMap = new Map(occupants.map(o => [o.id, o.age_group]));
-        const patientStayMap = new Map(patients.map(p => [p.id, p.length_of_stay || 0]));
-        rooms.forEach(room => {
-            for (let day = 0; day < days; day++) {
-                const patientsInRoom = solutionData.patients.filter(p => {
-                    if (typeof p.admission_day !== 'number') return false;
-                    return (
-                        p.room === room.id &&
-                        p.admission_day <= day &&
-                        day < p.admission_day + (patientStayMap.get(p.id) ?? 0)
-                    );
-                });
-                const occupantsInRoom = occupants.filter(o =>
-                    o.room_id === room.id && day < o.length_of_stay
-                );
-                // Obtener índices de edad para los pacientes en la habitación en este día
-                const ageIndices = [...patientsInRoom, ...occupantsInRoom]
-                    .map(person => {
-                        const ageGroup = patientAgeMap.get(person.id) || occupantAgeMap.get(person.id);
-                        return ageGroup ? age_groups.indexOf(ageGroup as AgeGroup) : -1;
-                    })
-                    .filter(index => index !== -1);
-                if (ageIndices.length > 0) {
-                    const minAge = Math.min(...ageIndices);
-                    const maxAge = Math.max(...ageIndices);
-                    totalAgeDifference += maxAge - minAge;
-                }
-            }
-        });
-        return totalAgeDifference * (globalS1Weighted ?? 1);
-    };
+    if (!inputData || !solutionData) {
+        return <div>Ups, something went wrong! There is no loaded data</div>;
+    }
 
+    const globalS1Weighted = inputData?.weights.room_mixed_age
 
     return (
         <div>
@@ -65,7 +31,7 @@ export const RoomsList: React.FC = () => {
                 <h2>Global Cost of Restriction</h2>
                 <div className={`flex items-center justify-center flex-row gap-2`}>
                     <Elderly sx={{ color: 'var(--color-white)', fontSize: 24 }} />
-                    <span><strong>S1 - Age Groups Difference</strong></span> (Weight: {globalS1Weighted}): {calculateGlobalS1AgeDifference()}
+                    <span><strong>S1 - Age Groups Difference</strong></span> (Weight: {globalS1Weighted}): {calculateGlobalS1AgeDifference(inputData, solutionData)}
                 </div>
             </div>
 

@@ -19,9 +19,9 @@ export function checkSoftConstraintsCost(inputData: InputFile, solutionData: Sol
     totalCost += nursesCost.globalS3Weighted;
     totalCost += nursesCost.globalS4Weighted;
 
-    totalCost += calculateGlobalS5OperatingTheaterCost(inputData, solutionData);
+    totalCost += calculateGlobalS5OperatingTheaterCost(inputData, solutionData).costS5;
 
-    totalCost += calculateGlobalS6SurgeonTransferCost(inputData, solutionData);
+    totalCost += calculateGlobalS6SurgeonTransferCost(inputData, solutionData).costS6;
 
     totalCost += calculateGlobalS7AdmissionDelayCost(inputData, solutionData);
 
