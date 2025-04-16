@@ -1,5 +1,5 @@
-import { InputFile, PatientInput } from "../types/InputFile";
-import { SolutionFile } from "../types/SolutionFile";
+import { InputFile, PatientInput } from "../../types/InputFile";
+import { SolutionFile } from "../../types/SolutionFile";
 
 export function checkRoomCapacity(inputData: InputFile, solutionData: SolutionFile): string[] {
     const errors: string[] = [];

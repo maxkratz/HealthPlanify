@@ -1,5 +1,5 @@
-import { InputFile } from "../types/InputFile";
-import { SolutionFile, PatientOutput } from "../types/SolutionFile";
+import { InputFile } from "../../types/InputFile";
+import { SolutionFile, PatientOutput } from "../../types/SolutionFile";
 
 export function checkMandatoryPatientsAdmitted(inputData: InputFile, solutionData: SolutionFile): string[] {
     const errors: string[] = [];

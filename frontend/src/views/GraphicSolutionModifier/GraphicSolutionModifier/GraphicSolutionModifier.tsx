@@ -9,6 +9,7 @@ import { PatientDetail } from '../PatientDetail/PatientDetail';
 import { DayDetail } from '../DayDetail/DayDetail';
 import { Legend } from '../Legend/Legend';
 import solutionGridStyles from './GraphicSolutionModifier.module.scss';
+import { checkSoftConstraintsCost } from '../../../utils/checkSoftConstraints';
 
 export type RoomPerson =
     | (PatientFullData & { roomOccupantType: "admission" | "ongoing" })
@@ -188,7 +189,7 @@ export const GraphicSolutionModifier = () => {
 
 
             <div className={solutionGridStyles.center}>
-                <div className='mb-16'>
+                <div className='flex flex-row items-center justify-center gap-32 mb-16'>
                     <button
                         onClick={handleUndo}
                         disabled={deltaHistory.length === 0}
@@ -197,10 +198,13 @@ export const GraphicSolutionModifier = () => {
                         Undo changes
                     </button>
 
+                    <span>
+                        Total cost {checkSoftConstraintsCost(inputData, solutionData)}
+                    </span>
+
                     <button
                         onClick={handleDownloadSolution}
                         className={`${solutionGridStyles.undo_button}`}
-                        style={{ marginLeft: '2rem' }}
                     >
                         Download solution
                     </button>

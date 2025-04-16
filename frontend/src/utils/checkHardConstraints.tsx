@@ -1,13 +1,13 @@
 import { InputFile } from "../types/InputFile";
 import { SolutionFile } from "../types/SolutionFile";
 
-import { checkRoomGenderMix } from "./checkRoomGenderMix";
-import { checkPatientRoomCompatibility } from "./checkPatientRoomCompatibility";
-import { checkRoomCapacity } from "./checkRoomCapacity";
-import { checkSurgeonOvertime } from "./checkSurgeonOvertime";
-import { checkOperatingTheaterOvertime } from "./checkOperatingTheaterOvertime";
-import { checkMandatoryPatientsAdmitted } from "./checkMandatoryPatientsAdmitted";
-import { checkAdmissionDay } from "./checkAdmissionDay";
+import { checkRoomGenderMix } from "./HardConstraints/checkRoomGenderMix";
+import { checkPatientRoomCompatibility } from "./HardConstraints/checkPatientRoomCompatibility";
+import { checkRoomCapacity } from "./HardConstraints/checkRoomCapacity";
+import { checkSurgeonOvertime } from "./HardConstraints/checkSurgeonOvertime";
+import { checkOperatingTheaterOvertime } from "./HardConstraints/checkOperatingTheaterOvertime";
+import { checkMandatoryPatientsAdmitted } from "./HardConstraints/checkMandatoryPatientsAdmitted";
+import { checkAdmissionDay } from "./HardConstraints/checkAdmissionDay";
 
 export function checkHardConstraints(inputData: InputFile, solutionData: SolutionFile): string[] {
     const errors: string[] = [];

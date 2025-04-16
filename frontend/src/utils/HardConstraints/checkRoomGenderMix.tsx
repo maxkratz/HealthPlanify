@@ -1,5 +1,5 @@
-import { InputFile, PatientInput } from "../types/InputFile";
-import { SolutionFile } from "../types/SolutionFile";
+import { InputFile, PatientInput } from "../../types/InputFile";
+import { SolutionFile } from "../../types/SolutionFile";
 
 export function checkRoomGenderMix(inputData: InputFile, solutionData: SolutionFile): string[] {
     // Mapa para contar pacientes por género en cada sala y día.

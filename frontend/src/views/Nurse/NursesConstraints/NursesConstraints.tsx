@@ -107,15 +107,13 @@ export const NursesConstraints: React.FC = () => {
                     .filter(patient => {
                         if (typeof patient.admission_day !== 'number') return false;
                         if (patient.admission_day > currentDay) return false;
-                        const inputPatient = (data.inputData?.patients.find(p => p.id === patient.id) ||
-                            patient) as PatientFullData;
+                        const inputPatient = (data.inputData?.patients.find(p => p.id === patient.id) || patient) as PatientFullData;
                         if (!inputPatient) return false;
                         if (currentDay >= patient.admission_day + inputPatient.length_of_stay) return false;
                         return assignment.rooms.includes(patient.room);
                     })
                     .map(patient => {
-                        const inputPatient = (data.inputData?.patients.find(p => p.id === patient.id) ||
-                            patient) as PatientFullData;
+                        const inputPatient = (data.inputData?.patients.find(p => p.id === patient.id) || patient) as PatientFullData;
                         if (!inputPatient) return null;
                         const shiftOrder: Record<string, number> = { early: 0, late: 1, night: 2 };
                         const shiftOrdinal = shiftOrder[currentShift];
