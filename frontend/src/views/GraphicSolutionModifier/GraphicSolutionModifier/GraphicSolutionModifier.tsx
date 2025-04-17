@@ -199,7 +199,7 @@ export const GraphicSolutionModifier = () => {
 
 
             <div className={solutionGridStyles.center}>
-                <div className='flex flex-row items-center justify-center gap-32 mb-16'>
+                <div className='flex flex-row items-center justify-center gap-16 mb-16'>
                     <button
                         onClick={handleUndo}
                         disabled={deltaHistory.length === 0}
