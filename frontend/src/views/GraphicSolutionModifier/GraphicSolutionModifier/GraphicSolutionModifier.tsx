@@ -22,6 +22,7 @@ interface PatientDelta {
 }
 
 export const GraphicSolutionModifier = () => {
+    const [selectedOperatingTheater, setSelectedOperatingTheater] = React.useState<string>("no-change");
     const [selectedPatientId, setSelectedPatientId] = React.useState<string | null>(null);
     const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
     const { inputData, solutionData, setSolutionData } = useData();
@@ -94,32 +95,41 @@ export const GraphicSolutionModifier = () => {
         });
 
 
-    const handleDropPatient = (patientId: string, newDay: number | "none", newRoom: string) => {
-        const currentPatient = solutionData.patients.find((patient: PatientOutput) => patient.id === patientId);
-        if (!currentPatient) {
-            console.error("Paciente no encontrado:", patientId);
-            return;
-        }
+    const handleDropPatient = (
+        patientId: string,
+        newDay: number | "none",
+        newRoom: string
+    ) => {
+        const currentPatient = solutionData.patients.find(p => p.id === patientId);
+        if (!currentPatient) return console.error("Paciente no encontrado:", patientId);
+
+        const newOT = selectedOperatingTheater !== "no-change"
+            ? selectedOperatingTheater
+            : currentPatient.operating_theater;
+
         const change: PatientDelta = {
             patientId,
             previousAdmissionDay: currentPatient.admission_day,
             previousRoom: currentPatient.room,
         };
-        setDeltaHistory(prevHistory => {
-            const newHistory = [...prevHistory, change];
-            return newHistory.length > MAX_HISTORY ? newHistory.slice(1) : newHistory;
+        setDeltaHistory(h => {
+            const nh = [...h, change];
+            return nh.length > MAX_HISTORY ? nh.slice(1) : nh;
         });
-        const updatedPatients = solutionData.patients.map((patient: PatientOutput) => {
-            if (patient.id === patientId) {
-                return { ...patient, admission_day: newDay, room: newRoom };
-            }
-            return patient;
-        });
+
+        const updatedPatients = solutionData.patients.map(p =>
+            p.id === patientId
+                ? { ...p, admission_day: newDay, room: newRoom, operating_theater: newOT }
+                : p
+        );
 
         const errors = checkHardConstraints(inputData, { ...solutionData, patients: updatedPatients });
         setErrorMessages(errors);
         setSolutionData({ ...solutionData, patients: updatedPatients });
+
+        setSelectedOperatingTheater("no-change");
     };
+
 
     const handleUndo = () => {
         if (deltaHistory.length === 0) return;
@@ -210,6 +220,26 @@ export const GraphicSolutionModifier = () => {
                     </button>
                 </div>
 
+
+                <div className='flex flex-row items-center justify-center gap-8 mb-16'>
+                    {inputData.operating_theaters.map(ot => (
+                        <button
+                            key={ot.id}
+                            onClick={() => setSelectedOperatingTheater(ot.id)}
+                            className={selectedOperatingTheater === ot.id ? solutionGridStyles.activeButton : solutionGridStyles.button}
+                        >
+                            {ot.id}
+                        </button>
+                    ))}
+                    <button
+                        onClick={() => setSelectedOperatingTheater("no-change")}
+                        className={selectedOperatingTheater === "no-change" ? solutionGridStyles.activeButton : solutionGridStyles.button}
+                    >
+                        No change
+                    </button>
+                </div>
+
+
                 <div className="flex flex-row">
                     <div className="flex flex-col">
                         <div className="flex flex-row gap-2 items-center">
@@ -254,7 +284,7 @@ export const GraphicSolutionModifier = () => {
                                 <RoomCell
                                     day={"none"}
                                     roomId="unscheduled"
-                                    capacity={unscheduledPatients.length * 2}
+                                    capacity={inputData.patients.length / 2} // Arbitrary value
                                     patients={unscheduledPatients}
                                     onDropPatient={(patientId, newDay, newRoom) => {
                                         handleDropPatient(patientId, "none", "");

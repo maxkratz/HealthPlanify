@@ -4,6 +4,7 @@
     margin-bottom: 1rem;
 }
 
+
 .container {
     display: flex;
     flex-direction: row;
@@ -14,7 +15,7 @@
 
 .side {
     width: 15.625rem;
-    margin-top: 9.6rem; // Hardcoded
+    margin-top: 16.8rem; // Hardcoded
 }
 
 .side_content {
@@ -26,6 +27,7 @@
     flex: 1;
     margin: 1rem;
 }
+
 
 .undo_button {
     border: 0.063rem solid var(--color-white);
@@ -53,4 +55,29 @@
 .undo_button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+
+.button {
+    border: 0.063rem solid var(--color-white);
+    border-radius: 0.75rem;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: var(--color-white);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+.button:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.activeButton {
+    @extend .button;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.activeButton:focus:not(:disabled) {
+    box-shadow: 0 0 0 0.188rem rgba(255, 255, 255, 0.5);
 }

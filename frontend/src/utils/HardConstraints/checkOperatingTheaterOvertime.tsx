@@ -1,6 +1,7 @@
 import { InputFile, PatientInput } from "../../types/InputFile";
 import { SolutionFile } from "../../types/SolutionFile";
 
+
 export function checkOperatingTheaterOvertime(inputData: InputFile, solutionData: SolutionFile): string[] {
     const errors: string[] = [];
 

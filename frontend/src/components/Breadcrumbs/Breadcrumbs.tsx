@@ -18,8 +18,16 @@ export const Breadcrumbs: React.FC = () => {
         "OperatingTheatersList",
     ];
 
+    const needsMargin = pathname === '/FirstElection/Test';
+
     return (
-        <nav className={`flex justify-center mb-16 ${BreadcrumbsStyle.container}`}>
+        <nav
+            className={`
+            flex justify-center mb-16
+            ${BreadcrumbsStyle.container}
+            ${needsMargin ? 'ml-44' : ''}
+          `}
+        >
             <ul className="flex flex-row items-center">
                 <li className="link">
                     <Link to="/">Home</Link>
