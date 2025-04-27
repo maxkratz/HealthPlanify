@@ -8,7 +8,7 @@ import { checkHardConstraints } from '../../../utils/checkHardConstraints';
 import { PatientDetail } from '../PatientDetail/PatientDetail';
 import { DayDetail } from '../DayDetail/DayDetail';
 import { Legend } from '../Legend/Legend';
-import solutionGridStyles from './GraphicSolutionModifier.module.scss';
+import solutionGridStyles from './PatientScheduler.module.scss';
 import { checkSoftConstraintsCost } from '../../../utils/checkSoftConstraints';
 
 export type RoomPerson =
@@ -21,7 +21,7 @@ interface PatientDelta {
     previousRoom: string;
 }
 
-export const GraphicSolutionModifier = () => {
+export const PatientScheduler = () => {
     const [selectedOperatingTheater, setSelectedOperatingTheater] = React.useState<string>("no-change");
     const [selectedPatientId, setSelectedPatientId] = React.useState<string | null>(null);
     const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
@@ -199,7 +199,7 @@ export const GraphicSolutionModifier = () => {
 
 
             <div className={solutionGridStyles.center}>
-                <div className='flex flex-row items-center justify-center gap-16 mb-16'>
+                <div className='flex flex-row items-center justify-center gap-16 mb-20'>
                     <button
                         onClick={handleUndo}
                         disabled={deltaHistory.length === 0}
@@ -221,22 +221,27 @@ export const GraphicSolutionModifier = () => {
                 </div>
 
 
-                <div className='flex flex-row items-center justify-center gap-8 mb-16'>
-                    {inputData.operating_theaters.map(ot => (
+                <div className='flex flex-col items-center justify-center mb-16'>
+                    <span>
+                        Operating Theater Selector (Unscheduled patients doesn't have OT)
+                    </span>
+                    <div className='flex flex-row items-center justify-center gap-8 mt-8'>
+                        {inputData.operating_theaters.map(ot => (
+                            <button
+                                key={ot.id}
+                                onClick={() => setSelectedOperatingTheater(ot.id)}
+                                className={selectedOperatingTheater === ot.id ? solutionGridStyles.activeButton : solutionGridStyles.button}
+                            >
+                                {ot.id}
+                            </button>
+                        ))}
                         <button
-                            key={ot.id}
-                            onClick={() => setSelectedOperatingTheater(ot.id)}
-                            className={selectedOperatingTheater === ot.id ? solutionGridStyles.activeButton : solutionGridStyles.button}
+                            onClick={() => setSelectedOperatingTheater("no-change")}
+                            className={selectedOperatingTheater === "no-change" ? solutionGridStyles.activeButton : solutionGridStyles.button}
                         >
-                            {ot.id}
+                            No change
                         </button>
-                    ))}
-                    <button
-                        onClick={() => setSelectedOperatingTheater("no-change")}
-                        className={selectedOperatingTheater === "no-change" ? solutionGridStyles.activeButton : solutionGridStyles.button}
-                    >
-                        No change
-                    </button>
+                    </div>
                 </div>
 
 
@@ -286,7 +291,7 @@ export const GraphicSolutionModifier = () => {
                                     roomId="unscheduled"
                                     capacity={inputData.patients.length / 2} // Arbitrary value
                                     patients={unscheduledPatients}
-                                    onDropPatient={(patientId, newDay, newRoom) => {
+                                    onDropPatient={(patientId, _newDay, _newRoom) => {
                                         handleDropPatient(patientId, "none", "");
                                     }}
                                     onPatientClick={onPatientClick}

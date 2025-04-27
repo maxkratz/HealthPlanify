@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import PatientCard from '../PatientCard/PatientCard';
-import { RoomPerson } from '../GraphicSolutionModifier/GraphicSolutionModifier';
+import { RoomPerson } from '../PatientScheduler/PatientScheduler';
 
 interface BedSlotProps {
     day: number | "none";

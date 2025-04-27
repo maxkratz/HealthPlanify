@@ -40,7 +40,7 @@ export const FirstElection: React.FC = () => {
 
             <Election>
                 <nav>
-                    <Link to="/FirstElection/Test">Test</Link>
+                    <Link to="/FirstElection/PatientScheduler">Patient Scheduler</Link>
                 </nav>
             </Election>
         </div>
