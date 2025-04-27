@@ -190,7 +190,7 @@ export const PatientScheduler = () => {
                     </div>
                 }
 
-                {selectedDay &&
+                {selectedDay != null &&
                     <div className={`${solutionGridStyles.side_content}`}>
                         <DayDetail day={selectedDay} />
                     </div>

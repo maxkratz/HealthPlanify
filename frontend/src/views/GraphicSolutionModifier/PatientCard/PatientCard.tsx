@@ -42,7 +42,10 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onClick }) => {
         ? "none"
         : (('mandatory' in patient && patient.mandatory) ? "solid" : "dashed");
 
-    const finalOpacity = isInteractive ? (isDragging ? 0.3 : 1) : 0.3;
+    let finalOpacity = isInteractive ? (isDragging ? 0.2 : 1) : 0.2;
+    if (patient.roomOccupantType === "occupant") {
+        finalOpacity = 0.7;
+    }
 
     const handleClick = () => {
         if (isInteractive && onClick) {

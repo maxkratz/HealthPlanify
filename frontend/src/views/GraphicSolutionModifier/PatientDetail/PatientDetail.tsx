@@ -57,7 +57,6 @@ export const PatientDetail: React.FC<PatientDetailProps> = ({ patientId }) => {
                 <strong>Incompatible Room IDs:</strong>{" "}
                 {patientFull.incompatible_room_ids.join(', ')}
             </p>
-            {/* Comentado: otros datos */}
         </div>
     );
 };
