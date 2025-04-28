@@ -24,7 +24,8 @@ import { PatientsList } from "./views/Patient/PatientsList";
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { PatientScheduler } from "./views/GraphicSolutionModifier/PatientScheduler/PatientScheduler";
+import { PatientScheduler } from "./views/PatientScheduler/PatientScheduler/PatientScheduler";
+import { NurseScheduler } from "./views/NurseScheduler/NurseScheduler/NurseScheduler";
 
 function App() {
     return (
@@ -59,6 +60,7 @@ function App() {
                         <Route path="/FirstElection/Patients" element={<PatientsList />} />
 
                         <Route path="/FirstElection/PatientScheduler" element={<PatientScheduler />} />
+                        <Route path="/FirstElection/NurseScheduler" element={<NurseScheduler />} />
                     </Routes>
                 </Router>
             </DndProvider>

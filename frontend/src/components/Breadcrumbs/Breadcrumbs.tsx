@@ -18,7 +18,7 @@ export const Breadcrumbs: React.FC = () => {
         "OperatingTheatersList",
     ];
 
-    const needsMargin = pathname === '/FirstElection/PatientScheduler';
+    const needsMargin = pathname === '/FirstElection/PatientScheduler' || pathname === '/FirstElection/NurseScheduler';
 
     return (
         <nav

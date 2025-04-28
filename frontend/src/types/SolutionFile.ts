@@ -18,7 +18,7 @@ interface Assignment {
     rooms: string[];
 }
 
-interface NurseOutput {
+export interface NurseOutput {
     id: string;
     assignments: Assignment[];
 }

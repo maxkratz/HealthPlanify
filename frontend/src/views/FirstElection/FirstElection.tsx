@@ -43,6 +43,12 @@ export const FirstElection: React.FC = () => {
                     <Link to="/FirstElection/PatientScheduler">Patient Scheduler</Link>
                 </nav>
             </Election>
+
+            <Election>
+                <nav>
+                    <Link to="/FirstElection/NurseScheduler">Nurse Scheduler</Link>
+                </nav>
+            </Election>
         </div>
     );
 };

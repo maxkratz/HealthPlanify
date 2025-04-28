@@ -33,7 +33,7 @@ interface WorkingShift {
     max_load: number;
 }
 
-interface Nurse {
+export interface Nurse {
     id: string;
     skill_level: number;
     working_shifts: WorkingShift[];
