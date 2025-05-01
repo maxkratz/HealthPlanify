@@ -24,7 +24,7 @@ interface NurseDelta {
 export const NurseScheduler = () => {
     const [selectedShift, setSelectedShift] = React.useState<ShiftType>('early');
     const [selectedNurseId, setSelectedNurseId] = React.useState<string | null>('n00');
-    const [newDay, setnewDay] = React.useState<number | null>(0);
+    const [selectedDay, setselectedDay] = React.useState<number | null>(0);
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
     const MAX_HISTORY = 10;
@@ -187,7 +187,7 @@ export const NurseScheduler = () => {
     };
 
     const onNurseClick = (nurseId: string) => setSelectedNurseId(nurseId);
-    const onDayClick = (day: number) => setnewDay(day);
+    const onDayClick = (day: number) => setselectedDay(day);
 
     const unscheduledNurseInfos: NurseInfo[] = inputData.nurses.map(n => ({
         id: n.id,
@@ -198,9 +198,9 @@ export const NurseScheduler = () => {
     return (
         <div className={solutionGridStyles.container}>
             <div className={solutionGridStyles.side}>
-                {newDay != null && (
+                {selectedDay != null && (
                     <div className={`${solutionGridStyles.side_content} mb-8`}>
-                        <DayDetail day={newDay} shift={selectedShift} />
+                        <DayDetail day={selectedDay} shift={selectedShift} />
                     </div>
                 )}
                 {selectedNurseId && (
@@ -251,7 +251,15 @@ export const NurseScheduler = () => {
                             <div className="min-w-[2rem]"></div>
                             {Array.from({ length: days }).map((_, day) => (
                                 <div key={day} className="min-w-[5.167rem]">
-                                    <span onClick={() => onDayClick(day)} style={{ cursor: 'pointer' }}>Day {day}</span>
+                                    <span
+                                        onClick={() => onDayClick(day)}
+                                        style={{
+                                            cursor: 'pointer',
+                                            textDecoration: selectedDay === day ? 'underline' : 'none'
+                                        }}
+                                    >
+                                        Day {day}
+                                    </span>
                                 </div>
                             ))}
                         </div>

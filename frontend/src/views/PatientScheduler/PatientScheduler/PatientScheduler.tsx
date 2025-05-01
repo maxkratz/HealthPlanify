@@ -251,7 +251,13 @@ export const PatientScheduler = () => {
                             <div className="min-w-[2rem]"></div>
                             {Array.from({ length: days }).map((_, day) => (
                                 <div key={day} className="min-w-[5.167rem]">
-                                    <span onClick={() => onDayClick(day)} style={{ cursor: 'pointer' }}>
+                                    <span
+                                        onClick={() => onDayClick(day)}
+                                        style={{
+                                            cursor: 'pointer',
+                                            textDecoration: selectedDay === day ? 'underline' : 'none'
+                                        }}
+                                    >
                                         Day {day}
                                     </span>
                                 </div>
