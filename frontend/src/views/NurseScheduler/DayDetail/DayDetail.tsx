@@ -1,65 +1,42 @@
 import React from 'react';
 import { useData } from '../../../DataContext';
+import { ShiftType } from '../../../types/types';
 
 interface DayDetailProps {
     day: number;
+    shift: ShiftType;
 }
 
-export const DayDetail: React.FC<DayDetailProps> = ({ day }) => {
-    const { inputData, solutionData } = useData();
+export const DayDetail: React.FC<DayDetailProps> = ({ day, shift }) => {
+    const { inputData } = useData();
 
-    if (!inputData || !solutionData) {
+    if (!inputData) {
         return <div>Ups, something went wrong! There is no loaded data</div>;
     }
 
+    // Filtramos las enfermeras que tengan un working_shift en este día y turno
+    const nursesOnShift = inputData.nurses
+        .map(nurse => {
+            const ws = nurse.working_shifts.find(w => w.day === day && w.shift === shift);
+            return ws ? { id: nurse.id, maxLoad: ws.max_load } : null;
+        })
+        .filter(Boolean) as { id: string; maxLoad: number }[];
+
     return (
-        <div className="flex flex-col gap-6">
-            <h3 className="text-center">Day {day} Details</h3>
-
-            <div className="flex flex-col gap-2 text-left">
-                <h4 className="text-center">Surgeons</h4>
-                {inputData.surgeons.map((surgeon) => {
-                    const usedTime = solutionData.patients
-                        .filter(p => p.admission_day === day)
-                        .reduce((sum, p) => {
-                            const inp = inputData.patients.find(ip => ip.id === p.id);
-                            return inp?.surgeon_id === surgeon.id
-                                ? sum + (inp.surgery_duration ?? 0)
-                                : sum;
-                        }, 0);
-
-                    const maxTime = surgeon.max_surgery_time[day];
-                    return (
-                        <div key={surgeon.id}>
-                            <strong>ID:</strong> {surgeon.id} —{' '}
-                            <strong>Surgery Time (Max / Used):</strong>{' '}
-                            {maxTime !== undefined ? `${maxTime} / ${usedTime}` : 'N/A'}
+        <div className="flex flex-col gap-4">
+            <h3 className="text-center">Day {day}, {shift} shift</h3>
+            {nursesOnShift.length > 0 ? (
+                <div className="flex flex-col gap-2 text-left">
+                    <h4 className="text-center">Nurses on duty</h4>
+                    {nursesOnShift.map(n => (
+                        <div key={n.id}>
+                            <strong>ID:</strong> {n.id} - <strong>Max Load:</strong> {n.maxLoad}
                         </div>
-                    );
-                })}
-            </div>
-
-
-            <div className="flex flex-col gap-2 text-left">
-                <h4 className="text-center">Operating Theaters</h4>
-                {inputData.operating_theaters.map((ot) => {
-                    const usedTime = solutionData.patients
-                        .filter(p => p.admission_day === day && p.operating_theater === ot.id)
-                        .reduce((sum, p) => {
-                            const inp = inputData.patients.find(ip => ip.id === p.id);
-                            return sum + (inp?.surgery_duration ?? 0);
-                        }, 0);
-
-                    const maxAvail = ot.availability[day];
-                    return (
-                        <div key={ot.id}>
-                            <strong>ID:</strong> {ot.id} —{' '}
-                            <strong>Availability (Max / Used):</strong>{' '}
-                            {maxAvail !== undefined ? `${maxAvail} / ${usedTime}` : 'N/A'}
-                        </div>
-                    );
-                })}
-            </div>
+                    ))}
+                </div>
+            ) : (
+                <p className="text-center italic">No nurses scheduled for this day & shift.</p>
+            )}
         </div>
     );
 };

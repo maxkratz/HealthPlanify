@@ -76,10 +76,21 @@ export const NurseScheduler = () => {
 
     const handleDropNurse = (nurseId: string, newRoom: string) => {
         const nurse = solutionData.nurses.find(n => n.id === nurseId);
-        if (!nurse) return console.error("Nurse not found:", nurseId);
+        if (!nurse) {
+            setErrorMessages(prev => [...prev, `Nurse not found: ${nurseId}`]);
+            return;
+        }
+
+        if (selectedDay === null) {
+            setErrorMessages(prev => [...prev, 'No day selected']);
+            return;
+        }
 
         const assignment = nurse.assignments.find(a => a.day === selectedDay && a.shift === selectedShift);
-        if (!assignment) return console.error("Assignment not found for nurse", nurseId, selectedDay, selectedShift);
+        if (!assignment) {
+            setErrorMessages(prev => [...prev, `Assignment not found for nurse ${nurseId} on day ${selectedDay} shift ${selectedShift}`]);
+            return;
+        }
 
         const previousRooms = [...assignment.rooms];
 
@@ -98,13 +109,34 @@ export const NurseScheduler = () => {
         });
 
         setDeltaHistory(prev => {
-            const nh = [...prev, { nurseId, day: selectedDay!, shift: selectedShift, previousRooms }];
+            const nh = [...prev, { nurseId, day: selectedDay, shift: selectedShift, previousRooms }];
             return nh.length > MAX_HISTORY ? nh.slice(1) : nh;
         });
 
         const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updatedNurses });
         setErrorMessages(errors);
         setSolutionData({ ...solutionData, nurses: updatedNurses });
+    };
+
+    const handleRemoveNurse = (
+        nurseId: string,
+        day: number | 'none',
+        shift: ShiftType,
+        roomId: string
+    ) => {
+        const updated = solutionData.nurses.map(n => {
+            if (n.id !== nurseId) return n;
+            const newAssignments = n.assignments.map(a => {
+                if (a.day === (day as number) && a.shift === shift) {
+                    return { ...a, rooms: a.rooms.filter(r => r !== roomId) };
+                }
+                return a;
+            });
+            return { ...n, assignments: newAssignments };
+        });
+        setSolutionData({ ...solutionData, nurses: updated });
+        const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updated });
+        setErrorMessages(errors);
     };
 
     const handleUndo = () => {
@@ -144,6 +176,12 @@ export const NurseScheduler = () => {
     const onNurseClick = (nurseId: string) => setSelectedNurseId(nurseId);
     const onDayClick = (day: number) => setSelectedDay(day);
 
+    const unscheduledNurseInfos: NurseInfo[] = inputData.nurses.map(n => ({
+        id: n.id,
+        day: -1,
+        room: 'unscheduled',
+    }));
+
     return (
         <div className={solutionGridStyles.container}>
             <div className={solutionGridStyles.side}>
@@ -165,7 +203,7 @@ export const NurseScheduler = () => {
                 )}
                 {selectedDay != null && (
                     <div className={`${solutionGridStyles.side_content}`}>
-                        <DayDetail day={selectedDay} />
+                        <DayDetail day={selectedDay} shift={selectedShift} />
                     </div>
                 )}
             </div>
@@ -215,16 +253,43 @@ export const NurseScheduler = () => {
                                     <div key={day} className="m-1">
                                         <RoomCell
                                             day={day}
+                                            shift={selectedShift}
                                             roomId={room.id}
                                             capacity={room.capacity}
                                             nurses={gridData[day][room.id]}
                                             onDropNurse={handleDropNurse}
                                             onNurseClick={onNurseClick}
+                                            onRemoveNurse={handleRemoveNurse}
                                         />
                                     </div>
                                 ))}
                             </div>
                         ))}
+                    </div>
+
+
+                    <div className="flex flex-col ml-4">
+                        <div className="flex flex-row gap-2 items-center">
+                            <div className="min-w-[2rem]"></div>
+                            <div className="min-w-[5.167rem]">
+                                <span>Nurses</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-row m-1 items-center">
+                            <span className="min-w-[2rem]"></span>
+                            <div className="m-1">
+                                <RoomCell
+                                    day={'none'}
+                                    shift={selectedShift}
+                                    roomId="unscheduled"
+                                    capacity={inputData.nurses.length}
+                                    nurses={unscheduledNurseInfos}
+                                    onDropNurse={() => { }}
+                                    onRemoveNurse={handleRemoveNurse}
+                                    onNurseClick={onNurseClick}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
