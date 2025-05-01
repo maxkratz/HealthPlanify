@@ -10,7 +10,7 @@ interface BedSlotProps {
     roomId: string;
     bedIndex: number;
     nurse?: NurseInfo;
-    onDropNurse: (nurseId: string, newRoom: string, bedIndex: number) => void;
+    onDropNurse: (nurseId: string, newDay: number | 'none', newRoom: string, bedIndex: number) => void;
     onRemoveNurse: (nurseId: string, day: number | 'none', shift: ShiftType, roomId: string) => void;
     onNurseClick: (nurseId: string) => void;
 }
@@ -19,7 +19,7 @@ const BedSlot: React.FC<BedSlotProps> = ({ day, shift, roomId, bedIndex, nurse, 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'NURSE',
         drop: (item: { id: string }) => {
-            onDropNurse(item.id, roomId, bedIndex);
+            onDropNurse(item.id, day, roomId, bedIndex);
         },
         collect: (monitor) => ({ isOver: !!monitor.isOver() }),
     }), [day, shift, roomId, bedIndex, onDropNurse]);
@@ -54,7 +54,7 @@ interface RoomCellProps {
     roomId: string;
     capacity: number;
     nurses: NurseInfo[];
-    onDropNurse: (nurseId: string, newRoom: string, bedIndex: number) => void;
+    onDropNurse: (nurseId: string, newDay: number | 'none', newRoom: string, bedIndex: number) => void;
     onRemoveNurse: (nurseId: string, day: number | 'none', shift: ShiftType, roomId: string) => void;
     onNurseClick: (nurseId: string) => void;
 }

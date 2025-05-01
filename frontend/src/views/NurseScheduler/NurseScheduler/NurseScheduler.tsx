@@ -25,7 +25,7 @@ interface NurseDelta {
 export const NurseScheduler = () => {
     const [selectedShift, setSelectedShift] = React.useState<ShiftType>('early');
     const [selectedNurseId, setSelectedNurseId] = React.useState<string | null>(null);
-    const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
+    const [newDay, setnewDay] = React.useState<number | null>(null);
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
     const MAX_HISTORY = 10;
@@ -74,21 +74,28 @@ export const NurseScheduler = () => {
         });
     }
 
-    const handleDropNurse = (nurseId: string, newRoom: string) => {
+    const handleDropNurse = (nurseId: string, newDay: number | 'none', newRoom: string) => {
         const nurse = solutionData.nurses.find(n => n.id === nurseId);
         if (!nurse) {
             setErrorMessages(prev => [...prev, `Nurse not found: ${nurseId}`]);
             return;
         }
 
-        if (selectedDay === null) {
-            setErrorMessages(prev => [...prev, 'No day selected']);
+        // ensure only one nurse per room/day/shift
+        const conflict = solutionData.nurses.some(n =>
+            n.id !== nurseId &&
+            n.assignments.some(a => a.day === newDay && a.shift === selectedShift && a.rooms.includes(newRoom))
+        );
+        if (conflict) {
+            setErrorMessages(prev => [...prev,
+            `Room ${newRoom} already has a nurse for day ${newDay} shift ${selectedShift}`
+            ]);
             return;
         }
 
-        const assignment = nurse.assignments.find(a => a.day === selectedDay && a.shift === selectedShift);
+        const assignment = nurse.assignments.find(a => a.day === newDay && a.shift === selectedShift);
         if (!assignment) {
-            setErrorMessages(prev => [...prev, `Assignment not found for nurse ${nurseId} on day ${selectedDay} shift ${selectedShift}`]);
+            setErrorMessages(prev => [...prev, `Assignment not found for nurse ${nurseId} on day ${newDay} shift ${selectedShift}`]);
             return;
         }
 
@@ -97,7 +104,7 @@ export const NurseScheduler = () => {
         const updatedNurses = solutionData.nurses.map(n => {
             if (n.id === nurseId) {
                 const updatedAssignments = n.assignments.map(a => {
-                    if (a.day === selectedDay && a.shift === selectedShift) {
+                    if (a.day === newDay && a.shift === selectedShift) {
                         const newRooms = Array.from(new Set([...a.rooms.filter(r => r !== newRoom), newRoom]));
                         return { ...a, rooms: newRooms };
                     }
@@ -109,7 +116,7 @@ export const NurseScheduler = () => {
         });
 
         setDeltaHistory(prev => {
-            const nh = [...prev, { nurseId, day: selectedDay, shift: selectedShift, previousRooms }];
+            const nh = [...prev, { nurseId, day: newDay, shift: selectedShift, previousRooms }];
             return nh.length > MAX_HISTORY ? nh.slice(1) : nh;
         });
 
@@ -181,7 +188,7 @@ export const NurseScheduler = () => {
     };
 
     const onNurseClick = (nurseId: string) => setSelectedNurseId(nurseId);
-    const onDayClick = (day: number) => setSelectedDay(day);
+    const onDayClick = (day: number) => setnewDay(day);
 
     const unscheduledNurseInfos: NurseInfo[] = inputData.nurses.map(n => ({
         id: n.id,
@@ -208,9 +215,9 @@ export const NurseScheduler = () => {
                         <NurseDetail nurseId={selectedNurseId} />
                     </div>
                 )}
-                {selectedDay != null && (
+                {newDay != null && (
                     <div className={`${solutionGridStyles.side_content}`}>
-                        <DayDetail day={selectedDay} shift={selectedShift} />
+                        <DayDetail day={newDay} shift={selectedShift} />
                     </div>
                 )}
             </div>
