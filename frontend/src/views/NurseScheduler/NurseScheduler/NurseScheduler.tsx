@@ -22,10 +22,10 @@ interface NurseDelta {
 }
 
 export const NurseScheduler = () => {
-    const [selectedShift, setSelectedShift] = React.useState<ShiftType>('early');
-    const [selectedNurseId, setSelectedNurseId] = React.useState<string | null>('n00');
-    const [selectedDay, setselectedDay] = React.useState<number | null>(0);
     const { inputData, solutionData, setSolutionData } = useData();
+    const [selectedShift, setSelectedShift] = React.useState<ShiftType>('early');
+    const [selectedNurseId, setSelectedNurseId] = React.useState<string | null>(inputData?.nurses[0]?.id || null);
+    const [selectedDay, setselectedDay] = React.useState<number | null>(0);
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
     const MAX_HISTORY = 10;
 
