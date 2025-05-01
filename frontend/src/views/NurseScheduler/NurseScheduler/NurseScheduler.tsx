@@ -17,7 +17,7 @@ export interface NurseInfo {
 
 interface NurseDelta {
     nurseId: string;
-    day: number;
+    day: number | 'none';
     shift: ShiftType;
     previousRooms: string[];
 }
@@ -124,41 +124,48 @@ export const NurseScheduler = () => {
         shift: ShiftType,
         roomId: string
     ) => {
+        const nurse = solutionData.nurses.find(n => n.id === nurseId);
+        if (!nurse) return;
+        const assignment = nurse.assignments.find(a => a.day === (day === 'none' ? -1 : day) && a.shift === shift);
+        const prevRooms = assignment ? [...assignment.rooms] : [];
+
         const updated = solutionData.nurses.map(n => {
             if (n.id !== nurseId) return n;
             const newAssignments = n.assignments.map(a => {
-                if (a.day === (day as number) && a.shift === shift) {
+                if (a.day === (day === 'none' ? -1 : day) && a.shift === shift) {
                     return { ...a, rooms: a.rooms.filter(r => r !== roomId) };
                 }
                 return a;
             });
             return { ...n, assignments: newAssignments };
         });
+
+        setDeltaHistory(prev => {
+            const nh = [...prev, { nurseId, day, shift, previousRooms: prevRooms }];
+            return nh.length > MAX_HISTORY ? nh.slice(1) : nh;
+        });
+
         setSolutionData({ ...solutionData, nurses: updated });
         const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updated });
         setErrorMessages(errors);
     };
 
     const handleUndo = () => {
-        if (deltaHistory.length === 0) return;
-        const lastChange = deltaHistory[deltaHistory.length - 1];
-        setDeltaHistory(prev => prev.slice(0, prev.length - 1));
-
-        const updatedNurses = solutionData.nurses.map(n => {
-            if (n.id === lastChange.nurseId) {
-                const updatedAssignments = n.assignments.map(a => {
-                    if (a.day === lastChange.day && a.shift === lastChange.shift) {
-                        return { ...a, rooms: lastChange.previousRooms };
-                    }
-                    return a;
-                });
-                return { ...n, assignments: updatedAssignments };
-            }
-            return n;
+        if (!deltaHistory.length) return;
+        const last = deltaHistory[deltaHistory.length - 1];
+        setDeltaHistory(prev => prev.slice(0, -1));
+        const updated = solutionData.nurses.map(n => {
+            if (n.id !== last.nurseId) return n;
+            const newAssign = n.assignments.map(a => {
+                if (a.day === (last.day === 'none' ? -1 : last.day) && a.shift === last.shift) {
+                    return { ...a, rooms: last.previousRooms };
+                }
+                return a;
+            });
+            return { ...n, assignments: newAssign };
         });
-
-        setSolutionData({ ...solutionData, nurses: updatedNurses });
-        const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updatedNurses });
+        setSolutionData({ ...solutionData, nurses: updated });
+        const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updated });
         setErrorMessages(errors);
     };
 
