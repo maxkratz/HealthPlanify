@@ -4,7 +4,6 @@ import RoomCell from '../RoomCell/RoomCell';
 import { checkHardConstraints } from '../../../utils/checkHardConstraints';
 import { NurseDetail } from '../NurseDetail/NurseDetail';
 import { DayDetail } from '../DayDetail/DayDetail';
-import { Legend } from '../Legend/Legend';
 import solutionGridStyles from './NurseScheduler.module.scss';
 import { checkSoftConstraintsCost } from '../../../utils/checkSoftConstraints';
 import { ShiftType } from '../../../types/types';
@@ -17,15 +16,15 @@ export interface NurseInfo {
 
 interface NurseDelta {
     nurseId: string;
-    day: number | 'none';
+    day: number;
     shift: ShiftType;
     previousRooms: string[];
 }
 
 export const NurseScheduler = () => {
     const [selectedShift, setSelectedShift] = React.useState<ShiftType>('early');
-    const [selectedNurseId, setSelectedNurseId] = React.useState<string | null>(null);
-    const [newDay, setnewDay] = React.useState<number | null>(null);
+    const [selectedNurseId, setSelectedNurseId] = React.useState<string | null>('n00');
+    const [newDay, setnewDay] = React.useState<number | null>(0);
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
     const MAX_HISTORY = 10;
@@ -74,7 +73,7 @@ export const NurseScheduler = () => {
         });
     }
 
-    const handleDropNurse = (nurseId: string, newDay: number | 'none', newRoom: string) => {
+    const handleDropNurse = (nurseId: string, newDay: number, newRoom: string) => {
         const nurse = solutionData.nurses.find(n => n.id === nurseId);
         if (!nurse) {
             setErrorMessages(prev => [...prev, `Nurse not found: ${nurseId}`]);
@@ -127,19 +126,19 @@ export const NurseScheduler = () => {
 
     const handleRemoveNurse = (
         nurseId: string,
-        day: number | 'none',
+        day: number,
         shift: ShiftType,
         roomId: string
     ) => {
         const nurse = solutionData.nurses.find(n => n.id === nurseId);
         if (!nurse) return;
-        const assignment = nurse.assignments.find(a => a.day === (day === 'none' ? -1 : day) && a.shift === shift);
+        const assignment = nurse.assignments.find(a => a.day === day && a.shift === shift);
         const prevRooms = assignment ? [...assignment.rooms] : [];
 
         const updated = solutionData.nurses.map(n => {
             if (n.id !== nurseId) return n;
             const newAssignments = n.assignments.map(a => {
-                if (a.day === (day === 'none' ? -1 : day) && a.shift === shift) {
+                if (a.day === day && a.shift === shift) {
                     return { ...a, rooms: a.rooms.filter(r => r !== roomId) };
                 }
                 return a;
@@ -164,7 +163,7 @@ export const NurseScheduler = () => {
         const updated = solutionData.nurses.map(n => {
             if (n.id !== last.nurseId) return n;
             const newAssign = n.assignments.map(a => {
-                if (a.day === (last.day === 'none' ? -1 : last.day) && a.shift === last.shift) {
+                if (a.day === last.day && a.shift === last.shift) {
                     return { ...a, rooms: last.previousRooms };
                 }
                 return a;
@@ -199,15 +198,9 @@ export const NurseScheduler = () => {
     return (
         <div className={solutionGridStyles.container}>
             <div className={solutionGridStyles.side}>
-                <div className={`${solutionGridStyles.side_content} mb-8`}>
-                    <Legend />
-                </div>
-
-                {errorMessages.length > 0 && (
+                {newDay != null && (
                     <div className={`${solutionGridStyles.side_content} mb-8`}>
-                        {errorMessages.map((msg, index) => (
-                            <p key={index} className={solutionGridStyles.error_messages}>{msg}</p>
-                        ))}
+                        <DayDetail day={newDay} shift={selectedShift} />
                     </div>
                 )}
                 {selectedNurseId && (
@@ -215,9 +208,11 @@ export const NurseScheduler = () => {
                         <NurseDetail nurseId={selectedNurseId} />
                     </div>
                 )}
-                {newDay != null && (
+                {errorMessages.length > 0 && (
                     <div className={`${solutionGridStyles.side_content}`}>
-                        <DayDetail day={newDay} shift={selectedShift} />
+                        {errorMessages.map((msg, index) => (
+                            <p key={index} className={solutionGridStyles.error_messages}>{msg}</p>
+                        ))}
                     </div>
                 )}
             </div>
@@ -264,12 +259,12 @@ export const NurseScheduler = () => {
                             <div key={room.id} className="flex flex-row m-1 items-center">
                                 <span className="min-w-[2rem]">{room.id}</span>
                                 {Array.from({ length: days }).map((_, day) => (
-                                    <div key={day} className="m-1">
+                                    <div key={day} className="m-1 mb-4">
                                         <RoomCell
                                             day={day}
                                             shift={selectedShift}
                                             roomId={room.id}
-                                            capacity={room.capacity}
+                                            capacity={1} // In a specific shift and day, only one nurse can be assigned to a room
                                             nurses={gridData[day][room.id]}
                                             onDropNurse={handleDropNurse}
                                             onNurseClick={onNurseClick}
@@ -293,7 +288,7 @@ export const NurseScheduler = () => {
                             <span className="min-w-[2rem]"></span>
                             <div className="m-1">
                                 <RoomCell
-                                    day={'none'}
+                                    day={-1}
                                     shift={selectedShift}
                                     roomId="unscheduled"
                                     capacity={inputData.nurses.length}

@@ -6,8 +6,8 @@ import { ShiftType } from '../../../types/types';
 interface NurseCardProps {
     nurse: NurseInfo;
     onClick?: (nurseId: string) => void;
-    onRemove?: (nurseId: string, day: number | 'none', shift: ShiftType, roomId: string) => void;
-    removeContext?: { day: number | 'none'; shift: ShiftType; roomId: string };
+    onRemove?: (nurseId: string, day: number, shift: ShiftType, roomId: string) => void;
+    removeContext?: { day: number; shift: ShiftType; roomId: string };
 }
 
 const NurseCard: React.FC<NurseCardProps> = ({ nurse, onClick, onRemove, removeContext }) => {

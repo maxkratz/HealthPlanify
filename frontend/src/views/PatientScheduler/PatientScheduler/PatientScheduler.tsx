@@ -23,8 +23,8 @@ interface PatientDelta {
 
 export const PatientScheduler = () => {
     const [selectedOperatingTheater, setSelectedOperatingTheater] = React.useState<string>("no-change");
-    const [selectedPatientId, setSelectedPatientId] = React.useState<string | null>(null);
-    const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
+    const [selectedPatientId, setSelectedPatientId] = React.useState<string | null>('p00');
+    const [selectedDay, setSelectedDay] = React.useState<number | null>(1);
     const { inputData, solutionData, setSolutionData } = useData();
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
     const MAX_HISTORY = 10;

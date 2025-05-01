@@ -4,25 +4,25 @@ import NurseCard from '../NurseCard/NurseCard';
 import { NurseInfo } from '../NurseScheduler/NurseScheduler';
 import { ShiftType } from '../../../types/types';
 
-interface BedSlotProps {
-    day: number | 'none';
+interface SlotProps {
+    day: number;
     shift: ShiftType;
     roomId: string;
-    bedIndex: number;
+    slotIndex: number;
     nurse?: NurseInfo;
-    onDropNurse: (nurseId: string, newDay: number | 'none', newRoom: string, bedIndex: number) => void;
-    onRemoveNurse: (nurseId: string, day: number | 'none', shift: ShiftType, roomId: string) => void;
+    onDropNurse: (nurseId: string, newDay: number, newRoom: string, slotIndex: number) => void;
+    onRemoveNurse: (nurseId: string, day: number, shift: ShiftType, roomId: string) => void;
     onNurseClick: (nurseId: string) => void;
 }
 
-const BedSlot: React.FC<BedSlotProps> = ({ day, shift, roomId, bedIndex, nurse, onDropNurse, onRemoveNurse, onNurseClick }) => {
+const Slot: React.FC<SlotProps> = ({ day, shift, roomId, slotIndex, nurse, onDropNurse, onRemoveNurse, onNurseClick }) => {
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'NURSE',
         drop: (item: { id: string }) => {
-            onDropNurse(item.id, day, roomId, bedIndex);
+            onDropNurse(item.id, day, roomId, slotIndex);
         },
         collect: (monitor) => ({ isOver: !!monitor.isOver() }),
-    }), [day, shift, roomId, bedIndex, onDropNurse]);
+    }), [day, shift, roomId, slotIndex, onDropNurse]);
 
     return (
         <div
@@ -49,18 +49,18 @@ const BedSlot: React.FC<BedSlotProps> = ({ day, shift, roomId, bedIndex, nurse, 
 };
 
 interface RoomCellProps {
-    day: number | 'none';
+    day: number;
     shift: ShiftType;
     roomId: string;
     capacity: number;
     nurses: NurseInfo[];
-    onDropNurse: (nurseId: string, newDay: number | 'none', newRoom: string, bedIndex: number) => void;
-    onRemoveNurse: (nurseId: string, day: number | 'none', shift: ShiftType, roomId: string) => void;
+    onDropNurse: (nurseId: string, newDay: number, newRoom: string, slotIndex: number) => void;
+    onRemoveNurse: (nurseId: string, day: number, shift: ShiftType, roomId: string) => void;
     onNurseClick: (nurseId: string) => void;
 }
 
 const RoomCell: React.FC<RoomCellProps> = ({ day, shift, roomId, capacity, nurses, onDropNurse, onRemoveNurse, onNurseClick }) => {
-    const bedSlots = Array.from({ length: capacity }, (_, index) => ({ bedIndex: index, nurse: nurses[index] }));
+    const slotSlots = Array.from({ length: capacity }, (_, index) => ({ slotIndex: index, nurse: nurses[index] }));
 
     return (
         <div
@@ -72,13 +72,13 @@ const RoomCell: React.FC<RoomCellProps> = ({ day, shift, roomId, capacity, nurse
                 border: '0.063rem solid var(--color-white)',
             }}
         >
-            {bedSlots.map(({ bedIndex, nurse }) => (
-                <BedSlot
-                    key={bedIndex}
+            {slotSlots.map(({ slotIndex, nurse }) => (
+                <Slot
+                    key={slotIndex}
                     day={day}
                     shift={shift}
                     roomId={roomId}
-                    bedIndex={bedIndex}
+                    slotIndex={slotIndex}
                     nurse={nurse}
                     onDropNurse={onDropNurse}
                     onRemoveNurse={onRemoveNurse}
