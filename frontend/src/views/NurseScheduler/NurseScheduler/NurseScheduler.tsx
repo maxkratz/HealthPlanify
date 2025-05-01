@@ -7,7 +7,7 @@ import { DayDetail } from '../DayDetail/DayDetail';
 import { Legend } from '../Legend/Legend';
 import solutionGridStyles from './NurseScheduler.module.scss';
 import { checkSoftConstraintsCost } from '../../../utils/checkSoftConstraints';
-
+import { ShiftType } from '../../../types/types';
 
 export interface NurseInfo {
     id: string;
@@ -17,11 +17,13 @@ export interface NurseInfo {
 
 interface NurseDelta {
     nurseId: string;
-    previousRoom: string;
+    day: number;
+    shift: ShiftType;
+    previousRooms: string[];
 }
 
 export const NurseScheduler = () => {
-    const [selectedShift, setSelectedShift] = React.useState<string>("early");
+    const [selectedShift, setSelectedShift] = React.useState<ShiftType>('early');
     const [selectedNurseId, setSelectedNurseId] = React.useState<string | null>(null);
     const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
     const { inputData, solutionData, setSolutionData } = useData();
@@ -34,7 +36,7 @@ export const NurseScheduler = () => {
             try {
                 return JSON.parse(persistedDeltas);
             } catch (error) {
-                console.error('Error al parsear el historial persistido de deltas', error);
+                console.error('Error al parsear deltaHistory', error);
             }
         }
         return [];
@@ -54,66 +56,79 @@ export const NurseScheduler = () => {
     const gridData: { [day: number]: { [roomId: string]: NurseInfo[] } } = {};
     for (let d = 0; d < days; d++) {
         gridData[d] = {};
-        rooms.forEach((room) => {
-            gridData[d][room.id] = [];
-            const nursesAssigned: NurseInfo[] = (solutionData.nurses.filter((nurseOutput) => {
-                nurseOutput.assignments.filter((assig) => {
-                    if (assig.day === d && assig.rooms.includes(room.id) && assig.shift === selectedShift) {
-                        return {
-                            id: nurseOutput.id,
-                            day: d,
-                            room: room.id,
-                        }
-                    }
-                })
-            }) || [])
+        rooms.forEach(room => {
+            const nursesInRoom: NurseInfo[] = solutionData.nurses
+                .filter(nurseOutput =>
+                    nurseOutput.assignments.some(assig =>
+                        assig.day === d &&
+                        assig.shift === selectedShift &&
+                        assig.rooms.includes(room.id)
+                    )
+                )
+                .map(nurseOutput => ({
+                    id: nurseOutput.id,
+                    day: d,
+                    room: room.id,
+                }));
+            gridData[d][room.id] = nursesInRoom;
         });
     }
 
+    const handleDropNurse = (nurseId: string, newRoom: string) => {
+        const nurse = solutionData.nurses.find(n => n.id === nurseId);
+        if (!nurse) return console.error("Nurse not found:", nurseId);
 
-    const handleDropNurse = (
-        nurseId: string,
-        newRoom: string
-    ) => {
-        const currentNurse = solutionData.nurses.find(p => p.id === nurseId);
-        if (!currentNurse) return console.error("Paciente no encontrado:", nurseId);
+        const assignment = nurse.assignments.find(a => a.day === selectedDay && a.shift === selectedShift);
+        if (!assignment) return console.error("Assignment not found for nurse", nurseId, selectedDay, selectedShift);
 
-        const change: NurseDelta = {
-            nurseId,
-            previousRoom: "temporal",
-        };
-        setDeltaHistory(h => {
-            const nh = [...h, change];
-            return nh.length > MAX_HISTORY ? nh.slice(1) : nh;
+        const previousRooms = [...assignment.rooms];
+
+        const updatedNurses = solutionData.nurses.map(n => {
+            if (n.id === nurseId) {
+                const updatedAssignments = n.assignments.map(a => {
+                    if (a.day === selectedDay && a.shift === selectedShift) {
+                        const newRooms = Array.from(new Set([...a.rooms.filter(r => r !== newRoom), newRoom]));
+                        return { ...a, rooms: newRooms };
+                    }
+                    return a;
+                });
+                return { ...n, assignments: updatedAssignments };
+            }
+            return n;
         });
 
-        const updatedNurses = solutionData.nurses.map(p =>
-            p.id === nurseId
-                ? { ...p, room: newRoom }
-                : p
-        );
+        setDeltaHistory(prev => {
+            const nh = [...prev, { nurseId, day: selectedDay!, shift: selectedShift, previousRooms }];
+            return nh.length > MAX_HISTORY ? nh.slice(1) : nh;
+        });
 
         const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updatedNurses });
         setErrorMessages(errors);
         setSolutionData({ ...solutionData, nurses: updatedNurses });
     };
-
 
     const handleUndo = () => {
         if (deltaHistory.length === 0) return;
         const lastChange = deltaHistory[deltaHistory.length - 1];
-        setDeltaHistory(prevHistory => prevHistory.slice(0, prevHistory.length - 1));
-        const updatedNurses = solutionData.nurses.map((nurse) => {
-            if (nurse.id === lastChange.nurseId) {
-                return { ...nurse, room: lastChange.previousRoom };
+        setDeltaHistory(prev => prev.slice(0, prev.length - 1));
+
+        const updatedNurses = solutionData.nurses.map(n => {
+            if (n.id === lastChange.nurseId) {
+                const updatedAssignments = n.assignments.map(a => {
+                    if (a.day === lastChange.day && a.shift === lastChange.shift) {
+                        return { ...a, rooms: lastChange.previousRooms };
+                    }
+                    return a;
+                });
+                return { ...n, assignments: updatedAssignments };
             }
-            return nurse;
+            return n;
         });
+
         setSolutionData({ ...solutionData, nurses: updatedNurses });
         const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updatedNurses });
         setErrorMessages(errors);
     };
-
 
     const handleDownloadSolution = () => {
         const fileData = JSON.stringify(solutionData, null, 2);
@@ -126,16 +141,8 @@ export const NurseScheduler = () => {
         URL.revokeObjectURL(url);
     };
 
-
-    const onNurseClick = (nurseId: string) => {
-        setSelectedNurseId(nurseId);
-    };
-
-
-    const onDayClick = (day: number) => {
-        setSelectedDay(day);
-    };
-
+    const onNurseClick = (nurseId: string) => setSelectedNurseId(nurseId);
+    const onDayClick = (day: number) => setSelectedDay(day);
 
     return (
         <div className={solutionGridStyles.container}>
@@ -147,54 +154,36 @@ export const NurseScheduler = () => {
                 {errorMessages.length > 0 && (
                     <div className={`${solutionGridStyles.side_content} mb-8`}>
                         {errorMessages.map((msg, index) => (
-                            <p key={index} className={solutionGridStyles.error_messages}>
-                                {msg}
-                            </p>
+                            <p key={index} className={solutionGridStyles.error_messages}>{msg}</p>
                         ))}
                     </div>
                 )}
-
-                {selectedNurseId &&
+                {selectedNurseId && (
                     <div className={`${solutionGridStyles.side_content} mb-8`}>
                         <NurseDetail nurseId={selectedNurseId} />
                     </div>
-                }
-
-                {selectedDay != null &&
+                )}
+                {selectedDay != null && (
                     <div className={`${solutionGridStyles.side_content}`}>
                         <DayDetail day={selectedDay} />
                     </div>
-                }
+                )}
             </div>
 
 
             <div className={solutionGridStyles.center}>
                 <div className='flex flex-row items-center justify-center gap-16 mb-20'>
-                    <button
-                        onClick={handleUndo}
-                        disabled={deltaHistory.length === 0}
-                        className={`${solutionGridStyles.undo_button}`}
-                    >
+                    <button onClick={handleUndo} disabled={deltaHistory.length === 0} className={solutionGridStyles.undo_button}>
                         Undo changes
                     </button>
-
-                    <span>
-                        Total cost {checkSoftConstraintsCost(inputData, solutionData)}
-                    </span>
-
-                    <button
-                        onClick={handleDownloadSolution}
-                        className={`${solutionGridStyles.undo_button}`}
-                    >
+                    <span>Total cost {checkSoftConstraintsCost(inputData, solutionData)}</span>
+                    <button onClick={handleDownloadSolution} className={solutionGridStyles.undo_button}>
                         Download solution
                     </button>
                 </div>
 
-
                 <div className='flex flex-col items-center justify-center mb-16'>
-                    <span>
-                        Shift Selector
-                    </span>
+                    <span>Shift Selector</span>
                     <div className='flex flex-row items-center justify-center gap-8 mt-8'>
                         {inputData.shift_types.map(shift => (
                             <button
@@ -215,13 +204,11 @@ export const NurseScheduler = () => {
                             <div className="min-w-[2rem]"></div>
                             {Array.from({ length: days }).map((_, day) => (
                                 <div key={day} className="min-w-[5.167rem]">
-                                    <span onClick={() => onDayClick(day)} style={{ cursor: 'pointer' }}>
-                                        Day {day}
-                                    </span>
+                                    <span onClick={() => onDayClick(day)} style={{ cursor: 'pointer' }}>Day {day}</span>
                                 </div>
                             ))}
                         </div>
-                        {rooms.map((room) => (
+                        {rooms.map(room => (
                             <div key={room.id} className="flex flex-row m-1 items-center">
                                 <span className="min-w-[2rem]">{room.id}</span>
                                 {Array.from({ length: days }).map((_, day) => (

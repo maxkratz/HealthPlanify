@@ -50,7 +50,8 @@ interface RoomCellProps {
 }
 
 const RoomCell: React.FC<RoomCellProps> = ({ day, roomId, capacity, nurses, onDropNurse, onNurseClick }) => {
-    const bedSlots = Array.from({ length: capacity }, (_, index) => ({
+    // In a specific shift there is only one nurse per room
+    const bedSlots = Array.from({ length: 1 }, (_, index) => ({
         bedIndex: index,
         nurse: nurses[index],
     }));
