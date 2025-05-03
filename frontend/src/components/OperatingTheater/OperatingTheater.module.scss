@@ -1,8 +1,7 @@
 .container {
     border: 0.125rem solid var(--color-white);
-    padding: 1.25rem;
     box-sizing: border-box; // Para incluir el padding en el cálculo del ancho
-    width: 12.5rem; // Más ancho que el resto de contenedores del mismo estilo
+    width: 11rem; // Más ancho que el resto de contenedores del mismo estilo
     aspect-ratio: 1 / 1;
 
     display: flex;
@@ -10,6 +9,8 @@
     justify-content: center; // Centra verticalmente (en caso de columna)
     align-items: center; // Centra horizontalmente
     gap: 0.625rem;
+
+    font-size: 0.875rem;
 
     &--free {
         background-color: var(--color-code-green);
@@ -26,4 +27,8 @@
     &--overfull {
         background-color: var(--color-code-black);
     }
+}
+
+.container:hover {
+    border-width: 0.35rem;
 }

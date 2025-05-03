@@ -12,3 +12,7 @@
     align-items: center; // Centra horizontalmente
     gap: 0.625rem;
 }
+
+.container:hover {
+    border-width: 0.35rem;
+}

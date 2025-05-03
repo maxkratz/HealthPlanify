@@ -1,8 +1,7 @@
 .container {
     border: 0.125rem solid var(--color-white);
-    padding: 1.25rem;
     box-sizing: border-box; // Para incluir el padding en el cálculo del ancho
-    width: 10.938rem;
+    width: 10.1rem; // +0.1 for the icons
     aspect-ratio: 1 / 1;
 
     display: flex;
@@ -10,6 +9,8 @@
     justify-content: center; // Centra verticalmente (en caso de columna)
     align-items: center; // Centra horizontalmente
     gap: 0.625rem;
+
+    font-size: 0.875rem;
 
     &--free {
         background-color: var(--color-code-green);
@@ -26,4 +27,8 @@
     &--full {
         background-color: var(--color-code-red);
     }
+}
+
+.container:hover {
+    border-width: 0.35rem;
 }
