@@ -1,5 +1,6 @@
 # Final Year Project (TFG)
 
+
 ## Running the Application:
 1. Navigate to the `frontend` directory:
    ```bash
@@ -9,6 +10,26 @@
    ```bash
    npm run dev
    ```
+3. Navigate to the `mock-server` directory:
+   ```bash
+   cd mock-server
+   ```
+4. Start the server:
+   ```bash
+   npm start
+   ```
+
+
+## With TMUX:
+1. Execute the script:
+   ```bash
+   ./start-dev
+   ```
+2. For ending ALL tmux sessions:
+   ```bash
+   tmux kill-server
+   ```
+
 
 ## Running the Validator:
 1. Navigate to the `validator` directory:
