@@ -104,7 +104,7 @@ export const InputFiles: React.FC = () => {
             file,
             json => {
                 if (!validateInputFile(json)) {
-                    alert('El fichero de instancia no sigue la estructura esperada.');
+                    alert('The instance file does not follow the expected structure.');
                     return;
                 }
                 setInputData(json);
@@ -112,7 +112,7 @@ export const InputFiles: React.FC = () => {
                 setInputFileName(file.name);
                 setError(null);
             },
-            () => alert('Error leyendo el JSON de instancia.')
+            () => alert('Error reading instance JSON file.')
         );
     };
 
@@ -123,7 +123,7 @@ export const InputFiles: React.FC = () => {
             file,
             json => {
                 if (!validateSolutionFile(json)) {
-                    alert('El fichero de solución no sigue la estructura esperada.');
+                    alert('The solution file does not follow the expected structure.');
                     return;
                 }
                 setSolutionData(json);
@@ -131,7 +131,7 @@ export const InputFiles: React.FC = () => {
                 setReady(true);
                 setError(null);
             },
-            () => alert('Error leyendo el JSON de solución.')
+            () => alert('Error reading solution JSON file.')
         );
     };
 
@@ -143,29 +143,29 @@ export const InputFiles: React.FC = () => {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 120_000);
 
-            const resp = await fetch('/api/solve', {
+            const response = await fetch('/api/solve', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputJson),
-                signal: controller.signal
+                signal: controller.signal,
             });
             clearTimeout(timeoutId);
 
-            if (!resp.ok) throw new Error(`Servidor respondió: ${resp.statusText}`);
+            if (!response.ok) throw new Error(`Server responded: ${response.statusText}`);
 
-            const sol = await resp.json();
+            const sol = await response.json();
             if (!validateSolutionFile(sol)) {
-                throw new Error('La respuesta de solución no tiene la estructura esperada.');
+                throw new Error('The solution response does not follow the expected structure.');
             }
 
             setSolutionData(sol);
-            setSolutionFileName('Obtenida de la API');
+            setSolutionFileName('Fetched from API');
             setReady(true);
         } catch (err: any) {
             setError(
                 err.name === 'AbortError'
-                    ? 'Tiempo de espera agotado (2 min).'
-                    : err.message || 'Error al obtener solución.'
+                    ? 'Timeout reached (2 min).'
+                    : err.message || 'Error fetching solution.'
             );
         } finally {
             setLoading(false);
