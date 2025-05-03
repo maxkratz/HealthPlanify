@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Style from './InputFiles.module.scss';
 import { useData } from '../../DataContext';
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const validateInputFile = (data: any): boolean => {
     if (typeof data.days !== 'number') return false;
@@ -31,8 +31,6 @@ const validateInputFile = (data: any): boolean => {
     if (!Array.isArray(data.occupants)) return false;
     if (!Array.isArray(data.patients)) return false;
 
-    // añadir más validaciones sit al 
-
     return true;
 };
 
@@ -43,13 +41,10 @@ const validateSolutionFile = (data: any): boolean => {
     for (const patient of data.patients) {
         if (typeof patient.id !== 'string') return false;
         if (typeof patient.admission_day === 'number') {
-            // Si es un número, room y operating_theater deben existir y ser strings
             if (typeof patient.room !== 'string') return false;
             if (typeof patient.operating_theater !== 'string') return false;
         } else if (typeof patient.admission_day === 'string') {
-            // Permitir "none"
             if (patient.admission_day !== 'none') return false;
-            // En este caso, room y operating_theater pueden no estar definidos
         } else {
             return false;
         }
@@ -69,107 +64,171 @@ const validateSolutionFile = (data: any): boolean => {
 
 export const InputFiles: React.FC = () => {
     const { setInputData, setSolutionData } = useData();
-
-    const [inputUploaded, setInputUploaded] = useState(false);
-    const [outputUploaded, setOutputUploaded] = useState(false);
-    const [filesUploaded, setFilesUploaded] = useState(false);
+    const navigate = useNavigate();
 
     const [inputFileName, setInputFileName] = useState('');
     const [solutionFileName, setSolutionFileName] = useState('');
+    const [inputJson, setInputJson] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [ready, setReady] = useState(false);
+    const solutionInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if (inputUploaded && outputUploaded) {
-            setFilesUploaded(true);
+        if (ready) {
+            navigate('/FirstElection');
         }
-    }, [inputUploaded, outputUploaded]);
+    }, [ready, navigate]);
 
-    const handleFileUpload = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        type: 'input' | 'output'
+    const readJsonFile = (
+        file: File,
+        onJson: (json: any) => void,
+        onInvalid: () => void
     ) => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const json = JSON.parse(ev.target?.result as string);
+                onJson(json);
+            } catch {
+                onInvalid();
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    const handleInputUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                try {
-                    const json = JSON.parse(event.target?.result as string);
-                    if (type === 'input') {
-                        if (!validateInputFile(json)) {
-                            alert("The uploaded input file does not follow the expected structure.");
-                            return;
-                        }
-                        setInputData(json);
-                        setInputUploaded(true);
-                        setInputFileName(file.name);
-                    } else {
-                        if (!validateSolutionFile(json)) {
-                            alert("The uploaded solution file does not follow the expected structure.");
-                            return;
-                        }
-                        setSolutionData(json);
-                        setOutputUploaded(true);
-                        setSolutionFileName(file.name);
-                    }
-                } catch (error) {
-                    console.error("Error parsing JSON", error);
-                    alert("Error parsing JSON file.");
+        if (!file) return;
+        readJsonFile(
+            file,
+            json => {
+                if (!validateInputFile(json)) {
+                    alert('El fichero de instancia no sigue la estructura esperada.');
+                    return;
                 }
-            };
-            reader.readAsText(file);
+                setInputData(json);
+                setInputJson(json);
+                setInputFileName(file.name);
+                setError(null);
+            },
+            () => alert('Error leyendo el JSON de instancia.')
+        );
+    };
+
+    const handleSolutionUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        readJsonFile(
+            file,
+            json => {
+                if (!validateSolutionFile(json)) {
+                    alert('El fichero de solución no sigue la estructura esperada.');
+                    return;
+                }
+                setSolutionData(json);
+                setSolutionFileName(file.name);
+                setReady(true);
+                setError(null);
+            },
+            () => alert('Error leyendo el JSON de solución.')
+        );
+    };
+
+    const fetchSolution = async () => {
+        if (!inputJson) return;
+        setLoading(true);
+        setError(null);
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 120_000);
+
+            const resp = await fetch('/api/solve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(inputJson),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (!resp.ok) throw new Error(`Servidor respondió: ${resp.statusText}`);
+
+            const sol = await resp.json();
+            if (!validateSolutionFile(sol)) {
+                throw new Error('La respuesta de solución no tiene la estructura esperada.');
+            }
+
+            setSolutionData(sol);
+            setSolutionFileName('Obtenida de la API');
+            setReady(true);
+        } catch (err: any) {
+            setError(
+                err.name === 'AbortError'
+                    ? 'Tiempo de espera agotado (2 min).'
+                    : err.message || 'Error al obtener solución.'
+            );
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className='flex flex-col gap-2'>
+        <div className="flex flex-col gap-8">
             <div>
-                <label>Input file: </label>
-
-                {!inputFileName && (
+                <label>Instance file (JSON): </label>
+                {!inputFileName ? (
                     <label htmlFor="inputFile" className={Style.customFileLabel}>
-                        Upload file
+                        upload file
                     </label>
+                ) : (
+                    <span className={Style.fileName}>{inputFileName}</span>
                 )}
-
                 <input
                     id="inputFile"
                     type="file"
                     accept=".json"
-                    onChange={(e) => handleFileUpload(e, 'input')}
+                    onChange={handleInputUpload}
                     className={Style.hiddenInput}
+                    disabled={loading}
                 />
-
-                <span className={Style.fileName}>
-                    {inputFileName || ''}
-                </span>
             </div>
 
-            <div className='mb-8'>
-                <label>Solution file: </label>
+            {inputFileName && !solutionFileName && (
+                <div className="flex flex-col gap-2">
+                    <button
+                        onClick={() => solutionInputRef.current?.click()}
+                        disabled={loading}
+                        className={Style.btn}
+                    >
+                        Upload solution file
+                    </button>
+                    <input
+                        ref={solutionInputRef}
+                        type="file"
+                        accept=".json"
+                        onChange={handleSolutionUpload}
+                        className="hidden"
+                    />
 
-                {!solutionFileName && (
-                    <label htmlFor="solutionFile" className={Style.customFileLabel}>
-                        Upload file
-                    </label>
-                )}
-
-                <input
-                    id="solutionFile"
-                    type="file"
-                    accept=".json"
-                    onChange={(e) => handleFileUpload(e, 'output')}
-                    className={Style.hiddenInput}
-                />
-
-                <span className={Style.fileName}>
-                    {solutionFileName || ''}
-                </span>
-            </div>
-
-            {filesUploaded && (
-                <nav>
-                    <Link to="/FirstElection">Continue</Link>
-                </nav>
+                    <button
+                        onClick={fetchSolution}
+                        disabled={loading}
+                        className={Style.btn}
+                    >
+                        Get solution from API
+                    </button>
+                </div>
             )}
+
+            {loading && (
+                <div className="flex items-center gap-2">
+                    <div className="loader" />
+                    <span>Processing...</span>
+                </div>
+            )}
+
+            {error && <div className="text-red-600">{error}</div>}
+
         </div>
     );
 };
