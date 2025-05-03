@@ -5,7 +5,8 @@ const path = require('path');
 const data = require(path.join('/home/nestor/TFG/validator/test_solutions/sol_test01.json'));
 
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 
 app.post('/api/solve', (req, res) => {
     console.log('Recibido en mock:', req.body);
