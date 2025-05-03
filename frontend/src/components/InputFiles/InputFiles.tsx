@@ -136,14 +136,16 @@ export const InputFiles: React.FC = () => {
     };
 
     const fetchSolution = async () => {
-        if (!inputJson) return;
+        if (!inputJson || !inputFileName) return;
         setLoading(true);
         setError(null);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 120_000);
 
-            const response = await fetch('/api/solve', {
+            const url = `/api/solve?file=${encodeURIComponent(inputFileName)}`;
+
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputJson),
@@ -151,7 +153,9 @@ export const InputFiles: React.FC = () => {
             });
             clearTimeout(timeoutId);
 
-            if (!response.ok) throw new Error(`Server responded: ${response.statusText}`);
+            if (!response.ok) {
+                throw new Error(`Server responded: ${response.statusText}`);
+            }
 
             const sol = await response.json();
             if (!validateSolutionFile(sol)) {
@@ -159,7 +163,7 @@ export const InputFiles: React.FC = () => {
             }
 
             setSolutionData(sol);
-            setSolutionFileName('Fetched from API');
+            setSolutionFileName(`sol_${inputFileName}`);
             setReady(true);
         } catch (err: any) {
             setError(
