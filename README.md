@@ -1,4 +1,23 @@
-# Final Year Project (TFG)
+# Final Year Project
+
+
+## Install the dependencies:
+1. Navigate to the `frontend` directory:
+   ```bash
+   cd frontend
+   ```
+2. Install frontend dependencies:
+   ```bash
+   npm i
+   ```
+3. Navigate to the `mock-server` directory:
+   ```bash
+   cd mock-server
+   ```
+4. Install backend dependencies:
+   ```bash
+   npm i
+   ```
 
 
 ## Running the Application:
