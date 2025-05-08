@@ -85,7 +85,7 @@ export const NurseScheduler = () => {
             return;
         }
 
-        // ensure only one nurse per room/day/shift
+        // Hard constraint: ensure only one nurse per room/day/shift
         const conflict = solutionData.nurses.some(n =>
             n.id !== nurseId &&
             n.assignments.some(a => a.day === newDay && a.shift === selectedShift && a.rooms.includes(newRoom))
@@ -125,8 +125,6 @@ export const NurseScheduler = () => {
             return nh.length > MAX_HISTORY ? nh.slice(1) : nh;
         });
 
-        const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updatedNurses });
-        setErrorMessages(errors);
         setSolutionData({ ...solutionData, nurses: updatedNurses });
     };
 
@@ -158,8 +156,6 @@ export const NurseScheduler = () => {
         });
 
         setSolutionData({ ...solutionData, nurses: updated });
-        const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updated });
-        setErrorMessages(errors);
     };
 
     const handleUndo = () => {
@@ -177,8 +173,6 @@ export const NurseScheduler = () => {
             return { ...n, assignments: newAssign };
         });
         setSolutionData({ ...solutionData, nurses: updated });
-        const errors = checkHardConstraints(inputData, { ...solutionData, nurses: updated });
-        setErrorMessages(errors);
     };
 
     const handleDownloadSolution = () => {
@@ -216,6 +210,7 @@ export const NurseScheduler = () => {
                 )}
                 {errorMessages.length > 0 && (
                     <div className={`${solutionGridStyles.side_content}`}>
+                        <h3 className="text-center">Violations</h3>
                         {errorMessages.map((msg, index) => (
                             <p key={index} className={solutionGridStyles.error_messages}>{msg}</p>
                         ))}

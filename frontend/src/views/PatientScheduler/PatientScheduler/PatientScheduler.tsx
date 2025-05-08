@@ -45,6 +45,11 @@ export const PatientScheduler = () => {
         localStorage.setItem('deltaHistory', JSON.stringify(deltaHistory));
     }, [deltaHistory]);
 
+    React.useEffect(() => {
+        const errors = checkHardConstraints(inputData!, solutionData!);
+        setErrorMessages(errors);
+    }, [inputData, solutionData]);
+
     if (!inputData || !solutionData) {
         return <div>Ups, something went wrong! No data loaded.</div>;
     }
@@ -123,10 +128,7 @@ export const PatientScheduler = () => {
                 : p
         );
 
-        const errors = checkHardConstraints(inputData, { ...solutionData, patients: updatedPatients });
-        setErrorMessages(errors);
         setSolutionData({ ...solutionData, patients: updatedPatients });
-
         setSelectedOperatingTheater("no-change");
     };
 
@@ -142,8 +144,6 @@ export const PatientScheduler = () => {
             return patient;
         });
         setSolutionData({ ...solutionData, patients: updatedPatients });
-        const errors = checkHardConstraints(inputData, { ...solutionData, patients: updatedPatients });
-        setErrorMessages(errors);
     };
 
     const handleDownloadSolution = () => {
@@ -174,16 +174,6 @@ export const PatientScheduler = () => {
                     <Legend />
                 </div>
 
-                {errorMessages.length > 0 && (
-                    <div className={`${solutionGridStyles.side_content} mb-8`}>
-                        {errorMessages.map((msg, index) => (
-                            <p key={index} className={solutionGridStyles.error_messages}>
-                                {msg}
-                            </p>
-                        ))}
-                    </div>
-                )}
-
                 {selectedPatientId &&
                     <div className={`${solutionGridStyles.side_content} mb-8`}>
                         <PatientDetail patientId={selectedPatientId} />
@@ -191,10 +181,21 @@ export const PatientScheduler = () => {
                 }
 
                 {selectedDay != null &&
-                    <div className={`${solutionGridStyles.side_content}`}>
+                    <div className={`${solutionGridStyles.side_content} mb-8`}>
                         <DayDetail day={selectedDay} />
                     </div>
                 }
+
+                {errorMessages.length > 0 && (
+                    <div className={`${solutionGridStyles.side_content}`}>
+                        <h3 className="text-center">Violations</h3>
+                        {errorMessages.map((msg, index) => (
+                            <p key={index} className={solutionGridStyles.error_messages}>
+                                {msg}
+                            </p>
+                        ))}
+                    </div>
+                )}
             </div>
 
 
