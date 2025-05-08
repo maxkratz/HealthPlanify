@@ -170,18 +170,18 @@ export const PatientScheduler = () => {
     return (
         <div className={solutionGridStyles.container}>
             <div className={solutionGridStyles.side}>
-                <div className={`${solutionGridStyles.side_content} mb-8`}>
+                <div className={`mb-8`}>
                     <Legend />
                 </div>
 
                 {selectedPatientId &&
-                    <div className={`${solutionGridStyles.side_content} mb-8`}>
+                    <div className={`mb-8`}>
                         <PatientDetail patientId={selectedPatientId} />
                     </div>
                 }
 
                 {selectedDay != null &&
-                    <div className={`${solutionGridStyles.side_content} mb-8`}>
+                    <div className={`mb-8`}>
                         <DayDetail day={selectedDay} />
                     </div>
                 }
