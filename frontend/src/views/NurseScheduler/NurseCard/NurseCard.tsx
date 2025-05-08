@@ -11,19 +11,24 @@ interface NurseCardProps {
 }
 
 /**
- * Generates a distinct HSL-based color per nurse index using the golden angle.
+ * Generates a distinct HSL-based dark color per nurse index using the golden angle.
  * Parses numeric suffix from ID (e.g., "n012" -> 12) to compute hue.
+ * Uses high saturation and lower lightness for darker backgrounds appropriate for white text.
  */
 function getColorFromId(id: string): string {
     // Extract numeric part
     const match = id.match(/\d+/);
     const index = match ? parseInt(match[0], 10) : 0;
-    // Golden angle in degrees
+
+    // Golden angle in degrees for hue distribution
     const goldenAngle = 137.50776405;
-    // Compute hue by multiplying index by golden angle mod 360
     const hue = (index * goldenAngle) % 360;
-    // Use moderate saturation and lightness
-    return `hsl(${Math.floor(hue)}, 65%, 55%)`;
+
+    // Increased saturation for vibrancy, lower lightness for darker backgrounds
+    const saturation = 75;
+    const lightness = 35;
+
+    return `hsl(${Math.floor(hue)}, ${saturation}%, ${lightness}%)`;
 }
 
 const NurseCard: React.FC<NurseCardProps> = ({ nurse, onClick, onRemove, removeContext }) => {
@@ -59,6 +64,7 @@ const NurseCard: React.FC<NurseCardProps> = ({ nurse, onClick, onRemove, removeC
                 padding: '0.25rem',
                 margin: '0.125rem',
                 backgroundColor: bgColor,
+                color: '#ffffff',             // White text for contrast
                 cursor: isInteractive ? 'move' : 'default',
                 textAlign: 'center',
                 minWidth: '4rem',

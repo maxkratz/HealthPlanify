@@ -59,7 +59,7 @@ export const DayDetail: React.FC<DayDetailProps> = ({ day }) => {
                         <h4 className="text-center">Surgeons</h4>
                         <div className="grid grid-cols-[1fr_3fr] gap-4 font-semibold">
                             <div>ID</div>
-                            <div>Used / Max</div>
+                            <div>Time Used / Max</div>
                         </div>
                         {surgeonsData.map(s => (
                             <div key={s.id} className="grid grid-cols-[1fr_3fr] gap-4">
@@ -73,7 +73,7 @@ export const DayDetail: React.FC<DayDetailProps> = ({ day }) => {
                         <h4 className="text-center">Operating Theaters</h4>
                         <div className="grid grid-cols-[1fr_3fr] gap-4 font-semibold">
                             <div>ID</div>
-                            <div>Used / Max</div>
+                            <div>Time Used / Max</div>
                         </div>
                         {theatersData.map(t => (
                             <div key={t.id} className="grid grid-cols-[1fr_3fr] gap-4">
