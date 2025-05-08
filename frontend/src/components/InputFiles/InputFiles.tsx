@@ -153,11 +153,14 @@ export const InputFiles: React.FC = () => {
             });
             clearTimeout(timeoutId);
 
+            const payload = await response.json().catch(() => ({}));
+
             if (!response.ok) {
-                throw new Error(`Server responded: ${response.statusText}`);
+                const serverMsg = payload.error ?? payload.message ?? response.statusText;
+                throw new Error(serverMsg);
             }
 
-            const sol = await response.json();
+            const sol = payload;
             if (!validateSolutionFile(sol)) {
                 throw new Error('The solution response does not follow the expected structure.');
             }
