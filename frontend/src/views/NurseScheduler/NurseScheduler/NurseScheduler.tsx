@@ -45,6 +45,11 @@ export const NurseScheduler = () => {
         localStorage.setItem('deltaHistory', JSON.stringify(deltaHistory));
     }, [deltaHistory]);
 
+    React.useEffect(() => {
+        const errors = checkHardConstraints(inputData!, solutionData!);
+        setErrorMessages(errors);
+    }, [inputData, solutionData]);
+
     if (!inputData || !solutionData) {
         return <div>Ups, something went wrong! No data loaded.</div>;
     }
@@ -92,6 +97,7 @@ export const NurseScheduler = () => {
             return;
         }
 
+        // Hard constraint: a nurse cannot be assigned to a room/shift where they are not scheduled to work (NursePresence)
         const assignment = nurse.assignments.find(a => a.day === newDay && a.shift === selectedShift);
         if (!assignment) {
             setErrorMessages(prev => [...prev, `Assignment not found for nurse ${nurseId} on day ${newDay} shift ${selectedShift}`]);

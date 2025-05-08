@@ -8,6 +8,7 @@ import { checkSurgeonOvertime } from "./HardConstraints/checkSurgeonOvertime";
 import { checkOperatingTheaterOvertime } from "./HardConstraints/checkOperatingTheaterOvertime";
 import { checkMandatoryPatientsAdmitted } from "./HardConstraints/checkMandatoryPatientsAdmitted";
 import { checkAdmissionDay } from "./HardConstraints/checkAdmissionDay";
+import { checkUncoveredRoom } from "./HardConstraints/checkUncoveredRoom";
 
 export function checkHardConstraints(inputData: InputFile, solutionData: SolutionFile): string[] {
     const errors: string[] = [];
@@ -26,6 +27,9 @@ export function checkHardConstraints(inputData: InputFile, solutionData: Solutio
     errors.push(...checkMandatoryPatientsAdmitted(inputData, solutionData));
     // H6
     errors.push(...checkAdmissionDay(inputData, solutionData));
+
+    // Nurse Uncovered Rooms
+    errors.push(...checkUncoveredRoom(inputData, solutionData));
 
     return errors.flat();
 }
