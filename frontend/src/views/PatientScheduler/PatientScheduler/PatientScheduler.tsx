@@ -200,6 +200,10 @@ export const PatientScheduler = () => {
 
 
             <div className={solutionGridStyles.center}>
+                <div className='mb-24'>
+                    <h1>Patient Scheduler</h1>
+                </div>
+
                 <div className='flex flex-row items-center justify-center gap-16 mb-20'>
                     <button
                         onClick={handleUndo}

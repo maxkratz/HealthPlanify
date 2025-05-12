@@ -4,13 +4,13 @@
 
 .customFileLabel {
     cursor: pointer;
-    color: var(--color-rose);
+    color: var(--color-red);
     text-decoration: underline;
 }
 
 .fileName {
     cursor: pointer;
-    color: var(--color-rose);
+    color: var(--color-red);
     text-decoration: underline;
 }
 
@@ -19,6 +19,6 @@
 }
 
 .btn:hover {
-    color: var(--color-rose);
+    color: var(--color-red);
     text-decoration: underline;
 }

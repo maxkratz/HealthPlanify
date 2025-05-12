@@ -14,13 +14,17 @@ export const SortButton: React.FC<SortButtonProps> = ({ onClick, active, icon, l
     return (
         <button
             onClick={onClick}
-            className={`flex items-center gap-1 p-2 rounded ${active ? SortButtonStyle.active : SortButtonStyle.inactive}`}
+            className={
+                active
+                    ? `${SortButtonStyle.container} ${SortButtonStyle['container--active']}`
+                    : SortButtonStyle.container
+            }
         >
             {sortDirection !== undefined && (
                 sortDirection === 'asc' ? (
-                    <SortAscending size={20} weight="fill" color="var(--color-white)" />
+                    <SortAscending size={20} weight="fill" color="var(--color-red)" />
                 ) : (
-                    <SortDescending size={20} weight="fill" color="var(--color-white)" />
+                    <SortDescending size={20} weight="fill" color="var(--color-red)" />
                 )
             )}
             <span>{label}</span>

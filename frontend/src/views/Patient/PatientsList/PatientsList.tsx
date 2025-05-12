@@ -87,25 +87,25 @@ export const PatientsList: React.FC = () => {
                     onClick={() => handleSort("surgeryReleaseDay")}
                     active={sortCriteria === "surgeryReleaseDay"}
                     label="Sort by Release Day"
-                    sortDirection={sortCriteria === "surgeryReleaseDay" ? sortDirection : undefined}
+                    sortDirection={sortCriteria === "surgeryReleaseDay" ? sortDirection : 'desc'}
                 />
                 <SortButton
                     onClick={() => handleSort("surgeryDueDay")}
                     active={sortCriteria === "surgeryDueDay"}
                     label="Sort by Due Day"
-                    sortDirection={sortCriteria === "surgeryDueDay" ? sortDirection : undefined}
+                    sortDirection={sortCriteria === "surgeryDueDay" ? sortDirection : 'desc'}
                 />
                 <SortButton
                     onClick={() => handleSort("admissionDay")}
                     active={sortCriteria === "admissionDay"}
                     label="Sort by Admission Day"
-                    sortDirection={sortCriteria === "admissionDay" ? sortDirection : undefined}
+                    sortDirection={sortCriteria === "admissionDay" ? sortDirection : 'desc'}
                 />
                 <SortButton
                     onClick={() => handleSort("delay")}
                     active={sortCriteria === "delay"}
                     label="Sort by Delay"
-                    sortDirection={sortCriteria === "delay" ? sortDirection : undefined}
+                    sortDirection={sortCriteria === "delay" ? sortDirection : 'desc'}
                 />
             </div>
 

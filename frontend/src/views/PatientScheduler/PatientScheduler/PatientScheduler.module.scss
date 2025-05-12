@@ -1,5 +1,4 @@
 .error_messages {
-    color: var(--color-white);
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
@@ -15,11 +14,11 @@
 
 .side {
     width: 15.625rem;
-    margin-top: 21.3rem; // Hardcoded for the Legend
+    margin-top: 30.8rem; // Hardcoded for the Legend
 }
 
 .side_content {
-    border: 0.125rem solid var(--color-white);
+    border: 0.125rem solid var(--color-black);
     padding: 0.625rem;
 }
 
@@ -30,11 +29,10 @@
 
 
 .undo_button {
-    border: 0.063rem solid var(--color-white);
+    border: 0.063rem solid var(--color-black);
     border-radius: 0.75rem;
     padding: 0.75rem;
     background-color: transparent;
-    color: var(--color-white);
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     outline: none;
@@ -59,11 +57,10 @@
 
 
 .button {
-    border: 0.063rem solid var(--color-white);
+    border: 0.063rem solid var(--color-black);
     border-radius: 0.75rem;
     padding: 0.5rem 1rem;
     background-color: transparent;
-    color: var(--color-white);
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     outline: none;

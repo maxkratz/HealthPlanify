@@ -29,7 +29,7 @@ const BedSlot: React.FC<BedSlotProps> = ({ day, roomId, bedIndex, patient, onDro
             style={{
                 minHeight: '2.75rem',
                 minWidth: '4.5rem',
-                border: isOver ? '0.125rem dashed var(--color-rose)' : '0.063rem solid var(--color-white)',
+                border: isOver ? '0.125rem dashed var(--color-red)' : '0.063rem solid var(--color-black)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -62,7 +62,7 @@ const RoomCell: React.FC<RoomCellProps> = ({ day, roomId, capacity, patients, on
                 gridTemplateColumns: "1fr",
                 gap: '0.25rem',
                 padding: '0.25rem',
-                border: '0.063rem solid var(--color-white)',
+                border: '0.063rem solid var(--color-black)',
             }}
         >
             {bedSlots.map(({ bedIndex, patient }) => (

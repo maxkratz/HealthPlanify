@@ -30,7 +30,7 @@ export const RoomsList: React.FC = () => {
             <div className='mb-16'>
                 <h2>Global Cost of Restriction</h2>
                 <div className={`flex items-center justify-center flex-row gap-2`}>
-                    <Elderly sx={{ color: 'var(--color-white)', fontSize: 24 }} />
+                    <Elderly sx={{ color: 'var(--color-black)', fontSize: 24 }} />
                     <span><strong>S1 - Age Groups Difference</strong></span> (Weight: {globalS1Weighted}): {calculateGlobalS1AgeDifference(inputData, solutionData)}
                 </div>
             </div>

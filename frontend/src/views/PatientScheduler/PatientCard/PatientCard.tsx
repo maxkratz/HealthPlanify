@@ -42,7 +42,7 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onClick }) => {
         ? "none"
         : (('mandatory' in patient && patient.mandatory) ? "solid" : "dashed");
 
-    let finalOpacity = isInteractive ? (isDragging ? 0.2 : 1) : 0.2;
+    let finalOpacity = isInteractive ? (isDragging ? 0.4 : 1) : 0.4;
     if (patient.roomOccupantType === "occupant") {
         finalOpacity = 0.7;
     }
@@ -58,7 +58,7 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onClick }) => {
             ref={drag as any}
             style={{
                 opacity: finalOpacity,
-                border: `0.188rem ${borderStyle} var(--color-white)`,
+                border: `0.188rem ${borderStyle} var(--color-black)`,
                 padding: '0.25rem',
                 margin: '0.125rem',
                 backgroundColor: patient.gender === 'A' ? 'var(--color-blue)' : 'var(--color-rose)',

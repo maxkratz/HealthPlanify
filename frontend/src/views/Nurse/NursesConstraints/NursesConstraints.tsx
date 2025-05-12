@@ -81,28 +81,28 @@ export const NursesConstraints: React.FC = () => {
                     onClick={() => handleSort("total")}
                     active={sortCriteria === "total"}
                     label="Sort by Total"
-                    sortDirection={sortCriteria === "total" ? sortDirection : undefined}
+                    sortDirection={sortCriteria === "total" ? sortDirection : 'desc'}
                 />
                 <SortButton
                     onClick={() => handleSort("S2")}
                     active={sortCriteria === "S2"}
                     icon={<FlagBanner size={20} weight="fill" color="var(--color-icon-flagBanner)" />}
                     label="Sort by S2"
-                    sortDirection={sortCriteria === "S2" ? sortDirection : undefined}
+                    sortDirection={sortCriteria === "S2" ? sortDirection : 'desc'}
                 />
                 <SortButton
                     onClick={() => handleSort("S3")}
                     active={sortCriteria === "S3"}
                     icon={<Heart size={20} weight="fill" color="var(--color-icon-heart)" />}
                     label="Sort by S3"
-                    sortDirection={sortCriteria === "S3" ? sortDirection : undefined}
+                    sortDirection={sortCriteria === "S3" ? sortDirection : 'desc'}
                 />
                 <SortButton
                     onClick={() => handleSort("S4")}
                     active={sortCriteria === "S4"}
                     icon={<BatteryFull size={20} weight="fill" color="var(--color-icon-batteryFull)" />}
                     label="Sort by S4"
-                    sortDirection={sortCriteria === "S4" ? sortDirection : undefined}
+                    sortDirection={sortCriteria === "S4" ? sortDirection : 'desc'}
                 />
             </div>
 

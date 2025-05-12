@@ -60,7 +60,7 @@ const NurseCard: React.FC<NurseCardProps> = ({ nurse, onClick, onRemove, removeC
             ref={drag as any}
             style={{
                 opacity: finalOpacity,
-                border: '0.188rem solid var(--color-white)',
+                border: '0.188rem solid var(--color-black)',
                 padding: '0.25rem',
                 margin: '0.125rem',
                 backgroundColor: bgColor,

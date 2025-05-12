@@ -53,7 +53,7 @@ export const Room: React.FC<RoomComponentProps> = ({
                     <span {...props}><strong>Assigned: </strong>{totalAssigned}</span>
                     {s1AgeDifference > 0 && (
                         <div className={`flex items-center justify-center flex-row gap-2`}>
-                            <Elderly sx={{ color: 'var(--color-white)', fontSize: 24 }} />
+                            <Elderly sx={{ color: 'var(--color-black)', fontSize: 24 }} />
                             {/* <span {...props}>
                                 <strong>S1: </strong>{s1AgeDifference}
                             </span> */}

@@ -58,7 +58,7 @@ export const Nurse: React.FC<NurseComponentProps> = ({
                     <span {...props}><strong>Actual Load: </strong>{actualLoad}</span>
                     {skillLevelDiff > 0 && (
                         <div className={`flex items-center justify-center flex-row gap-2`}>
-                            <FlagBanner size={24} weight="fill" color="var(--color-white)" />
+                            <FlagBanner size={24} weight="fill" color="var(--color-black)" />
                             {/* <span {...props}><strong>S2: </strong>{skillLevelDiff}</span> */}
                         </div>
                     )}

@@ -32,7 +32,7 @@ export const NursesList: React.FC = () => {
             <div className='mb-16'>
                 <h2>Global Cost of Restriction</h2>
                 <div className={`flex items-center justify-center flex-row gap-2`}>
-                    <FlagBanner size={24} weight="fill" color="var(--color-white)" />
+                    <FlagBanner size={24} weight="fill" color="var(--color-black)" />
                     <span><strong>S2 - Minimum Skill Level</strong></span>
                 </div>
             </div>
