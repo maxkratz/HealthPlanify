@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { DataProvider } from './DataContext';
 import { PageNotFound } from "./views/PageNotFound";
 import { Breadcrumbs } from "./components/Breadcrumbs";
+import { Menu } from "./components/Menu/Menu";
 import { Home } from "./views/Home/Home";
 import { FirstElection } from "./views/FirstElection/FirstElection";
 import { SecondElection } from "./views/SecondElection";
@@ -33,6 +34,7 @@ function App() {
             <DndProvider backend={HTML5Backend}>
                 <Router>
                     <Breadcrumbs />
+                    <Menu />
                     <Routes>
                         <Route path="*" element={<PageNotFound />} />
 
