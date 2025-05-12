@@ -1,13 +1,7 @@
-/* src/components/Menu/Menu.module.scss */
-
 .menuButton {
     position: fixed;
-    top: 1rem;
-    right: 1rem;
-    background: var(--color-primary, #333);
-    border: none;
-    padding: 0.5rem;
-    border-radius: 4px;
+    top: 3rem;
+    right: 3rem;
     cursor: pointer;
     z-index: 1000;
     display: flex;
@@ -15,41 +9,74 @@
     justify-content: center;
 
     svg {
+        color: var(--color-red);
+    }
+}
+
+.openButton {
+    svg {
         color: var(--color-white);
     }
 }
+
 
 .menu {
     position: fixed;
     top: 0;
     right: 0;
     height: 100%;
-    /* Cambiamos de 240px a mitad de pantalla */
     width: 50vw;
-    background: var(--color-white, #fff);
+    background: var(--color-red);
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
     transform: translateX(100%);
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.6s ease-in-out;
     padding: 2rem 1rem;
     z-index: 999;
     display: flex;
+    align-items: flex-start;
     flex-direction: column;
     gap: 1rem;
+    padding-top: 8rem;
 }
 
 .open {
     transform: translateX(0);
 }
 
+
 .menuItem {
-    font-size: 1rem;
-    color: var(--color-text, #333);
+    font-size: 3rem;
+    color: var(--color-white);
+    margin-left: 3.688rem;
     text-decoration: none;
     padding: 0.5rem 0;
     border-radius: 2px;
     transition: background 0.2s;
 
     &:hover {
-        background: rgba(0, 0, 0, 0.05);
+        color: var(--color-rose);
     }
+}
+
+
+.menuImage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 100%;
+    object-fit: cover;
+    z-index: 998;
+
+    filter: blur(20px);
+    opacity: 0;
+
+    transition: filter 0.6s ease-in-out, opacity 0.6s ease-in-out;
+
+    pointer-events: none;
+}
+
+.visible {
+    filter: blur(0);
+    opacity: 1;
 }
