@@ -76,7 +76,7 @@ export const InputFiles: React.FC = () => {
 
     useEffect(() => {
         if (ready) {
-            navigate('/FirstElection');
+            navigate('/PatientScheduler');
         }
     }, [ready, navigate]);
 

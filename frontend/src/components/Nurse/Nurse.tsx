@@ -49,7 +49,7 @@ export const Nurse: React.FC<NurseComponentProps> = ({
     return (
         <div>
             <Link
-                to={`/FirstElection/${branch}/SecondElection/Calendar/${dayIndex}/Shifts/${shiftType}/NursesList/${nurseId}`}
+                to={`/${branch}/SecondElection/Calendar/${dayIndex}/Shifts/${shiftType}/NursesList/${nurseId}`}
                 state={{ nurseData }} // Necessary for NurseDetails
             >
                 <div className={containerClassName}>

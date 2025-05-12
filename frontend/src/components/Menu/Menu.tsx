@@ -32,25 +32,25 @@ export const Menu: React.FC = () => {
                 className={`${styles.menu} ${isOpen ? styles.open : ''}`}
                 aria-hidden={!isOpen}
             >
-                <Link to="/FirstElection/Rooms/SecondElection" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/Rooms/SecondElection" className={styles.menuItem} onClick={closeMenu}>
                     Rooms
                 </Link>
-                <Link to="/FirstElection/Nurses/SecondElection" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/Nurses/SecondElection" className={styles.menuItem} onClick={closeMenu}>
                     Nurses
                 </Link>
-                <Link to="/FirstElection/Surgeons/SecondElection" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/Surgeons/SecondElection" className={styles.menuItem} onClick={closeMenu}>
                     Surgeons
                 </Link>
-                <Link to="/FirstElection/OperatingTheaters/SecondElection" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/OperatingTheaters/SecondElection" className={styles.menuItem} onClick={closeMenu}>
                     Operating Theaters
                 </Link>
-                <Link to="/FirstElection/Patients" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/Patients" className={styles.menuItem} onClick={closeMenu}>
                     Patients
                 </Link>
-                <Link to="/FirstElection/PatientScheduler" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/PatientScheduler" className={styles.menuItem} onClick={closeMenu}>
                     Patient Scheduler
                 </Link>
-                <Link to="/FirstElection/NurseScheduler" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/NurseScheduler" className={styles.menuItem} onClick={closeMenu}>
                     Nurse Scheduler
                 </Link>
             </nav>

@@ -1,1 +1,0 @@
-export { FirstElection } from './FirstElection'

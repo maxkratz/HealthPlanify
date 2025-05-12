@@ -12,7 +12,6 @@ export const Breadcrumbs: React.FC = () => {
     }
 
     const allowedSegments = [
-        "FirstElection",
         "SecondElection",
         "Calendar",
         "RoomsList",
@@ -22,7 +21,7 @@ export const Breadcrumbs: React.FC = () => {
         "OperatingTheatersList",
     ];
 
-    const needsMargin = pathname === '/FirstElection/PatientScheduler' || pathname === '/FirstElection/NurseScheduler';
+    const needsMargin = pathname === '/PatientScheduler' || pathname === '/NurseScheduler';
 
     return (
         <nav

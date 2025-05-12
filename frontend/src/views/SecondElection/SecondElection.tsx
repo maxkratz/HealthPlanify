@@ -15,7 +15,7 @@ export const SecondElection: React.FC = () => {
                     <div className="flex flex-row justify-center gap-4">
                         <Election>
                             <nav>
-                                <Link to="/FirstElection/Rooms/SecondElection/Calendar">Calendar</Link>
+                                <Link to="/Rooms/SecondElection/Calendar">Calendar</Link>
                             </nav>
                         </Election>
                     </div>
@@ -30,12 +30,12 @@ export const SecondElection: React.FC = () => {
                     <div className="flex flex-row justify-center gap-4">
                         <Election>
                             <nav>
-                                <Link to="/FirstElection/Nurses/SecondElection/Calendar">Calendar</Link>
+                                <Link to="/Nurses/SecondElection/Calendar">Calendar</Link>
                             </nav>
                         </Election>
                         <Election>
                             <nav>
-                                <Link to="/FirstElection/Nurses/SecondElection/NursesConstraints">Constraints</Link>
+                                <Link to="/Nurses/SecondElection/NursesConstraints">Constraints</Link>
                             </nav>
                         </Election>
                     </div>
@@ -50,12 +50,12 @@ export const SecondElection: React.FC = () => {
                     <div className="flex flex-row justify-center gap-4">
                         <Election>
                             <nav>
-                                <Link to="/FirstElection/Surgeons/SecondElection/Calendar">Calendar</Link>
+                                <Link to="/Surgeons/SecondElection/Calendar">Calendar</Link>
                             </nav>
                         </Election>
                         <Election>
                             <nav>
-                                <Link to="/FirstElection/Surgeons/SecondElection/SurgeonsConstraints">Constraints</Link>
+                                <Link to="/Surgeons/SecondElection/SurgeonsConstraints">Constraints</Link>
                             </nav>
                         </Election>
                     </div>
@@ -70,12 +70,12 @@ export const SecondElection: React.FC = () => {
                     <div className="flex flex-row justify-center gap-4">
                         <Election>
                             <nav>
-                                <Link to="/FirstElection/OperatingTheaters/SecondElection/Calendar">Calendar</Link>
+                                <Link to="/OperatingTheaters/SecondElection/Calendar">Calendar</Link>
                             </nav>
                         </Election>
                         <Election>
                             <nav>
-                                <Link to="/FirstElection/OperatingTheaters/SecondElection/OperatingTheatersConstraints">Constraints</Link>
+                                <Link to="/OperatingTheaters/SecondElection/OperatingTheatersConstraints">Constraints</Link>
                             </nav>
                         </Election>
                     </div>
