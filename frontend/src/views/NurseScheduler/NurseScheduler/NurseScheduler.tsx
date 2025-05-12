@@ -235,7 +235,7 @@ export const NurseScheduler = () => {
                 </div>
 
                 <div className='flex flex-col items-center justify-center mb-16'>
-                    <span>Shift Selector</span>
+                    <span className="text-[var(--color-red)]">Shift Selector</span>
                     <div className='flex flex-row items-center justify-center gap-8 mt-8'>
                         {inputData.shift_types.map(shift => (
                             <button

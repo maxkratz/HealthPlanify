@@ -1,5 +1,3 @@
-// import HomeStyle from './home.module.scss'
-
 import React from 'react'
 import { InputFiles } from '../../components/InputFiles';
 

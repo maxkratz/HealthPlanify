@@ -7,6 +7,10 @@ export const Breadcrumbs: React.FC = () => {
     const { pathname } = location;
     const pathnames = pathname.split('/').filter(x => x);
 
+    if (pathnames.length === 0) {
+        return null;
+    }
+
     const allowedSegments = [
         "FirstElection",
         "SecondElection",
@@ -25,7 +29,7 @@ export const Breadcrumbs: React.FC = () => {
             className={`
             flex justify-center mb-16
             ${BreadcrumbsStyle.container}
-            ${needsMargin ? 'ml-44' : ''}
+            ${needsMargin ? 'ml-40' : ''}
           `}
         >
             <ul className="flex flex-row items-center">
