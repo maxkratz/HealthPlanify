@@ -9,7 +9,7 @@ export const SecondElection: React.FC = () => {
         <div>
             {branch === 'Rooms' && (
                 <div>
-                    <div className='mb-16'>
+                    <div className='mb-24'>
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
@@ -24,7 +24,7 @@ export const SecondElection: React.FC = () => {
 
             {branch === 'Nurses' && (
                 <div>
-                    <div className='mb-16'>
+                    <div className='mb-24'>
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
@@ -44,7 +44,7 @@ export const SecondElection: React.FC = () => {
 
             {branch === 'Surgeons' && (
                 <div>
-                    <div className='mb-16'>
+                    <div className='mb-24'>
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
@@ -64,7 +64,7 @@ export const SecondElection: React.FC = () => {
 
             {branch === 'OperatingTheaters' && (
                 <div>
-                    <div className='mb-16'>
+                    <div className='mb-24'>
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
