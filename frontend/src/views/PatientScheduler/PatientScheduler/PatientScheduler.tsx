@@ -208,7 +208,7 @@ export const PatientScheduler = () => {
                     <button
                         onClick={handleUndo}
                         disabled={deltaHistory.length === 0}
-                        className={`${solutionGridStyles.undo_button}`}
+                        className={`${solutionGridStyles.button}`}
                     >
                         Undo changes
                     </button>
@@ -219,7 +219,7 @@ export const PatientScheduler = () => {
 
                     <button
                         onClick={handleDownloadSolution}
-                        className={`${solutionGridStyles.undo_button}`}
+                        className={`${solutionGridStyles.button}`}
                     >
                         Download solution
                     </button>
@@ -235,14 +235,18 @@ export const PatientScheduler = () => {
                             <button
                                 key={ot.id}
                                 onClick={() => setSelectedOperatingTheater(ot.id)}
-                                className={selectedOperatingTheater === ot.id ? solutionGridStyles.activeButton : solutionGridStyles.button}
+                                className={selectedOperatingTheater === ot.id
+                                    ? `${solutionGridStyles.button} ${solutionGridStyles['button--active']}`
+                                    : solutionGridStyles.button}
                             >
                                 {ot.id}
                             </button>
                         ))}
                         <button
                             onClick={() => setSelectedOperatingTheater("no-change")}
-                            className={selectedOperatingTheater === "no-change" ? solutionGridStyles.activeButton : solutionGridStyles.button}
+                            className={selectedOperatingTheater === "no-change"
+                                ? `${solutionGridStyles.button} ${solutionGridStyles['button--active']}`
+                                : solutionGridStyles.button}
                         >
                             No change
                         </button>

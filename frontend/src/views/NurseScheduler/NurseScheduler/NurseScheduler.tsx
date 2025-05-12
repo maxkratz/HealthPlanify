@@ -225,11 +225,11 @@ export const NurseScheduler = () => {
                 </div>
 
                 <div className='flex flex-row items-center justify-center gap-16 mb-20'>
-                    <button onClick={handleUndo} disabled={deltaHistory.length === 0} className={solutionGridStyles.undo_button}>
+                    <button onClick={handleUndo} disabled={deltaHistory.length === 0} className={solutionGridStyles.button}>
                         Undo changes
                     </button>
                     <span>Total cost {checkSoftConstraintsCost(inputData, solutionData)}</span>
-                    <button onClick={handleDownloadSolution} className={solutionGridStyles.undo_button}>
+                    <button onClick={handleDownloadSolution} className={solutionGridStyles.button}>
                         Download solution
                     </button>
                 </div>
@@ -241,7 +241,9 @@ export const NurseScheduler = () => {
                             <button
                                 key={shift}
                                 onClick={() => setSelectedShift(shift)}
-                                className={selectedShift === shift ? solutionGridStyles.activeButton : solutionGridStyles.button}
+                                className={selectedShift === shift
+                                    ? `${solutionGridStyles.button} ${solutionGridStyles['button--active']}`
+                                    : solutionGridStyles.button}
                             >
                                 {shift}
                             </button>

@@ -28,53 +28,24 @@
 }
 
 
-.undo_button {
-    border: 0.063rem solid var(--color-black);
-    border-radius: 0.75rem;
-    padding: 0.75rem;
-    background-color: transparent;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    outline: none;
-}
-
-.undo_button:hover:not(:disabled) {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.undo_button:focus:not(:disabled) {
-    box-shadow: 0 0 0 0.188rem rgba(255, 255, 255, 0.5);
-}
-
-.undo_button:active:not(:disabled) {
-    transform: translateY(0.063rem);
-}
-
-.undo_button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-
 .button {
-    border: 0.063rem solid var(--color-black);
-    border-radius: 0.75rem;
-    padding: 0.5rem 1rem;
-    background-color: transparent;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    outline: none;
-}
+    border: 0.1rem solid var(--color-red);
+    color: var(--color-red);
+    border-radius: 0.625rem;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;
 
-.button:hover:not(:disabled) {
-    background-color: rgba(255, 255, 255, 0.1);
-}
+    min-width: 6rem;
 
-.activeButton {
-    @extend .button;
-    background-color: rgba(255, 255, 255, 0.2);
-}
+    &--active {
+        background: var(--color-red-weak);
+    }
 
-.activeButton:focus:not(:disabled) {
-    box-shadow: 0 0 0 0.188rem rgba(255, 255, 255, 0.5);
+    &:hover {
+        background-color: var(--color-red-weak);
+    }
 }
