@@ -17,7 +17,7 @@
 }
 
 .menuButton:hover {
-    box-shadow: 0 0 0 8px var(--color-red-weak);
+    box-shadow: 0 0 0 0.5rem var(--color-red-weak);
     background-color: var(--color-red-weak);
 }
 
@@ -30,9 +30,10 @@
 }
 
 .openButton:hover {
-    box-shadow: 0 0 0 8px var(--color-red-strong);
+    box-shadow: 0 0 0 0.5rem var(--color-red-strong);
     background-color: var(--color-red-strong);
 }
+
 
 
 .menu {
@@ -42,7 +43,7 @@
     height: 100%;
     width: 50vw;
     background: var(--color-red);
-    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+    box-shadow: -0.125rem 0 0.5rem rgba(0, 0, 0, 0.15);
     transform: translateX(100%);
     transition: transform 0.6s ease-in-out;
     padding: 2rem 1rem;
@@ -59,19 +60,21 @@
 }
 
 
+
 .menuItem {
     font-size: 3rem;
     color: var(--color-white);
     margin-left: 3.688rem;
     text-decoration: none;
     padding: 0.5rem 0;
-    border-radius: 2px;
+    border-radius: 0.125rem;
     transition: background 0.2s;
 
     &:hover {
         color: var(--color-yellow-weak);
     }
 }
+
 
 
 .menuImage {
@@ -83,7 +86,7 @@
     object-fit: cover;
     z-index: 998;
 
-    filter: blur(20px);
+    filter: blur(1.25rem);
     opacity: 0;
 
     transition: filter 0.6s ease-in-out, opacity 0.6s ease-in-out;

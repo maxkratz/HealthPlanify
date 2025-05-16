@@ -1,12 +1,21 @@
 import React from 'react'
-import { InputFiles } from '../../components/InputFiles';
+import styles from './Home.module.scss'
+import backgroundImage from '../../assets/2.jpg'
+import { InputFiles } from '../../components/InputFiles'
 
-export const Home: React.FC = () => {
-
-    return (
-        <div className="flex flex-col gap-16">
-            <h1>Welcome!</h1>
-            <InputFiles></InputFiles>
+export const Home: React.FC = () => (
+    <div className={styles.container}>
+        <div className={styles.leftPane}>
+            <h1 className={styles.heading}>Resual</h1>
+            <h2 className={styles.subheading}>A healthcare timetable visualizer</h2>
+            <InputFiles />
         </div>
-    );
-};
+        <div className={styles.rightPane}>
+            <img
+                src={backgroundImage}
+                alt="Descripción"
+                className={styles.image}
+            />
+        </div>
+    </div>
+)
