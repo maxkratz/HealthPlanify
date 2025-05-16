@@ -21,6 +21,7 @@
     --color-red: #CF163E;
     --color-red-strong: #a51232;
     --color-red-weak: #FFE3E5;
+    --color-yellow-weak: #fff9cb;
     --color-rose: rgb(255, 127, 127);
     --color-blue: rgb(127, 136, 255);
 
@@ -29,7 +30,7 @@
     --color-code-yellow: #ffc400be;
     --color-code-orange: #ff7300be;
     --color-code-red: #a00000a6;
-    --color-code-black: #0000005e;
+    --color-code-black: #00000077;
 
     /* Icon color palette */
     --color-icon-heart: #ff0000;
