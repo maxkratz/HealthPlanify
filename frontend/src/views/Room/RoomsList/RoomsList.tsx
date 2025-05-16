@@ -24,7 +24,7 @@ export const RoomsList: React.FC = () => {
     return (
         <div>
             <div className='mb-16'>
-                <h1>Rooms List</h1>
+                <h1>Rooms List (day {dayNumber})</h1>
             </div>
 
             <div className='mb-16'>

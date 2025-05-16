@@ -26,7 +26,7 @@ export const NursesList: React.FC = () => {
     return (
         <div>
             <div className='mb-16'>
-                <h1>Nurses List</h1>
+                <h1>Nurses List (day {dayNumber}, shift {shiftType})</h1>
             </div>
 
             <div className='mb-16'>
