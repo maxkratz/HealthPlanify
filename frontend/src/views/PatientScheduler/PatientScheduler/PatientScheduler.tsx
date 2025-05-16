@@ -227,7 +227,7 @@ export const PatientScheduler = () => {
 
 
                 <div className='flex flex-col items-center justify-center mb-16'>
-                    <span className="text-[var(--color-red)]">
+                    <span className="text-[var(--color-blue)]">
                         Operating Theater Selector (Unscheduled patients doesn't have OT)
                     </span>
                     <div className='flex flex-row items-center justify-center gap-8 mt-8'>

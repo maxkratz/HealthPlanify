@@ -22,9 +22,9 @@ export const SortButton: React.FC<SortButtonProps> = ({ onClick, active, icon, l
         >
             {sortDirection !== undefined && (
                 sortDirection === 'asc' ? (
-                    <SortAscending size={20} weight="fill" color="var(--color-red)" />
+                    <SortAscending size={20} weight="fill" color="var(--color-blue)" />
                 ) : (
-                    <SortDescending size={20} weight="fill" color="var(--color-red)" />
+                    <SortDescending size={20} weight="fill" color="var(--color-blue)" />
                 )
             )}
             <span>{label}</span>

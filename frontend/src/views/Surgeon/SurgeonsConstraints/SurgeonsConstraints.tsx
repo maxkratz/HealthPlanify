@@ -28,7 +28,7 @@ export const SurgeonsConstraints: React.FC = () => {
                 <XAxis dataKey="day" />
                 <YAxis allowDecimals={false} />
                 <Tooltip />
-                <Bar dataKey="surgeonTransfers" fill="var(--color-red)" />
+                <Bar dataKey="surgeonTransfers" fill="var(--color-blue)" />
             </BarChart>
         </div>
     );

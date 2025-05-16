@@ -75,20 +75,31 @@ export const Menu: React.FC = () => {
                 </div>
             )}
 
-            <nav className={`${styles.menu} ${isOpen ? styles.open : ''}`} aria-hidden={!isOpen}>
-                {items.map(({ label, to }) => (
-                    <Link
-                        key={label}
-                        to={to}
-                        className={styles.menuItem}
-                        onMouseEnter={() => handleMouseEnter(label)}
-                        onMouseLeave={handleMouseLeave}
-                        onClick={closeMenu}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.nav
+                        className={styles.menu}
+                        initial={{ x: '100%', opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: '100%', opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        aria-hidden={!isOpen}
                     >
-                        {label}
-                    </Link>
-                ))}
-            </nav>
+                        {items.map(({ label, to }) => (
+                            <Link
+                                key={label}
+                                to={to}
+                                className={styles.menuItem}
+                                onMouseEnter={() => handleMouseEnter(label)}
+                                onMouseLeave={handleMouseLeave}
+                                onClick={closeMenu}
+                            >
+                                {label}
+                            </Link>
+                        ))}
+                    </motion.nav>
+                )}
+            </AnimatePresence>
         </>
     );
 };

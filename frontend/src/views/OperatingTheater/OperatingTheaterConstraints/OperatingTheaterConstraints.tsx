@@ -28,7 +28,7 @@ export const OperatingTheaterConstraints: React.FC = () => {
                 <XAxis dataKey="day" />
                 <YAxis allowDecimals={false} />
                 <Tooltip />
-                <Bar dataKey="openOTs" fill="var(--color-red)" />
+                <Bar dataKey="openOTs" fill="var(--color-blue)" />
             </BarChart>
         </div>
     );

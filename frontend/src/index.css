@@ -18,12 +18,12 @@
     --color-white: #ffffff;
     --color-black: #252525;
     --color-green: #009c0d;
-    --color-red: #385399;
-    --color-red-strong: #23408e;
-    --color-red-weak: #e3e6ff;
+    --color-blue: #385399;
+    --color-blue-strong: #23408e;
+    --color-blue-weak: #e3e6ff;
     --color-yellow-weak: #fff9cb;
-    --color-rose: rgb(255, 127, 127);
-    --color-blue: rgb(127, 136, 255);
+    --color-rose-legend: rgb(255, 127, 127);
+    --color-blue-legend: rgb(127, 136, 255);
 
     /* Code color palette */
     --color-code-green: #009c0dc7;
@@ -52,7 +52,7 @@ h1 {
     font-weight: 700;
     line-height: 1.2;
     margin: 0;
-    color: var(--color-red-strong);
+    color: var(--color-blue-strong);
 }
 
 h2 {

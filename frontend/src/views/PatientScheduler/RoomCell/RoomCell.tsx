@@ -29,7 +29,7 @@ const BedSlot: React.FC<BedSlotProps> = ({ day, roomId, bedIndex, patient, onDro
             style={{
                 minHeight: '2.75rem',
                 minWidth: '4.5rem',
-                border: isOver ? '0.125rem dashed var(--color-red)' : '0.063rem solid var(--color-black)',
+                border: isOver ? '0.125rem dashed var(--color-blue)' : '0.063rem solid var(--color-black)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

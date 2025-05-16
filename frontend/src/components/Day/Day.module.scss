@@ -1,6 +1,6 @@
 .container {
     border: 0.125rem solid var(--color-black);
-    background-color: var(--color-red);
+    background-color: var(--color-blue);
     color: var(--color-white);
     padding: 1.25rem;
     box-sizing: border-box; // Para incluir el padding en el cálculo del ancho
@@ -15,5 +15,5 @@
 }
 
 .container:hover {
-    background-color: var(--color-red-strong);
+    background-color: var(--color-blue-strong);
 }
