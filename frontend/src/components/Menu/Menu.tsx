@@ -12,6 +12,7 @@ import patientsImg from '../../assets/patients.png';
 import patientSchedulerImg from '../../assets/patientScheduler.png';
 import nurseSchedulerImg from '../../assets/nurseScheduler.png';
 
+import { motion, AnimatePresence } from 'framer-motion';
 
 const hoverImages: Record<string, string> = {
     Rooms: roomsImg,
@@ -25,27 +26,26 @@ const hoverImages: Record<string, string> = {
 
 export const Menu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [currentImg, setCurrentImg] = useState<string>(defaultImg);
+    const [currentImg, setCurrentImg] = useState(defaultImg);
 
-    const toggleMenu = () => setIsOpen(open => !open);
+    const toggleMenu = () => setIsOpen(o => !o);
     const closeMenu = () => setIsOpen(false);
 
     const handleMouseEnter = (label: string) => {
-        setCurrentImg(hoverImages[label] || defaultImg);
+        setCurrentImg(hoverImages[label] ?? defaultImg);
     };
-
     const handleMouseLeave = () => {
         setCurrentImg(defaultImg);
     };
 
     const items = [
-        'Rooms',
-        'Nurses',
-        'Surgeons',
-        'Operating Theaters',
-        'Patients',
-        'Patient Scheduler',
-        'Nurse Scheduler',
+        { label: 'Rooms', to: '/Rooms/Election' },
+        { label: 'Nurses', to: '/Nurses/Election' },
+        { label: 'Surgeons', to: '/Surgeons/Election' },
+        { label: 'Operating Theaters', to: '/OperatingTheaters/Election' },
+        { label: 'Patients', to: '/Patients' },
+        { label: 'Patient Scheduler', to: '/PatientScheduler' },
+        { label: 'Nurse Scheduler', to: '/NurseScheduler' },
     ];
 
     return (
@@ -55,26 +55,31 @@ export const Menu: React.FC = () => {
                 className={`${styles.menuButton} ${isOpen ? styles.openButton : ''}`}
                 aria-label="Toggle menu"
             >
-                {isOpen
-                    ? <X size={40} weight="fill" />
-                    : <List size={40} weight="fill" />
-                }
+                {isOpen ? <X size={40} weight="fill" /> : <List size={40} weight="fill" />}
             </button>
 
-            <img
-                src={currentImg}
-                alt="Vista previa"
-                className={`${styles.menuImage} ${isOpen ? styles.visible : ''}`}
-            />
+            {isOpen && (
+                <div className={styles.imageWrapper}>
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={currentImg}
+                            src={currentImg}
+                            initial={{ opacity: 0, filter: 'blur(1.25rem)' }}
+                            animate={{ opacity: 1, filter: 'blur(0)' }}
+                            exit={{ opacity: 0, filter: 'blur(1.25rem)' }}
+                            transition={{ duration: 0.3 }}
+                            className={styles.menuImage}
+                            alt="Vista previa"
+                        />
+                    </AnimatePresence>
+                </div>
+            )}
 
-            <nav
-                className={`${styles.menu} ${isOpen ? styles.open : ''}`}
-                aria-hidden={!isOpen}
-            >
-                {items.map(label => (
+            <nav className={`${styles.menu} ${isOpen ? styles.open : ''}`} aria-hidden={!isOpen}>
+                {items.map(({ label, to }) => (
                     <Link
                         key={label}
-                        to={`/${label.replace(/\s+/g, '')}/Election`}
+                        to={to}
                         className={styles.menuItem}
                         onMouseEnter={() => handleMouseEnter(label)}
                         onMouseLeave={handleMouseLeave}
