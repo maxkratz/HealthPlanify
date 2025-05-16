@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Home.module.scss'
-import backgroundImage from '../../assets/2.jpg'
+import backgroundImage from '../../assets/home.png'
 import { InputFiles } from '../../components/InputFiles'
 
 export const Home: React.FC = () => (
