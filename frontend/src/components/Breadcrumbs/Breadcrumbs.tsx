@@ -12,7 +12,7 @@ export const Breadcrumbs: React.FC = () => {
     }
 
     const allowedSegments = [
-        "SecondElection",
+        "Election",
         "Calendar",
         "RoomsList",
         "Shifts",

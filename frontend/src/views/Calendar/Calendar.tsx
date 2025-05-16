@@ -10,15 +10,15 @@ export const Calendar: React.FC = () => {
 
     const generateLink = (dayIndex: number) => {
         if (branch === 'Rooms') {
-            return `/${branch}/SecondElection/Calendar/${dayIndex}/RoomsList`;
+            return `/${branch}/Election/Calendar/${dayIndex}/RoomsList`;
         } else if (branch === 'Nurses') {
-            return `/${branch}/SecondElection/Calendar/${dayIndex}/Shifts`;
+            return `/${branch}/Election/Calendar/${dayIndex}/Shifts`;
         } else if (branch === 'Surgeons') {
-            return `/${branch}/SecondElection/Calendar/${dayIndex}/SurgeonsList`;
+            return `/${branch}/Election/Calendar/${dayIndex}/SurgeonsList`;
         } else if (branch === 'OperatingTheaters') {
-            return `/${branch}/SecondElection/Calendar/${dayIndex}/OperatingTheatersList`;
+            return `/${branch}/Election/Calendar/${dayIndex}/OperatingTheatersList`;
         } else {
-            return `/${branch}/SecondElection/Calendar/${dayIndex}`;
+            return `/${branch}/Election/Calendar/${dayIndex}`;
         }
     };
 

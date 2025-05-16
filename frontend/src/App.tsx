@@ -6,7 +6,7 @@ import { PageNotFound } from "./views/PageNotFound";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { Menu } from "./components/Menu/Menu";
 import { Home } from "./views/Home/Home";
-import { SecondElection } from "./views/SecondElection";
+import { Election } from "./views/Election";
 import { Calendar } from "./views/Calendar/Calendar";
 import { RoomsList } from "./views/Room/RoomsList/RoomsList";
 import { RoomDetails } from "./views/Room/RoomDetails/RoomDetails";
@@ -38,24 +38,24 @@ function App() {
                         <Route path="*" element={<PageNotFound />} />
 
                         <Route path="/" element={<Home />} />
-                        <Route path="/:branch/SecondElection" element={<SecondElection />} />
-                        <Route path="/:branch/SecondElection/Calendar" element={<Calendar />} />
+                        <Route path="/:branch/Election" element={<Election />} />
+                        <Route path="/:branch/Election/Calendar" element={<Calendar />} />
 
-                        <Route path="/:branch/SecondElection/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
-                        <Route path="/:branch/SecondElection/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
+                        <Route path="/:branch/Election/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
+                        <Route path="/:branch/Election/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
 
-                        <Route path="/:branch/SecondElection/Calendar/:dayIndex/Shifts" element={<Shifts />} />
-                        <Route path="/:branch/SecondElection/Calendar/:dayIndex/Shifts/:shiftType/NursesList" element={<NursesList />} />
-                        <Route path="/:branch/SecondElection/Calendar/:dayIndex/Shifts/:shiftType/NursesList/:nurseId" element={<NurseDetails />} />
-                        <Route path="/:branch/SecondElection/NursesConstraints" element={<NursesConstraints />} />
+                        <Route path="/:branch/Election/Calendar/:dayIndex/Shifts" element={<Shifts />} />
+                        <Route path="/:branch/Election/Calendar/:dayIndex/Shifts/:shiftType/NursesList" element={<NursesList />} />
+                        <Route path="/:branch/Election/Calendar/:dayIndex/Shifts/:shiftType/NursesList/:nurseId" element={<NurseDetails />} />
+                        <Route path="/:branch/Election/NursesConstraints" element={<NursesConstraints />} />
 
-                        <Route path="/:branch/SecondElection/Calendar/:dayIndex/SurgeonsList" element={<SurgeonsList />} />
-                        <Route path="/:branch/SecondElection/Calendar/:dayIndex/SurgeonsList/:surgeonId" element={<SurgeonDetails />} />
-                        <Route path="/:branch/SecondElection/SurgeonsConstraints" element={<SurgeonsConstraints />} />
+                        <Route path="/:branch/Election/Calendar/:dayIndex/SurgeonsList" element={<SurgeonsList />} />
+                        <Route path="/:branch/Election/Calendar/:dayIndex/SurgeonsList/:surgeonId" element={<SurgeonDetails />} />
+                        <Route path="/:branch/Election/SurgeonsConstraints" element={<SurgeonsConstraints />} />
 
-                        <Route path="/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
-                        <Route path="/:branch/SecondElection/Calendar/:dayIndex/OperatingTheatersList/:operatingTheaterId" element={<OperatingTheaterDetails />} />
-                        <Route path="/:branch/SecondElection/OperatingTheatersConstraints" element={<OperatingTheaterConstraints />} />
+                        <Route path="/:branch/Election/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
+                        <Route path="/:branch/Election/Calendar/:dayIndex/OperatingTheatersList/:operatingTheaterId" element={<OperatingTheaterDetails />} />
+                        <Route path="/:branch/Election/OperatingTheatersConstraints" element={<OperatingTheaterConstraints />} />
 
                         <Route path="/Patients" element={<PatientsList />} />
 

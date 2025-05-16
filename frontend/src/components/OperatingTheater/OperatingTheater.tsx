@@ -38,7 +38,7 @@ export const OperatingTheater: React.FC<OperatingTheaterComponentProps> = ({
     return (
         <div>
             <Link
-                to={`/${branch}/SecondElection/Calendar/${dayIndex}/OperatingTheatersList/${operatingTheaterId}`}
+                to={`/${branch}/Election/Calendar/${dayIndex}/OperatingTheatersList/${operatingTheaterId}`}
                 state={{ operatingTheaterData }} // Necessary for OperatingTheaterDetails
             >
                 <div className={containerClassName}>

@@ -32,16 +32,16 @@ export const Menu: React.FC = () => {
                 className={`${styles.menu} ${isOpen ? styles.open : ''}`}
                 aria-hidden={!isOpen}
             >
-                <Link to="/Rooms/SecondElection" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/Rooms/Election" className={styles.menuItem} onClick={closeMenu}>
                     Rooms
                 </Link>
-                <Link to="/Nurses/SecondElection" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/Nurses/Election" className={styles.menuItem} onClick={closeMenu}>
                     Nurses
                 </Link>
-                <Link to="/Surgeons/SecondElection" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/Surgeons/Election" className={styles.menuItem} onClick={closeMenu}>
                     Surgeons
                 </Link>
-                <Link to="/OperatingTheaters/SecondElection" className={styles.menuItem} onClick={closeMenu}>
+                <Link to="/OperatingTheaters/Election" className={styles.menuItem} onClick={closeMenu}>
                     Operating Theaters
                 </Link>
                 <Link to="/Patients" className={styles.menuItem} onClick={closeMenu}>

@@ -1,12 +1,12 @@
 import React from 'react';
 
-import ElectionStyle from './Election.module.scss';
+import ElectionStyle from './ElectionCard.module.scss';
 
 export type ElectionComponentProps = {
     children: React.ReactNode;
 };
 
-export const Election: React.FC<ElectionComponentProps> = ({
+export const ElectionCard: React.FC<ElectionComponentProps> = ({
     children,
     ...props
 }) => {
