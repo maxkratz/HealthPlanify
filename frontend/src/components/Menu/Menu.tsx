@@ -39,7 +39,7 @@ export const Menu: React.FC = () => {
     };
 
     const items = [
-        { label: 'Rooms', to: '/Rooms/Election' },
+        { label: 'Rooms', to: '/Rooms/Election/Calendar' },
         { label: 'Nurses', to: '/Nurses/Election' },
         { label: 'Surgeons', to: '/Surgeons/Election' },
         { label: 'Operating Theaters', to: '/OperatingTheaters/Election' },
