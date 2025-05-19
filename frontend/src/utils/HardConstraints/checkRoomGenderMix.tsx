@@ -56,7 +56,7 @@ export function checkRoomGenderMix(inputData: InputFile, solutionData: SolutionF
             const countA = roomGenderCount[room.id][day].A;
             const countB = roomGenderCount[room.id][day].B;
             if (countA > 0 && countB > 0) {
-                errors.push(`Room ${room.id} is gender-mixed ${countA}/${countB} on day ${day}`);
+                errors.push(`Room ${room.id} is gender-mixed ${countA} male(s) / ${countB} female(s) on day ${day}`);
             }
         }
     });
