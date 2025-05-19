@@ -27,7 +27,7 @@ export const NurseScheduler = () => {
     const [selectedNurseId, setSelectedNurseId] = React.useState<string | null>(inputData?.nurses[0]?.id || null);
     const [selectedDay, setselectedDay] = React.useState<number | null>(0);
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
-    const MAX_HISTORY = 10;
+    const MAX_HISTORY = 20;
 
     const [deltaHistory, setDeltaHistory] = React.useState<NurseDelta[]>(() => {
         const persistedDeltas = localStorage.getItem('deltaHistory');

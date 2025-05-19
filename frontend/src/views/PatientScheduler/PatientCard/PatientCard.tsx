@@ -61,7 +61,7 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onClick }) => {
                 border: `0.188rem ${borderStyle} var(--color-black)`,
                 padding: '0.25rem',
                 margin: '0.125rem',
-                backgroundColor: patient.gender === 'A' ? 'var(--color-blue-legend)' : 'var(--color-rose-legend)',
+                backgroundColor: patient.gender === 'A' ? 'var(--color-legend-blue)' : 'var(--color-legend-rose)',
                 cursor: isInteractive ? 'move' : 'default',
                 textAlign: 'center',
                 minWidth: '4rem',

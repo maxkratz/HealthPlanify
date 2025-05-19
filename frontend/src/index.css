@@ -24,8 +24,8 @@
     --color-yellow-weak: #fff9cb;
 
     /* Legend color palette */
-    --color-rose-legend: rgb(255, 127, 127);
-    --color-blue-legend: rgb(127, 136, 255);
+    --color-legend-rose: rgb(255, 127, 127);
+    --color-legend-blue: rgb(127, 136, 255);
 
     /* Code color palette */
     --color-code-green: #009c0dc7;
