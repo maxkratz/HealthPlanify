@@ -72,6 +72,8 @@ export const InputFiles: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [ready, setReady] = useState(false);
+
+    const inputFileRef = useRef<HTMLInputElement>(null);
     const solutionInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -95,6 +97,10 @@ export const InputFiles: React.FC = () => {
             }
         };
         reader.readAsText(file);
+    };
+
+    const clearFileInputValue = (e: React.MouseEvent<HTMLInputElement>) => {
+        e.currentTarget.value = '';
     };
 
     const handleInputUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -188,12 +194,16 @@ export const InputFiles: React.FC = () => {
                         upload file
                     </label>
                 ) : (
-                    <span className={Style.fileName}>{inputFileName}</span>
+                    <label htmlFor="inputFile" className={Style.fileName}>
+                        {inputFileName}
+                    </label>
                 )}
                 <input
                     id="inputFile"
+                    ref={inputFileRef}
                     type="file"
                     accept=".json"
+                    onClick={clearFileInputValue}
                     onChange={handleInputUpload}
                     className={Style.hiddenInput}
                     disabled={loading}
@@ -235,7 +245,6 @@ export const InputFiles: React.FC = () => {
             )}
 
             {error && <div className="text-red-600">{error}</div>}
-
         </div>
     );
 };

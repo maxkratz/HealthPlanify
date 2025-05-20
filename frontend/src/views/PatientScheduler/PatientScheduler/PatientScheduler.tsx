@@ -10,6 +10,7 @@ import { DayDetail } from '../DayDetail/DayDetail';
 import { Legend } from '../Legend/Legend';
 import solutionGridStyles from './PatientScheduler.module.scss';
 import { checkSoftConstraintsCost } from '../../../utils/checkSoftConstraints';
+import { Button } from '../../../components/Button/Button';
 
 export type RoomPerson =
     | (PatientFullData & { roomOccupantType: "admission" | "ongoing" })
@@ -205,24 +206,20 @@ export const PatientScheduler = () => {
                 </div>
 
                 <div className='flex flex-row items-center justify-center gap-16 mb-20'>
-                    <button
+                    <Button
                         onClick={handleUndo}
                         disabled={deltaHistory.length === 0}
-                        className={`${solutionGridStyles.button}`}
                     >
                         Undo changes
-                    </button>
+                    </Button>
 
                     <span>
                         Total cost {checkSoftConstraintsCost(inputData, solutionData)}
                     </span>
 
-                    <button
-                        onClick={handleDownloadSolution}
-                        className={`${solutionGridStyles.button}`}
-                    >
+                    <Button onClick={handleDownloadSolution}>
                         Download solution
-                    </button>
+                    </Button>
                 </div>
 
 
@@ -232,24 +229,20 @@ export const PatientScheduler = () => {
                     </span>
                     <div className='flex flex-row items-center justify-center gap-8 mt-8'>
                         {inputData.operating_theaters.map(ot => (
-                            <button
+                            <Button
                                 key={ot.id}
                                 onClick={() => setSelectedOperatingTheater(ot.id)}
-                                className={selectedOperatingTheater === ot.id
-                                    ? `${solutionGridStyles.button} ${solutionGridStyles['button--active']}`
-                                    : solutionGridStyles.button}
+                                active={selectedOperatingTheater === ot.id}
                             >
                                 {ot.id}
-                            </button>
+                            </Button>
                         ))}
-                        <button
+                        <Button
                             onClick={() => setSelectedOperatingTheater("no-change")}
-                            className={selectedOperatingTheater === "no-change"
-                                ? `${solutionGridStyles.button} ${solutionGridStyles['button--active']}`
-                                : solutionGridStyles.button}
+                            active={selectedOperatingTheater === "no-change"}
                         >
                             No change
-                        </button>
+                        </Button>
                     </div>
                 </div>
 

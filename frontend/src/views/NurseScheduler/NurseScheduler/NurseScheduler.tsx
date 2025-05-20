@@ -7,6 +7,7 @@ import { DayDetail } from '../DayDetail/DayDetail';
 import solutionGridStyles from './NurseScheduler.module.scss';
 import { checkSoftConstraintsCost } from '../../../utils/checkSoftConstraints';
 import { ShiftType } from '../../../types/types';
+import { Button } from '../../../components/Button/Button';
 
 export interface NurseInfo {
     id: string;
@@ -224,29 +225,34 @@ export const NurseScheduler = () => {
                     <h1>Nurse Scheduler</h1>
                 </div>
 
-                <div className='flex flex-row items-center justify-center gap-16 mb-20'>
-                    <button onClick={handleUndo} disabled={deltaHistory.length === 0} className={solutionGridStyles.button}>
+
+                <div className="flex flex-row items-center justify-center gap-16 mb-20">
+                    <Button
+                        onClick={handleUndo}
+                        disabled={deltaHistory.length === 0}
+                    >
                         Undo changes
-                    </button>
+                    </Button>
+
                     <span>Total cost {checkSoftConstraintsCost(inputData, solutionData)}</span>
-                    <button onClick={handleDownloadSolution} className={solutionGridStyles.button}>
+
+                    <Button onClick={handleDownloadSolution}>
                         Download solution
-                    </button>
+                    </Button>
                 </div>
 
-                <div className='flex flex-col items-center justify-center mb-16'>
+
+                <div className="flex flex-col items-center justify-center mb-16">
                     <span className="text-[var(--color-blue)]">Shift Selector</span>
-                    <div className='flex flex-row items-center justify-center gap-8 mt-8'>
+                    <div className="flex flex-row items-center justify-center gap-8 mt-8">
                         {inputData.shift_types.map(shift => (
-                            <button
+                            <Button
                                 key={shift}
                                 onClick={() => setSelectedShift(shift)}
-                                className={selectedShift === shift
-                                    ? `${solutionGridStyles.button} ${solutionGridStyles['button--active']}`
-                                    : solutionGridStyles.button}
+                                active={selectedShift === shift}
                             >
                                 {shift}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 </div>

@@ -49,4 +49,9 @@
     &:hover {
         background-color: var(--color-blue-weak);
     }
+
+    &:disabled {
+        background-color: var(--color-red-weak);
+        cursor: not-allowed;
+    }
 }
