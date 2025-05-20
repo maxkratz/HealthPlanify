@@ -39,9 +39,9 @@ export const Calendar: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col items-center gap-8 p-6">
-            <h1 className="text-2xl font-semibold">
-                {branch} — Planning for {daysCount} day{daysCount !== 1 ? 's' : ''}
+        <div className="flex flex-wrap justify-center items-start gap-8 p-6 w-full">
+            <h1 className="w-full text-center text-2xl font-semibold">
+                {branch} - Planning for {daysCount} day{daysCount !== 1 ? 's' : ''}
             </h1>
 
             {monthKeys.map(monthKey => {
@@ -51,14 +51,10 @@ export const Calendar: React.FC = () => {
 
                 return (
                     <div key={monthKey} className="w-full max-w-md">
-                        <h2 className="text-lg font-medium mb-2">
-                            {format(firstOfMonth, 'LLLL yyyy')}
-                        </h2>
-
+                        <h2 className="mb-6">{format(firstOfMonth, 'LLLL yyyy')}</h2>
                         <div className="grid grid-cols-7 text-center text-sm text-gray-600 mb-1">
                             {weekDays.map(wd => <div key={wd}>{wd}</div>)}
                         </div>
-
                         <div className="grid grid-cols-7 auto-rows-fr gap-1">
                             {Array.from({ length: totalInMonth }).map((_, idx) => {
                                 const d = new Date(year, month - 1, idx + 1);
@@ -72,7 +68,6 @@ export const Calendar: React.FC = () => {
                                         isPlanned={isPlanned}
                                     />
                                 );
-
                                 return isPlanned ? (
                                     <Link key={key} to={generateLink(d)}>
                                         {dayNode}
