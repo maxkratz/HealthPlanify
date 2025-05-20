@@ -1,19 +1,25 @@
 import React from 'react';
+import styles from './Day.module.scss';
 
-import DayStyle from './Day.module.scss';
-
-export type DayComponentProps = {
+export type DayProps = {
     dayNumber: number;
+    isToday?: boolean;
+    isPlanned?: boolean;
 };
 
-export const Day: React.FC<DayComponentProps> = ({
+export const Day: React.FC<DayProps> = ({
     dayNumber,
-    ...props
+    isToday = false,
+    isPlanned = false
 }) => {
-
+    const cls = [
+        styles.container,
+        isToday ? styles.today : '',
+        isPlanned ? styles.planned : ''
+    ].join(' ');
     return (
-        <div className={DayStyle.container}>
-            <span {...props}>{dayNumber}</span>
+        <div className={cls}>
+            <span className={styles.number}>{dayNumber}</span>
         </div>
     );
 };

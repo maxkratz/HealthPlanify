@@ -1,19 +1,32 @@
 .container {
-    border: 0.125rem solid var(--color-black);
-    background-color: var(--color-blue);
-    color: var(--color-white);
-    padding: 1.25rem;
-    box-sizing: border-box; // Para incluir el padding en el cálculo del ancho
-    width: 4.375rem;
-    aspect-ratio: 1 / 1;
-
+    border: 1px solid var(--color-black);
+    background-color: var(--color-white);
+    padding: 0.5rem;
+    aspect-ratio: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: center; // Centra verticalmente (en caso de columna)
-    align-items: center; // Centra horizontalmente
-    gap: 0.625rem;
+    justify-content: flex-start;
+    align-items: flex-end;
+    position: relative;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color .2s, box-shadow .2s;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--color-blue-weak);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    }
 }
 
-.container:hover {
-    background-color: var(--color-blue-strong);
+.number {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.today {
+    border-color: var(--color-blue);
+}
+
+.planned {
+    background-color: var(--color-blue-weak);
 }
