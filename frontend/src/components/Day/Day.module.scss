@@ -10,12 +10,7 @@
     border-radius: 0.25rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: background-color .2s, box-shadow .2s;
-    cursor: pointer;
-
-    &:hover {
-        background-color: var(--color-blue-weak);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-    }
+    cursor: not-allowed;
 }
 
 .number {
@@ -24,9 +19,16 @@
 }
 
 .today {
-    border-color: var(--color-blue);
+    border: 2px solid var(--color-blue-strong);
 }
 
 .planned {
     background-color: var(--color-blue-weak);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--color-white);
+        background-color: var(--color-blue-strong);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    }
 }
