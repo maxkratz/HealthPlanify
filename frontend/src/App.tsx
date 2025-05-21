@@ -40,9 +40,10 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/:branch/Options" element={<Options />} />
                         <Route path="/:branch/Options/Calendar" element={<Calendar />} />
+                        <Route path="/:branch/Calendar" element={<Calendar />} /> {/* Rooms have no options */}
 
-                        <Route path="/:branch/Options/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
-                        <Route path="/:branch/Options/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
+                        <Route path="/:branch/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
+                        <Route path="/:branch/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
 
                         <Route path="/:branch/Options/Calendar/:dayIndex/Shifts" element={<Shifts />} />
                         <Route path="/:branch/Options/Calendar/:dayIndex/Shifts/:shiftType/NursesList" element={<NursesList />} />

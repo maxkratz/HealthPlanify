@@ -7,21 +7,6 @@ export const Options: React.FC = () => {
 
     return (
         <div>
-            {branch === 'Rooms' && (
-                <div>
-                    <div className='mb-24'>
-                        <h1>{branch}</h1>
-                    </div>
-                    <div className="flex flex-row justify-center gap-4">
-                        <OptionsCard>
-                            <nav>
-                                <Link to="/Rooms/Options/Calendar">Calendar</Link>
-                            </nav>
-                        </OptionsCard>
-                    </div>
-                </div>
-            )}
-
             {branch === 'Nurses' && (
                 <div>
                     <div className='mb-24'>

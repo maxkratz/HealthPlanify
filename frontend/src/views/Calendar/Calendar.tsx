@@ -43,7 +43,7 @@ export const Calendar: React.FC = () => {
             isSameDay(new Date(ds), date)
         );
         switch (branch) {
-            case 'Rooms': return `/${branch}/Options/Calendar/${idx}/RoomsList`;
+            case 'Rooms': return `/${branch}/Calendar/${idx}/RoomsList`;
             case 'Nurses': return `/${branch}/Options/Calendar/${idx}/Shifts`;
             case 'Surgeons': return `/${branch}/Options/Calendar/${idx}/SurgeonsList`;
             case 'OperatingTheaters': return `/${branch}/Options/Calendar/${idx}/OperatingTheatersList`;
