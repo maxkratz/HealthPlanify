@@ -96,7 +96,7 @@ tmux kill-server
 **Example**:
 
 ```bash
-./validator-code/IHTP_Validator ../data/test_instances/test10.json ../data/test_solutions/sol_test10.json verbose
+./validator-code/IHTP_Validator ../data/test-instances/test09.json ../data/test-solutions/sol_test09.json verbose
 ```
 
 ---
