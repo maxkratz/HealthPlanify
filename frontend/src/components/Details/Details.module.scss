@@ -1,8 +1,9 @@
 .container {
-    border: 0.125rem solid var(--color-black);
+    border: 0.125rem solid var(--color-blue-strong);
     border-radius: 50%;
     padding: 2.5rem;
     box-sizing: border-box;
+    background-color: var(--color-blue-weak);
 
     /* Permite que el ancho se ajuste al contenido */
     display: inline-flex;

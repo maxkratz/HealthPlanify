@@ -38,7 +38,7 @@ export const Surgeon: React.FC<SurgeonComponentProps> = ({
     return (
         <div>
             <Link
-                to={`/${branch}/Election/Calendar/${dayIndex}/SurgeonsList/${surgeonId}`}
+                to={`/${branch}/Options/Calendar/${dayIndex}/SurgeonsList/${surgeonId}`}
                 state={{ surgeonData }} // Necessary for SurgeonDetails
             >
                 <div className={containerClassName}>

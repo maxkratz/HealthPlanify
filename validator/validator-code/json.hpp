@@ -2120,7 +2120,7 @@ JSON_HEDLEY_DIAGNOSTIC_POP
           !defined(JSON_HEDLEY_SUNPRO_VERSION) && \
           !defined(JSON_HEDLEY_PGI_VERSION) && \
           !defined(JSON_HEDLEY_IAR_VERSION)) || \
-       (JSON_HEDLEY_HAS_EXTENSION(c_generic_selections) && !defined(JSON_HEDLEY_IAR_VERSION)) || \
+       (JSON_HEDLEY_HAS_EXTENSION(c_generic_sOptionss) && !defined(JSON_HEDLEY_IAR_VERSION)) || \
        JSON_HEDLEY_GCC_VERSION_CHECK(4,9,0) || \
        JSON_HEDLEY_INTEL_VERSION_CHECK(17,0,0) || \
        JSON_HEDLEY_IBM_VERSION_CHECK(12,1,0) || \

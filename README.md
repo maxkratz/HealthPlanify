@@ -2,7 +2,7 @@
 
 **A Healthcare Timetable Visualizer**
 
-HealthPlanify is an interactive web application for exploring, validating, and editing solutions to the Integrated Healthcare Timetabling Problem (IHTP) from IHTC 2024. Through an intuitive interface and real-time visualizations, it enables both experts and non-technical users to analyze surgical scheduling, hospital admissions, and nurse assignments, assess associated costs, and adjust parameters on the fly.
+HealthPlanify is an interactive web application for exploring, validating, and editing solutions to the Integrated Healthcare Timetabling Problem (IHTP) from [IHTC 2024](https://ihtc2024.github.io/). Through an intuitive interface and real-time visualizations, it enables both experts and non-technical users to analyze surgical scheduling, hospital admissions, and nurse assignments, assess associated costs, and adjust parameters on the fly.
 
 ### 📋 Prerequisites
 

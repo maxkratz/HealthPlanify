@@ -31,11 +31,11 @@ export const Calendar: React.FC = () => {
         const idx = Array.from(planningDates).findIndex(ds =>
             isSameDay(new Date(ds), date)
         );
-        if (branch === 'Rooms') return `/${branch}/Election/Calendar/${idx}/RoomsList`;
-        if (branch === 'Nurses') return `/${branch}/Election/Calendar/${idx}/Shifts`;
-        if (branch === 'Surgeons') return `/${branch}/Election/Calendar/${idx}/SurgeonsList`;
-        if (branch === 'OperatingTheaters') return `/${branch}/Election/Calendar/${idx}/OperatingTheatersList`;
-        return `/${branch}/Election/Calendar/${idx}`;
+        if (branch === 'Rooms') return `/${branch}/Options/Calendar/${idx}/RoomsList`;
+        if (branch === 'Nurses') return `/${branch}/Options/Calendar/${idx}/Shifts`;
+        if (branch === 'Surgeons') return `/${branch}/Options/Calendar/${idx}/SurgeonsList`;
+        if (branch === 'OperatingTheaters') return `/${branch}/Options/Calendar/${idx}/OperatingTheatersList`;
+        return `/${branch}/Options/Calendar/${idx}`;
     };
 
     return (

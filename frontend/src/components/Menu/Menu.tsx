@@ -39,10 +39,10 @@ export const Menu: React.FC = () => {
     };
 
     const items = [
-        { label: 'Rooms', to: '/Rooms/Election/Calendar' },
-        { label: 'Nurses', to: '/Nurses/Election' },
-        { label: 'Surgeons', to: '/Surgeons/Election' },
-        { label: 'Operating Theaters', to: '/OperatingTheaters/Election' },
+        { label: 'Rooms', to: '/Rooms/Options/Calendar' },
+        { label: 'Nurses', to: '/Nurses/Options' },
+        { label: 'Surgeons', to: '/Surgeons/Options' },
+        { label: 'Operating Theaters', to: '/OperatingTheaters/Options' },
         { label: 'Patients', to: '/Patients' },
         { label: 'Patient Scheduler', to: '/PatientScheduler' },
         { label: 'Nurse Scheduler', to: '/NurseScheduler' },

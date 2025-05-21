@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ElectionCard } from '../../components/ElectionCard/ElectionCard';
+import { OptionsCard } from '../../components/OptionsCard/OptionsCard';
 
-export const Election: React.FC = () => {
+export const Options: React.FC = () => {
     const { branch } = useParams();
 
     return (
@@ -13,11 +13,11 @@ export const Election: React.FC = () => {
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
-                        <ElectionCard>
+                        <OptionsCard>
                             <nav>
-                                <Link to="/Rooms/Election/Calendar">Calendar</Link>
+                                <Link to="/Rooms/Options/Calendar">Calendar</Link>
                             </nav>
-                        </ElectionCard>
+                        </OptionsCard>
                     </div>
                 </div>
             )}
@@ -28,16 +28,16 @@ export const Election: React.FC = () => {
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
-                        <ElectionCard>
+                        <OptionsCard>
                             <nav>
-                                <Link to="/Nurses/Election/Calendar">Calendar</Link>
+                                <Link to="/Nurses/Options/Calendar">Calendar</Link>
                             </nav>
-                        </ElectionCard>
-                        <ElectionCard>
+                        </OptionsCard>
+                        <OptionsCard>
                             <nav>
-                                <Link to="/Nurses/Election/NursesConstraints">Constraints</Link>
+                                <Link to="/Nurses/Options/NursesConstraints">Constraints</Link>
                             </nav>
-                        </ElectionCard>
+                        </OptionsCard>
                     </div>
                 </div>
             )}
@@ -48,16 +48,16 @@ export const Election: React.FC = () => {
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
-                        <ElectionCard>
+                        <OptionsCard>
                             <nav>
-                                <Link to="/Surgeons/Election/Calendar">Calendar</Link>
+                                <Link to="/Surgeons/Options/Calendar">Calendar</Link>
                             </nav>
-                        </ElectionCard>
-                        <ElectionCard>
+                        </OptionsCard>
+                        <OptionsCard>
                             <nav>
-                                <Link to="/Surgeons/Election/SurgeonsConstraints">Constraints</Link>
+                                <Link to="/Surgeons/Options/SurgeonsConstraints">Constraints</Link>
                             </nav>
-                        </ElectionCard>
+                        </OptionsCard>
                     </div>
                 </div>
             )}
@@ -68,16 +68,16 @@ export const Election: React.FC = () => {
                         <h1>{branch}</h1>
                     </div>
                     <div className="flex flex-row justify-center gap-4">
-                        <ElectionCard>
+                        <OptionsCard>
                             <nav>
-                                <Link to="/OperatingTheaters/Election/Calendar">Calendar</Link>
+                                <Link to="/OperatingTheaters/Options/Calendar">Calendar</Link>
                             </nav>
-                        </ElectionCard>
-                        <ElectionCard>
+                        </OptionsCard>
+                        <OptionsCard>
                             <nav>
-                                <Link to="/OperatingTheaters/Election/OperatingTheatersConstraints">Constraints</Link>
+                                <Link to="/OperatingTheaters/Options/OperatingTheatersConstraints">Constraints</Link>
                             </nav>
-                        </ElectionCard>
+                        </OptionsCard>
                     </div>
                 </div>
             )}

@@ -28,7 +28,7 @@ export const NurseDetails: React.FC = () => {
     return (
         <div className='flex flex-col items-center'>
             <div className='mb-16'>
-                <h1>Nurse Details: {nurseData.nurseId}</h1>
+                <h1>Nurse {nurseData.nurseId} Details</h1>
                 <p>
                     <strong>Skill Level:</strong> {nurseData.skillLevel}
                 </p>

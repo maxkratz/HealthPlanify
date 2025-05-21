@@ -1,1 +1,0 @@
-export { Election } from './Election'

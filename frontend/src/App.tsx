@@ -6,7 +6,7 @@ import { PageNotFound } from "./views/PageNotFound";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { Menu } from "./components/Menu/Menu";
 import { Home } from "./views/Home/Home";
-import { Election } from "./views/Election";
+import { Options } from "./views/Options";
 import { Calendar } from "./views/Calendar/Calendar";
 import { RoomsList } from "./views/Room/RoomsList/RoomsList";
 import { RoomDetails } from "./views/Room/RoomDetails/RoomDetails";
@@ -38,24 +38,24 @@ function App() {
                         <Route path="*" element={<PageNotFound />} />
 
                         <Route path="/" element={<Home />} />
-                        <Route path="/:branch/Election" element={<Election />} />
-                        <Route path="/:branch/Election/Calendar" element={<Calendar />} />
+                        <Route path="/:branch/Options" element={<Options />} />
+                        <Route path="/:branch/Options/Calendar" element={<Calendar />} />
 
-                        <Route path="/:branch/Election/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
-                        <Route path="/:branch/Election/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
+                        <Route path="/:branch/Options/Calendar/:dayIndex/RoomsList" element={<RoomsList />} />
+                        <Route path="/:branch/Options/Calendar/:dayIndex/RoomsList/:roomId" element={<RoomDetails />} />
 
-                        <Route path="/:branch/Election/Calendar/:dayIndex/Shifts" element={<Shifts />} />
-                        <Route path="/:branch/Election/Calendar/:dayIndex/Shifts/:shiftType/NursesList" element={<NursesList />} />
-                        <Route path="/:branch/Election/Calendar/:dayIndex/Shifts/:shiftType/NursesList/:nurseId" element={<NurseDetails />} />
-                        <Route path="/:branch/Election/NursesConstraints" element={<NursesConstraints />} />
+                        <Route path="/:branch/Options/Calendar/:dayIndex/Shifts" element={<Shifts />} />
+                        <Route path="/:branch/Options/Calendar/:dayIndex/Shifts/:shiftType/NursesList" element={<NursesList />} />
+                        <Route path="/:branch/Options/Calendar/:dayIndex/Shifts/:shiftType/NursesList/:nurseId" element={<NurseDetails />} />
+                        <Route path="/:branch/Options/NursesConstraints" element={<NursesConstraints />} />
 
-                        <Route path="/:branch/Election/Calendar/:dayIndex/SurgeonsList" element={<SurgeonsList />} />
-                        <Route path="/:branch/Election/Calendar/:dayIndex/SurgeonsList/:surgeonId" element={<SurgeonDetails />} />
-                        <Route path="/:branch/Election/SurgeonsConstraints" element={<SurgeonsConstraints />} />
+                        <Route path="/:branch/Options/Calendar/:dayIndex/SurgeonsList" element={<SurgeonsList />} />
+                        <Route path="/:branch/Options/Calendar/:dayIndex/SurgeonsList/:surgeonId" element={<SurgeonDetails />} />
+                        <Route path="/:branch/Options/SurgeonsConstraints" element={<SurgeonsConstraints />} />
 
-                        <Route path="/:branch/Election/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
-                        <Route path="/:branch/Election/Calendar/:dayIndex/OperatingTheatersList/:operatingTheaterId" element={<OperatingTheaterDetails />} />
-                        <Route path="/:branch/Election/OperatingTheatersConstraints" element={<OperatingTheaterConstraints />} />
+                        <Route path="/:branch/Options/Calendar/:dayIndex/OperatingTheatersList" element={<OperatingTheatersList />} />
+                        <Route path="/:branch/Options/Calendar/:dayIndex/OperatingTheatersList/:operatingTheaterId" element={<OperatingTheaterDetails />} />
+                        <Route path="/:branch/Options/OperatingTheatersConstraints" element={<OperatingTheaterConstraints />} />
 
                         <Route path="/Patients" element={<PatientsList />} />
 

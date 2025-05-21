@@ -24,7 +24,7 @@ export const RoomDetails: React.FC = () => {
     return (
         <div className='flex flex-col items-center'>
             <div className='mb-16'>
-                <h1>Room Details: {roomData.roomId}</h1>
+                <h1>Room {roomData.roomId} Details</h1>
                 <p>
                     <strong>Capacity:</strong> {roomData.capacity}
                 </p>

@@ -20,7 +20,7 @@ export const OperatingTheaterDetails: React.FC = () => {
     return (
         <div className="flex flex-col items-center gap-8">
             <div className='mb-16'>
-                <h1>Operating Theater Details: {operatingTheaterData.operatingTheaterId}</h1>
+                <h1>Operating Theater {operatingTheaterData.operatingTheaterId} Details</h1>
                 <p>
                     <strong>Max Surgery Time:</strong> {operatingTheaterData.maxAvailableTime}
                 </p>
