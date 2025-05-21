@@ -1,8 +1,24 @@
-# Final Year Project (Trabajo de Fin de Grado - TFG)
+# HealthPlanify - A healthcare timetable visualizer
 
-## 📦 How to use the application
+## How to use the application
 
-### 🔧 Install dependencies
+### Download the repository
+
+1. 
+
+   ```bash
+   git clone 
+   ```
+
+2. 
+
+   ```bash
+   cd 
+   ```
+
+---
+
+### Install dependencies
 
 1. Go to the frontend directory:
 
@@ -30,7 +46,7 @@
 
 ---
 
-### 🚀 Option 1: Run the application manually
+### Option 1: Run the application manually
 
 1. Go to the mock-server directory:
 
@@ -64,7 +80,7 @@
 
 ---
 
-### ⚡ Option 2: Run using script and tmux
+### Option 2: Run using script and tmux
 
 1. From the project root, run the script:
 
@@ -86,7 +102,7 @@
 
 ---
 
-## 🛠 How to use the competition validator
+## How to use the competition validator
 
 1. Go to the validator directory:
 
