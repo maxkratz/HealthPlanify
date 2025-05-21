@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 
-const SOL_DIR = '../validator/test_solutions/';
+const SOL_DIR = '../data/test_solutions/';
 
 const app = express();
 app.use(bodyParser.json({ limit: '5mb' }));

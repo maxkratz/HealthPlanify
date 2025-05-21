@@ -1,127 +1,108 @@
-# HealthPlanify - A healthcare timetable visualizer
+## HealthPlanify
 
-## How to use the application
+**A Healthcare Timetable Visualizer**
 
-### Download the repository
+HealthPlanify is an interactive web application for exploring, validating, and editing solutions to the Integrated Healthcare Timetabling Problem (IHTP) from IHTC 2024. Through an intuitive interface and real-time visualizations, it enables both experts and non-technical users to analyze surgical scheduling, hospital admissions, and nurse assignments, assess associated costs, and adjust parameters on the fly.
 
-1. 
+### 📋 Prerequisites
 
-   ```bash
-   git clone 
-   ```
-
-2. 
-
-   ```bash
-   cd 
-   ```
+- **Git** 2.0+
+- **Node.js** 14+
+- **npm** 6+
+- **C++ compiler** (g++ or clang++) for the validator
+- **tmux** (optional, for development script)
 
 ---
 
-### Install dependencies
+### ⚙️ Installation
 
-1. Go to the frontend directory:
-
-   ```bash
-   cd frontend
-   ```
-
-2. Install frontend dependencies:
+1. **Clone the repository**
 
    ```bash
-   npm install
+   git clone https://github.com/Nestor-DF/HealthPlanify.git
+   cd HealthPlanify
    ```
 
-3. Go to the mock-server directory:
+2. **Install dependencies**
 
-   ```bash
-   cd ../mock-server
-   ```
+   - Frontend:
 
-4. Install backend dependencies:
+     ```bash
+     cd frontend && npm install
+     ```
 
-   ```bash
-   npm install
-   ```
+   - Mock server:
+
+     ```bash
+     cd ../mock-server && npm install
+     ```
 
 ---
 
-### Option 1: Run the application manually
+### ▶️ Running the Application
 
-1. Go to the mock-server directory:
+Choose one of the following options:
 
-   ```bash
-   cd mock-server
-   ```
+#### Option 1: Manual Start
 
-2. Start the backend server:
+1. Launch the mock server:
 
    ```bash
-   npm start
+   cd mock-server && npm start
    ```
 
-3. In another terminal, go to the frontend directory:
+2. In a new terminal, start the frontend dev server:
 
    ```bash
-   cd frontend
+   cd frontend && npm run dev
    ```
 
-4. Start the development server:
+3. Open your browser at `http://localhost:5173`.
 
-   ```bash
-   npm run dev
-   ```
+#### Option 2: One-Command Dev Script (requires tmux)
 
-5. Access the application in your browser at:
+From the project root:
 
-   ```
-   http://localhost:5173/
-   ```
+```bash
+./start-dev
+```
+
+When finished, terminate all sessions with:
+
+```bash
+tmux kill-server
+```
 
 ---
 
-### Option 2: Run using script and tmux
+### 🔍 Competition Validator
 
-1. From the project root, run the script:
+Verify your scheduling solutions against instance definitions using the CLI tool.
 
-   ```bash
-   ./start-dev
-   ```
-
-2. Access the application:
-
-   ```
-   http://localhost:5173/
-   ```
-
-3. To stop **all** tmux sessions:
-
-   ```bash
-   tmux kill-server
-   ```
-
----
-
-## How to use the competition validator
-
-1. Go to the validator directory:
+1. Navigate to the `validator` directory:
 
    ```bash
    cd validator
    ```
 
-2. Run the validator with the required files:
+2. Run the validator:
 
    ```bash
-   ./validator/IHTP_Validator <instance_file> <solution_file> [verbose]
+   ./validator-code/IHTP_Validator <instance_file> <solution_file> [verbose]
    ```
 
-   Example:
+   - `<instance_file>`: Path to a JSON file defining the problem instance.
+   - `<solution_file>`: Path to your solution file (JSON).
+   - `verbose`: (optional) Enables detailed output.
 
-   ```bash
-   ./validator/IHTP_Validator test_instances/test10.json test_solutions/sol_test10.json verbose
-   ```
+**Example**:
 
-   - Replace `<instance_file>` with the input instance file.
-   - Replace `<solution_file>` with the solution file.
-   - Optionally add `verbose` for detailed output.
+```bash
+./validator-code/IHTP_Validator ../data/test_instances/test10.json ../data/test_solutions/sol_test10.json verbose
+```
+
+---
+
+### 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
