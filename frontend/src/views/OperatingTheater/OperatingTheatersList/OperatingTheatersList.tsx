@@ -63,7 +63,7 @@ export const OperatingTheatersList: React.FC = () => {
                 </div>
             ) : (
                 <div className="flex items-center justify-center p-8">
-                    <p className="text-lg font-medium text-gray-600">There are no open operating theaters this day :c</p>
+                    <p className="text-lg font-medium text-[var(--color-grey)]">There are no open operating theaters this day :c</p>
                 </div>
             )}
         </div>

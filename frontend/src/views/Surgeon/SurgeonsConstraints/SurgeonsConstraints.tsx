@@ -23,7 +23,7 @@ export const SurgeonsConstraints: React.FC = () => {
                         <strong>S6 - Number of different OTs a surgeon is assigned to per day</strong> (Weight: {weights.surgeon_transfer}): {costS6}
                     </p>
                 </div>
-                <p className="text-lg font-medium text-gray-600">There is nothing to graph! All surgeons are assigned to the same operating theater every day!</p>
+                <p className="text-lg font-medium text-[var(--color-grey)]">There is nothing to graph! All surgeons are assigned to the same operating theater every day!</p>
             </>
         );
     }
