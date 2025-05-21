@@ -9,8 +9,8 @@ HealthPlanify is an interactive web application for exploring, validating, and e
 - **Git** 2.0+
 - **Node.js** 14+
 - **npm** 6+
-- **C++ compiler** (g++ or clang++) for the validator
-- **tmux** (optional, for development script)
+- **C++ compiler** (g++ or clang++) for the validator (OPTIONAL)
+- **tmux** for running the app with the script (OPTIONAL)
 
 ---
 
@@ -75,9 +75,7 @@ tmux kill-server
 
 ---
 
-### 🔍 Competition Validator
-
-Verify your scheduling solutions against instance definitions using the CLI tool.
+### 🔍 Oficial Competition Validator
 
 1. Navigate to the `validator` directory:
 
@@ -102,7 +100,3 @@ Verify your scheduling solutions against instance definitions using the CLI tool
 ```
 
 ---
-
-### 📄 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
