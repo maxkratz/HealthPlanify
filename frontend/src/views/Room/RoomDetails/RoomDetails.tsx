@@ -75,7 +75,7 @@ export const RoomDetails: React.FC = () => {
                                 <Details key={occupant.id}>
                                     <span><strong>ID:</strong> {occupant.id}</span>
                                     <span><strong>Gender:</strong> {occupant.gender || 'Unknown'}</span>
-                                    <span><strong>Age group:</strong>{occupant.age_group || 'Unknown'}</span>
+                                    <span><strong>Age group:</strong> {occupant.age_group || 'Unknown'}</span>
                                     <span><strong>Days left:</strong> {daysLeft}</span>
                                 </Details>
                             );

@@ -25,8 +25,8 @@ function getColorFromId(id: string): string {
     const hue = (index * goldenAngle) % 360;
 
     // Increased saturation for vibrancy, lower lightness for darker backgrounds
-    const saturation = 75;
-    const lightness = 35;
+    const saturation = 100;
+    const lightness = 25;
 
     return `hsl(${Math.floor(hue)}, ${saturation}%, ${lightness}%)`;
 }
@@ -59,12 +59,12 @@ const NurseCard: React.FC<NurseCardProps> = ({ nurse, onClick, onRemove, removeC
         <div
             ref={drag as any}
             style={{
+                color: 'var(--color-white)',
                 opacity: finalOpacity,
                 border: '0.188rem solid var(--color-black)',
                 padding: '0.25rem',
                 margin: '0.125rem',
                 backgroundColor: bgColor,
-                color: '#ffffff',             // White text for contrast
                 cursor: isInteractive ? 'move' : 'default',
                 textAlign: 'center',
                 minWidth: '4rem',

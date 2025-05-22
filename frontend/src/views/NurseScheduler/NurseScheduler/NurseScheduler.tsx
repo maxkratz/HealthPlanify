@@ -20,6 +20,8 @@ interface NurseDelta {
     day: number;
     shift: ShiftType;
     previousRooms: string[];
+    replacedNurseId?: string;
+    replacedPreviousRooms?: string[];
 }
 
 export const NurseScheduler = () => {
@@ -31,13 +33,9 @@ export const NurseScheduler = () => {
     const MAX_HISTORY = 20;
 
     const [deltaHistory, setDeltaHistory] = React.useState<NurseDelta[]>(() => {
-        const persistedDeltas = localStorage.getItem('deltaHistory');
-        if (persistedDeltas) {
-            try {
-                return JSON.parse(persistedDeltas);
-            } catch (error) {
-                console.error('Error al parsear deltaHistory', error);
-            }
+        const persisted = localStorage.getItem('deltaHistory');
+        if (persisted) {
+            try { return JSON.parse(persisted); } catch { console.error('Error parsing deltaHistory'); }
         }
         return [];
     });
@@ -62,19 +60,9 @@ export const NurseScheduler = () => {
     for (let d = 0; d < days; d++) {
         gridData[d] = {};
         rooms.forEach(room => {
-            const nursesInRoom: NurseInfo[] = solutionData.nurses
-                .filter(nurseOutput =>
-                    nurseOutput.assignments.some(assig =>
-                        assig.day === d &&
-                        assig.shift === selectedShift &&
-                        assig.rooms.includes(room.id)
-                    )
-                )
-                .map(nurseOutput => ({
-                    id: nurseOutput.id,
-                    day: d,
-                    room: room.id,
-                }));
+            const nursesInRoom = solutionData.nurses
+                .filter(n => n.assignments.some(a => a.day === d && a.shift === selectedShift && a.rooms.includes(room.id)))
+                .map(n => ({ id: n.id, day: d, room: room.id }));
             gridData[d][room.id] = nursesInRoom;
         });
     }
@@ -86,47 +74,82 @@ export const NurseScheduler = () => {
             return;
         }
 
-        // Hard constraint: ensure only one nurse per room/day/shift
-        const conflict = solutionData.nurses.some(n =>
-            n.id !== nurseId &&
-            n.assignments.some(a => a.day === newDay && a.shift === selectedShift && a.rooms.includes(newRoom))
-        );
-        if (conflict) {
-            setErrorMessages(prev => [...prev,
-            `Room ${newRoom} already has a nurse for day ${newDay} shift ${selectedShift}`
-            ]);
-            return;
-        }
-
-        // Hard constraint: a nurse cannot be assigned to a room/shift where they are not scheduled to work (NursePresence)
         const assignment = nurse.assignments.find(a => a.day === newDay && a.shift === selectedShift);
         if (!assignment) {
             setErrorMessages(prev => [...prev, `Assignment not found for nurse ${nurseId} on day ${newDay} shift ${selectedShift}`]);
             return;
         }
 
+        // Record previous rooms for dragged nurse
         const previousRooms = [...assignment.rooms];
 
+        // Find any nurse currently holding this room
+        const replacedNurse = solutionData.nurses.find(n =>
+            n.id !== nurseId && n.assignments.some(a => a.day === newDay && a.shift === selectedShift && a.rooms.includes(newRoom))
+        );
+        let replacedPreviousRooms: string[] | undefined;
+        if (replacedNurse) {
+            const repAssign = replacedNurse.assignments.find(a => a.day === newDay && a.shift === selectedShift)!;
+            replacedPreviousRooms = [...repAssign.rooms];
+        }
+
+        // Apply update: remove room from replaced nurse and add to dragged nurse
         const updatedNurses = solutionData.nurses.map(n => {
-            if (n.id === nurseId) {
-                const updatedAssignments = n.assignments.map(a => {
-                    if (a.day === newDay && a.shift === selectedShift) {
-                        const newRooms = Array.from(new Set([...a.rooms.filter(r => r !== newRoom), newRoom]));
-                        return { ...a, rooms: newRooms };
+            const newAssignments = n.assignments.map(a => {
+                if (a.day === newDay && a.shift === selectedShift) {
+                    if (n.id === nurseId) {
+                        // Add room
+                        return { ...a, rooms: Array.from(new Set([...a.rooms, newRoom])) };
+                    } else if (replacedNurse && n.id === replacedNurse.id) {
+                        // Remove room
+                        return { ...a, rooms: a.rooms.filter(r => r !== newRoom) };
                     }
-                    return a;
-                });
-                return { ...n, assignments: updatedAssignments };
-            }
-            return n;
+                }
+                return a;
+            });
+            return { ...n, assignments: newAssignments };
         });
 
+        // Push delta with both changes
         setDeltaHistory(prev => {
-            const nh = [...prev, { nurseId, day: newDay, shift: selectedShift, previousRooms }];
-            return nh.length > MAX_HISTORY ? nh.slice(1) : nh;
+            const delta: NurseDelta = {
+                nurseId,
+                day: newDay,
+                shift: selectedShift,
+                previousRooms,
+                replacedNurseId: replacedNurse?.id,
+                replacedPreviousRooms,
+            };
+            const list = [...prev, delta];
+            return list.length > MAX_HISTORY ? list.slice(list.length - MAX_HISTORY) : list;
         });
 
         setSolutionData({ ...solutionData, nurses: updatedNurses });
+    };
+
+    const handleUndo = () => {
+        if (!deltaHistory.length) return;
+        const last = deltaHistory[deltaHistory.length - 1];
+        setDeltaHistory(prev => prev.slice(0, -1));
+
+        const restoredNurses = solutionData.nurses.map(n => {
+            const newAssignments = n.assignments.map(a => {
+                if (a.day === last.day && a.shift === last.shift) {
+                    if (n.id === last.nurseId) {
+                        // restore dragged nurse
+                        return { ...a, rooms: last.previousRooms };
+                    }
+                    if (last.replacedNurseId && n.id === last.replacedNurseId && last.replacedPreviousRooms) {
+                        // restore replaced nurse
+                        return { ...a, rooms: last.replacedPreviousRooms };
+                    }
+                }
+                return a;
+            });
+            return { ...n, assignments: newAssignments };
+        });
+
+        setSolutionData({ ...solutionData, nurses: restoredNurses });
     };
 
     const handleRemoveNurse = (
@@ -156,23 +179,6 @@ export const NurseScheduler = () => {
             return nh.length > MAX_HISTORY ? nh.slice(1) : nh;
         });
 
-        setSolutionData({ ...solutionData, nurses: updated });
-    };
-
-    const handleUndo = () => {
-        if (!deltaHistory.length) return;
-        const last = deltaHistory[deltaHistory.length - 1];
-        setDeltaHistory(prev => prev.slice(0, -1));
-        const updated = solutionData.nurses.map(n => {
-            if (n.id !== last.nurseId) return n;
-            const newAssign = n.assignments.map(a => {
-                if (a.day === last.day && a.shift === last.shift) {
-                    return { ...a, rooms: last.previousRooms };
-                }
-                return a;
-            });
-            return { ...n, assignments: newAssign };
-        });
         setSolutionData({ ...solutionData, nurses: updated });
     };
 
