@@ -38,7 +38,15 @@ export const DayDetail: React.FC<DayDetailProps> = ({ day, shift }) => {
                 <h3 className="text-center">Day {day}, {shift} shift</h3>
                 <button
                     onClick={toggleDetails}
-                    className="px-2 py-1 text-sm rounded cursor-pointer"
+                    className="
+                        px-2 py-1
+                        text-sm
+                        rounded
+                        cursor-pointer
+
+                        transition-all duration-200 ease-in-out
+                        hover:font-bold
+                    "
                 >
                     {isOpen ? 'Hide' : 'Show'}
                 </button>

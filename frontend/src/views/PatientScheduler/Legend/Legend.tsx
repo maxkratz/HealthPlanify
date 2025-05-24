@@ -19,7 +19,15 @@ export const Legend: React.FC = () => {
                 <h3 className="text-lg font-semibold">Legend</h3>
                 <button
                     onClick={toggleLegend}
-                    className="px-2 py-1 text-sm rounded cursor-pointer"
+                    className="
+                        px-2 py-1
+                        text-sm
+                        rounded
+                        cursor-pointer
+
+                        transition-all duration-200 ease-in-out
+                        hover:font-bold
+                    "
                 >
                     {isOpen ? 'Hide' : 'Show'}
                 </button>
