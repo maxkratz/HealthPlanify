@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './Home.module.scss'
 import backgroundImage from '../../assets/home.png'
 import { InputFiles } from '../../components/InputFiles'
-import logo from '../../../public/logo.png'
+import logo from '/logo.png?url';
 
 export const Home: React.FC = () => (
     <div className={styles.container}>
