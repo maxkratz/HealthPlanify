@@ -349,5 +349,5 @@ function constructiveHeuristic(inputData) {
     return solution;
 }
 
-// Si usas CommonJS, exporta así:
+
 module.exports = { constructiveHeuristic };
