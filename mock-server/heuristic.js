@@ -1,39 +1,3 @@
-/**
- * Heurística constructiva con aleatoriedad para el IHTP,
- * asegurándose de que todos los pacientes aparecen en solution.patients.
- *
- * Supone que `inputData` es un objeto con la misma estructura JSON descrita en el PDF:
- * {
- *   days: número de días (D),
- *   shift_types: ["early","late","night"],
- *   nurses: [ {id, skill_level, working_shifts: [ {day, shift, max_load}, ... ] }, ... ],
- *   rooms: [ {id, capacity}, ... ],
- *   operating_theaters: [ {id, availability: [minutos_por_día...]}, ... ],
- *   surgeons: [ {id, max_surgery_time: [minutos_por_día...]}, ... ],
- *   occupants: [ {id, room_id, length_of_stay, gender, ...}, ... ],
- *   patients: [ 
- *     { id, mandatory, surgery_release_day, surgery_due_day, length_of_stay, surgery_duration,
- *       surgeon_id, incompatible_room_ids, gender, workload_produced, skill_level_required, ... },
- *       ...
- *   ]
- * }
- *
- * La función devuelve un objeto `solution`:
- * {
- *   patients: [
- *     { id, admission_day, room?, operating_theater? },
- *     ...
- *   ],
- *   nurses: [
- *     { id, assignments: [ {day, shift, rooms:[...]}, ... ] },
- *     ...
- *   ]
- * }
- *
- * Nota clave: todos los pacientes de inputData.patients aparecen en solution.patients.
- * Si un paciente opcional no cabe en ningún hueco, se añade con admission_day: "none".
- */
-
 // -------------------------------------------------------------
 // UTILIDADES GENERALES
 // -------------------------------------------------------------

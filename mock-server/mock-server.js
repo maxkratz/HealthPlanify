@@ -27,19 +27,15 @@ app.post('/api/solve', (req, res) => {
         return res.status(400).json({ error: 'Missing "file" parameter.' });
     }
 
-    // Validar extensión .json
     if (path.extname(fileName) !== '.json') {
         return res.status(400).json({
             error: `Invalid extension: ${path.extname(fileName)}. Only .json is allowed.`
         });
     }
 
-    // Si el fileName *no* está en la whitelist, asumimos que el cuerpo
-    // de la petición es un JSON válido con la instancia y generamos solución:
     if (!allowedFiles.includes(fileName)) {
         try {
-            const inputData = req.body; // aquí debe ir el JSON de la instancia
-            // Llamamos a la heurística constructiva:
+            const inputData = req.body;
             const solution = constructiveHeuristic(inputData);
             return res.json(solution);
         } catch (e) {
@@ -47,7 +43,6 @@ app.post('/api/solve', (req, res) => {
         }
     }
 
-    // Si sí está en la whitelist, devolvemos el fichero precomputado:
     const base = path.basename(fileName, '.json');
     const solFile = `sol_${base}.json`;
     const solPath = path.join(SOL_DIR, solFile);
