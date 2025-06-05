@@ -68,20 +68,29 @@ export const NurseScheduler = () => {
     }
 
     const handleDropNurse = (nurseId: string, newDay: number, newRoom: string) => {
-        const nurse = solutionData.nurses.find(n => n.id === nurseId);
-        if (!nurse) {
+        const nurse = solutionData.nurses.find(n => n.id === nurseId)!;
+
+        // Validate that the nurse can work on this day and shift
+        const inputNurse = inputData.nurses.find(n => n.id === nurseId);
+        if (!inputNurse) {
             setErrorMessages(prev => [...prev, `Nurse not found: ${nurseId}`]);
             return;
         }
-
-        const assignment = nurse.assignments.find(a => a.day === newDay && a.shift === selectedShift);
-        if (!assignment) {
-            setErrorMessages(prev => [...prev, `Assignment not found for nurse ${nurseId} on day ${newDay} shift ${selectedShift}`]);
+        const working_shift = inputNurse.working_shifts.find(ws => ws.day === newDay && ws.shift === selectedShift);
+        if (!working_shift) {
+            setErrorMessages(prev => [
+                ...prev,
+                `Working shift not found for nurse ${nurseId} on day ${newDay} shift ${selectedShift}`
+            ]);
             return;
         }
 
         // Record previous rooms for dragged nurse
-        const previousRooms = [...assignment.rooms];
+        let previousRooms: string[] = [];
+        const assignment = nurse.assignments.find(a => a.day === newDay && a.shift === selectedShift);
+        if (assignment) {
+            previousRooms = [...assignment.rooms];
+        }
 
         // Find any nurse currently holding this room
         const replacedNurse = solutionData.nurses.find(n =>
@@ -93,22 +102,32 @@ export const NurseScheduler = () => {
             replacedPreviousRooms = [...repAssign.rooms];
         }
 
-        // Apply update: remove room from replaced nurse and add to dragged nurse
         const updatedNurses = solutionData.nurses.map(n => {
-            const newAssignments = n.assignments.map(a => {
-                if (a.day === newDay && a.shift === selectedShift) {
-                    if (n.id === nurseId) {
-                        // Add room
-                        return { ...a, rooms: Array.from(new Set([...a.rooms, newRoom])) };
-                    } else if (replacedNurse && n.id === replacedNurse.id) {
-                        // Remove room
-                        return { ...a, rooms: a.rooms.filter(r => r !== newRoom) };
-                    }
+            const newAssignments = [...n.assignments];
+
+            const assignmentIndex = newAssignments.findIndex(a => a.day === newDay && a.shift === selectedShift);
+
+            if (assignmentIndex !== -1) {
+                const a = newAssignments[assignmentIndex];
+                if (n.id === nurseId) {
+                    // Add room
+                    newAssignments[assignmentIndex] = { ...a, rooms: Array.from(new Set([...a.rooms, newRoom])) };
+                } else if (replacedNurse && n.id === replacedNurse.id) {
+                    // Remove room
+                    newAssignments[assignmentIndex] = { ...a, rooms: a.rooms.filter(r => r !== newRoom) };
                 }
-                return a;
-            });
+            } else if (n.id === nurseId) {
+                // No assignment yet — create one with the new room
+                newAssignments.push({
+                    day: newDay,
+                    shift: selectedShift,
+                    rooms: [newRoom],
+                });
+            }
+
             return { ...n, assignments: newAssignments };
         });
+
 
         // Push delta with both changes
         setDeltaHistory(prev => {
