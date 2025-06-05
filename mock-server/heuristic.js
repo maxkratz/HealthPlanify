@@ -163,11 +163,10 @@ function constructiveHeuristic(inputData) {
                         okRoom = false;
                         break;
                     }
-                    // Sin mezcla de géneros (revisar otros pacientes asignados)
+                    // Verificar mezcla de géneros con pacientes ya asignados
                     for (const solP of solution.patients) {
                         if (solP.room === roomId) {
                             const adm = solP.admission_day;
-                            // Si admission_day no es "none", comprobamos su estancia real
                             if (typeof adm === 'number') {
                                 const len = patients.find(q => q.id === solP.id).length_of_stay;
                                 if (dd >= adm && dd < adm + len) {
@@ -176,6 +175,18 @@ function constructiveHeuristic(inputData) {
                                         okRoom = false;
                                         break;
                                     }
+                                }
+                            }
+                        }
+                    }
+                    // Verificar mezcla de géneros con occupants
+                    for (const occ of occupants) {
+                        if (occ.room_id === roomId) {
+                            const occLen = occ.length_of_stay;
+                            if (dd < occLen) {
+                                if (occ.gender !== gender) {
+                                    okRoom = false;
+                                    break;
                                 }
                             }
                         }
@@ -251,36 +262,24 @@ function constructiveHeuristic(inputData) {
                 });
             }
         }
-    } // fin bucle pacientes
+    }
 
     // 4) ASIGNACIÓN DE ENFERMERAS POR TURNO Y SALA
     for (let day = 0; day < D; day++) {
         for (const shift of shiftsPerDay) {
-            // 4.1) Detectar salas ocupadas en (day, shift)
-            const salasOcupadas = new Set();
-            for (const solP of solution.patients) {
-                const adm = solP.admission_day;
-                if (typeof adm === 'number') {
-                    const pInfo = patients.find(q => q.id === solP.id);
-                    const len = pInfo.length_of_stay;
-                    if (day >= adm && day < adm + len) {
-                        salasOcupadas.add(solP.room);
-                    }
-                }
-            }
-            if (salasOcupadas.size === 0) continue;
-
-            // 4.2) Para cada sala ocupada, asignar enfermera
-            for (const roomId of salasOcupadas) {
+            // 4.2) Para todas las salas (ocupadas o no), asignar una enfermera, no genera coste adicional
+            for (const room of rooms) {
+                const roomId = room.id;
                 const enfermerasDisponibles = [];
+
                 for (let ni = 0; ni < nurses.length; ni++) {
-                    //  — Ver si la enfermera trabaja en (day, shift)
                     const trabajaAquí = nurses[ni].working_shifts.some(ws => ws.day === day && ws.shift === shift);
                     if (!trabajaAquí) continue;
-                    //  — Ver carga actual y carga máxima
+
                     const key = `${day}-${shift}`;
                     const cargaActual = nurseLoads[ni].get(key) || 0;
                     const maxLoad = nurses[ni].working_shifts.find(ws => ws.day === day && ws.shift === shift).max_load;
+
                     if (cargaActual + 1 <= maxLoad) {
                         enfermerasDisponibles.push(ni);
                     }
@@ -290,7 +289,7 @@ function constructiveHeuristic(inputData) {
                 if (enfermerasDisponibles.length > 0) {
                     nurseAssignedIdx = shuffleArray(enfermerasDisponibles)[0];
                 } else {
-                    // No cabe ninguna sin exceder carga → asignamos cualquiera que trabaje (aunque exceda)
+                    // Ninguna disponible sin pasarse de carga → asignar cualquiera que trabaje
                     const anyDisponibles = [];
                     for (let ni = 0; ni < nurses.length; ni++) {
                         const trabajaAquí = nurses[ni].working_shifts.some(ws => ws.day === day && ws.shift === shift);
