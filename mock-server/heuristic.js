@@ -1,11 +1,13 @@
+const seedrandom = require('seedrandom');
+
 // -------------------------------------------------------------
 // UTILIDADES GENERALES
 // -------------------------------------------------------------
-function shuffleArray(arr) {
+function shuffleArray(arr, rng) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[i - 1]] = [a[i - 1], a[i]];
+        const j = Math.floor(rng() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
 }
@@ -47,7 +49,9 @@ function initNurseLoad(nurses, days) {
 // -------------------------------------------------------------
 // FUNCIÓN PRINCIPAL: HEURÍSTICA CONSTRUCTIVA
 // -------------------------------------------------------------
-function constructiveHeuristic(inputData) {
+function constructiveHeuristic(inputData, seed = null) {
+    const rng = seedrandom(seed || Date.now().toString());
+    console.log("Seed usada:", seed || "aleatoria", Date.now().toString());
     const D = inputData.days;
     const rooms = inputData.rooms;                          // [ {id, capacity}, ... ]
     const operatingTheaters = inputData.operating_theaters; // [ {id, availability:[...]}, ... ]
@@ -113,7 +117,9 @@ function constructiveHeuristic(inputData) {
 
     // 3) Empezar con la heurística por pacientes
     //    Barajamos el orden para introducir aleatoriedad
-    const patientOrder = shuffleArray(patients);
+    const patientOrder = shuffleArray(patients, rng);
+    console.log("Orden pacientes:", patientOrder.map(p => p.id));
+
 
     for (const p of patientOrder) {
         const pid = p.id;
@@ -132,7 +138,7 @@ function constructiveHeuristic(inputData) {
         for (let d = relDay; d <= dueDay && d < D; d++) {
             feasibleDays.push(d);
         }
-        const daysShuffled = shuffleArray(feasibleDays);
+        const daysShuffled = shuffleArray(feasibleDays, rng);
 
         // Intentar asignar en alguno de esos días
         for (const day0 of daysShuffled) {
@@ -148,7 +154,7 @@ function constructiveHeuristic(inputData) {
                 continue; // ningún OT libre este día
             }
             // Barajar y elegir una OT al azar
-            const chosenOtIdx = shuffleArray(otsDisponibles)[0];
+            const chosenOtIdx = shuffleArray(otsDisponibles, rng)[0];
 
             // 3.2) Verificar salas compatibles que cumplan capacidad y no mezclen géneros
             const candidateRooms = [];
@@ -201,7 +207,7 @@ function constructiveHeuristic(inputData) {
                 continue; // ninguna sala libre este día
             }
             // Barajar y elegir una sala al azar
-            const chosenRoomIdx = shuffleArray(candidateRooms)[0];
+            const chosenRoomIdx = shuffleArray(candidateRooms, rng)[0];
             const chosenRoomId = rooms[chosenRoomIdx].id;
 
             // 3.3) Ya podemos asignar al paciente en day0, chosenRoomIdx y chosenOtIdx
@@ -230,7 +236,7 @@ function constructiveHeuristic(inputData) {
                 const day0 = dueDay < D ? dueDay : D - 1;
                 // Escoger cualquier OT (aunque viole capacidad):
                 const anyOts = Array.from({ length: operatingTheaters.length }, (_, i) => i);
-                const chosenOtIdx = shuffleArray(anyOts)[0];
+                const chosenOtIdx = shuffleArray(anyOts, rng)[0];
                 // Escoger cualquier sala compatible (sin chequear capacidad):
                 const candidateRooms = [];
                 for (let r = 0; r < rooms.length; r++) {
@@ -238,7 +244,7 @@ function constructiveHeuristic(inputData) {
                         candidateRooms.push(r);
                     }
                 }
-                const chosenRoomIdx = shuffleArray(candidateRooms)[0];
+                const chosenRoomIdx = shuffleArray(candidateRooms, rng)[0];
                 const chosenRoomId = rooms[chosenRoomIdx].id;
 
                 // Actualizar (aunque sobrepase)
@@ -287,7 +293,7 @@ function constructiveHeuristic(inputData) {
 
                 let nurseAssignedIdx = -1;
                 if (enfermerasDisponibles.length > 0) {
-                    nurseAssignedIdx = shuffleArray(enfermerasDisponibles)[0];
+                    nurseAssignedIdx = shuffleArray(enfermerasDisponibles, rng)[0];
                 } else {
                     // Ninguna disponible sin pasarse de carga → asignar cualquiera que trabaje
                     const anyDisponibles = [];
@@ -298,7 +304,7 @@ function constructiveHeuristic(inputData) {
                         }
                     }
                     if (anyDisponibles.length > 0) {
-                        nurseAssignedIdx = shuffleArray(anyDisponibles)[0];
+                        nurseAssignedIdx = shuffleArray(anyDisponibles, rng)[0];
                     }
                 }
 
