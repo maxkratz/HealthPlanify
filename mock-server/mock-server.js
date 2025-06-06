@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 
-const { constructiveHeuristic } = require('./heuristic');
+const { ejecutarHeuristicaIHTC } = require('./heuristic');
 
 const SOL_DIR = '../data/test-solutions/';
 
@@ -36,7 +36,7 @@ app.post('/api/solve', (req, res) => {
     if (!allowedFiles.includes(fileName)) {
         try {
             const inputData = req.body;
-            const solution = constructiveHeuristic(inputData);
+            const solution = ejecutarHeuristicaIHTC(inputData);
             return res.json(solution);
         } catch (e) {
             return res.status(400).json({ error: 'Invalid inputData: ' + e.message });

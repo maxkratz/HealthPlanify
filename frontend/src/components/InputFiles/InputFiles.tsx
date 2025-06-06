@@ -147,7 +147,7 @@ export const InputFiles: React.FC = () => {
         setError(null);
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 120_000);
+            const timeoutId = setTimeout(() => controller.abort(), 480_000);
 
             const url = `/api/solve?file=${encodeURIComponent(inputFileName)}`;
 
@@ -177,7 +177,7 @@ export const InputFiles: React.FC = () => {
         } catch (err: any) {
             setError(
                 err.name === 'AbortError'
-                    ? 'Timeout reached (2 min).'
+                    ? 'Timeout reached (8 min).'
                     : err.message || 'Error fetching solution.'
             );
         } finally {
@@ -238,9 +238,9 @@ export const InputFiles: React.FC = () => {
             )}
 
             {loading && (
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col items-center gap-2">
                     <div className="loader" />
-                    <span>Processing...</span>
+                    <span>Processing... It may take some minutes</span>
                 </div>
             )}
 
