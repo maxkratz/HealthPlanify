@@ -247,12 +247,11 @@ function heuristicaConstructivaIHTC(instance) {
 
     // 4) Bucle principal: mientras queden obligatorios
     while (pendientes.size > 0) {
-        console.log(`Pendientes: ${pendientes.size} obligatorios por ubicar.`);
         // Filtrar pool para quedarnos con candidatos cuyo paciente esté en pendientes
         const posibles = pool.filter(c => pendientes.has(c.patientId));
         if (posibles.length === 0) {
             // No quedan candidatos para ubicar a ninguno de los pendientes: falla
-            console.warn("Heurística falló: no hay más candidatos para ubicar a los obligatorios.");
+            console.warn("Heurística falló: no hay más candidatos para ubicar a los obligatorios. Quedan pendientes:", pendientes.size);
             return null;
         }
 
@@ -260,19 +259,15 @@ function heuristicaConstructivaIHTC(instance) {
         const eleccion = _.sample(posibles);
         const { patientId } = eleccion;
 
-        console.log(`Intentando ubicar paciente ${patientId} en día ${eleccion.day}, habitación ${eleccion.roomId}, OT ${eleccion.OTid}.`);
         // Comprobamos restricciones duras
         if (cumpleRestriccionesDurasyPoliticas(solution, eleccion, instance, occupantMap)) {
-            console.log(`✓ Asignación válida para paciente ${patientId}.`);
             // ✓ Podemos asignarlo: lo fijamos y actualizamos estructuras
             fijarAsignacion(solution, eleccion, instance);
             // Lo marcamos como colocado
             pendientes.delete(patientId);
             // Eliminamos del pool TODO candidato con patientId == este paciente
             pool = pool.filter(c => c.patientId !== patientId);
-            console.log(`Paciente ${patientId} asignado correctamente.`);
         } else {
-            console.log(`✗ Asignación inválida para paciente ${patientId}. Descartando candidato.`);
             // ✗ No es válido: descartamos solo este candidato
             pool = pool.filter(c =>
                 !(c.patientId === eleccion.patientId &&
@@ -280,11 +275,9 @@ function heuristicaConstructivaIHTC(instance) {
                     c.roomId === eleccion.roomId &&
                     c.OTid === eleccion.OTid)
             );
-            console.warn(`Paciente ${patientId} no pudo ser asignado en el candidato elegido.`);
         }
     }
 
-    console.log("Todos los pacientes obligatorios han sido asignados correctamente.");
     // Si llegamos aquí, hemos colocado a todos los obligatorios correctamente.
     return solution;
 }
@@ -486,7 +479,7 @@ function asignarEnfermeras(solution, instance) {
  * Devuelve un objeto listo para exportar a JSON con la forma que pide el validador,
  * asegurándose de que TODOS los pacientes aparezcan (los no asignados con admission_day:"none").
  */
-function ejecutarHeuristicaIHTC(instance, maxRetries = 100) {
+function ejecutarHeuristicaIHTC(instance, maxRetries = 1000) {
     // 1) Intentamos generar asignaciones de pacientes (múltiples reintentos si falla)
     let solPacientes = null;
     for (let intento = 0; intento < maxRetries; intento++) {
