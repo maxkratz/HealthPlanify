@@ -270,9 +270,11 @@ function heuristicaConstructivaIHTC(instance) {
 
     // 3) Conjunto de pendientes
     const pendientes = new Set(mandatoryPatients);
+    console.log(`Pendientes: ${pendientes.size}, Pool: ${pool.length}`);
 
     // 4) Bucle principal con MRV
     while (pendientes.size > 0) {
+        console.log(`Pendientes: ${pendientes.size}, Pool: ${pool.length}`);
         // ★ 4.1) Para cada pendiente, contamos cuántos candidatos le quedan
         let pacienteMRV = null;
         let minCandidatos = Infinity;
@@ -301,13 +303,27 @@ function heuristicaConstructivaIHTC(instance) {
 
         // 4.4) Comprobamos restricciones duras
         if (cumpleRestriccionesDurasyPoliticas(solution, eleccion, instance, occupantMap)) {
-            // ✓ Asignamos y actualizamos
+            // 1) Asignamos y actualizamos la solución
             fijarAsignacion(solution, eleccion, instance);
+
+            // 1.1) Insertamos al paciente en occupantMap para futuras comprobaciones
+            const p = instance.patients.find(pac => pac.id === patientId);
+            occupantMap.set(patientId, p);
+
+            // 2) Marcamos como resuelto
             pendientes.delete(patientId);
-            // Eliminamos todos los candidatos de ese paciente
+
+            // 3) Eliminamos **todos** los candidatos de este paciente
             pool = pool.filter(c => c.patientId !== patientId);
+
+            // 4) ***PODA DINÁMICA***: quitamos del pool
+            //    cualquier candidato que ya no cumpla las restricciones
+            pool = pool.filter(c =>
+                cumpleRestriccionesDurasyPoliticas(solution, c, instance, occupantMap)
+            );
+
         } else {
-            // ✗ Descartamos sólo este candidato e intentamos continuar
+            // si falla, descartamos solo ese candidato
             pool = pool.filter(c =>
                 !(
                     c.patientId === eleccion.patientId &&
@@ -319,6 +335,7 @@ function heuristicaConstructivaIHTC(instance) {
         }
     }
 
+    console.log("Heurística completada: todos los pacientes asignados.");
     return solution;
 }
 
