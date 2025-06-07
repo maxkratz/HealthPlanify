@@ -254,69 +254,71 @@ function heuristicaConstructivaIHTC(instance) {
     const rooms = instance.rooms;
     const OTs = instance.operating_theaters;
     const surgeons = instance.surgeons;
-    const occupants = instance.occupants;       // pacientes ya ingresados
+    const occupants = instance.occupants;
     const mandatoryPatients = instance.patients
         .filter(p => p.mandatory)
         .map(p => p.id);
 
     // 1) Inicializar la solución vacía e inyectar ocupantes fijos
     const solution = inicializarSolution(D, rooms, OTs, surgeons);
-
-    // Creamos un Map de occupants (solo para chequear el género en roomOccupancy)
     const occupantMap = new Map();
-    for (const o of occupants) {
-        occupantMap.set(o.id, o);
-    }
+    for (const o of occupants) occupantMap.set(o.id, o);
     cargarOccupantsEnSolucion(solution, occupants);
 
-    // 2) Generar el pool inicial de candidatos
-    let pool = construirPoolInicial(instance);
-    // Barajamos el array para aleatorizar un poco
-    pool = _.shuffle(pool);
+    // 2) Generar y barajar el pool inicial de candidatos
+    let pool = _.shuffle(construirPoolInicial(instance));
 
-    // 3) Preparar el conjunto de obligatorios pendientes
+    // 3) Conjunto de pendientes
     const pendientes = new Set(mandatoryPatients);
 
-    // 4) Bucle principal: mientras queden obligatorios
+    // 4) Bucle principal con MRV
     while (pendientes.size > 0) {
-        // // Calculamos qué pacientes obligatorios no tienen ningún candidato
-        // const sinCandidatos = mandatoryPatients.filter(
-        //     pid => !pool.some(c => c.patientId === pid)
-        // );
-        // console.log("Pacientes sin candidatos:", sinCandidatos);
-        // Filtrar pool para quedarnos con candidatos cuyo paciente esté en pendientes
-        const posibles = pool.filter(c => pendientes.has(c.patientId));
-        if (posibles.length === 0) {
-            // No quedan candidatos para ubicar a ninguno de los pendientes: falla
-            console.warn("Heurística falló: no hay más candidatos para ubicar a los obligatorios. Quedan pendientes:", pendientes.size);
+        // ★ 4.1) Para cada pendiente, contamos cuántos candidatos le quedan
+        let pacienteMRV = null;
+        let minCandidatos = Infinity;
+        for (const pid of pendientes) {
+            const cnt = pool.reduce((sum, c) => sum + (c.patientId === pid ? 1 : 0), 0);
+            if (cnt < minCandidatos) {
+                minCandidatos = cnt;
+                pacienteMRV = pid;
+            }
+        }
+
+        // Si alguno tiene 0 candidatos, fallo inmediato
+        if (minCandidatos === 0) {
+            console.warn(
+                `Heurística falló: el paciente ${pacienteMRV} no tiene candidatos disponibles.`, pendientes.size, "pendientes restantes."
+            );
             return null;
         }
 
-        // Elegimos uno al azar
-        const eleccion = _.sample(posibles);
+        // ★ 4.2) Extraemos sólo los candidatos de ese paciente
+        const candidatos = pool.filter(c => c.patientId === pacienteMRV);
+
+        // ★ 4.3) Elegimos uno al azar (puedes aquí reemplazar por un score si quieres)
+        const eleccion = _.sample(candidatos);
         const { patientId } = eleccion;
 
-        // Comprobamos restricciones duras
+        // 4.4) Comprobamos restricciones duras
         if (cumpleRestriccionesDurasyPoliticas(solution, eleccion, instance, occupantMap)) {
-            // ✓ Podemos asignarlo: lo fijamos y actualizamos estructuras
+            // ✓ Asignamos y actualizamos
             fijarAsignacion(solution, eleccion, instance);
-            // Lo marcamos como colocado
             pendientes.delete(patientId);
-            // Eliminamos del pool TODO candidato con patientId == este paciente
+            // Eliminamos todos los candidatos de ese paciente
             pool = pool.filter(c => c.patientId !== patientId);
         } else {
-            // ✗ No es válido: descartamos solo este candidato
+            // ✗ Descartamos sólo este candidato e intentamos continuar
             pool = pool.filter(c =>
-                !(c.patientId === eleccion.patientId &&
+                !(
+                    c.patientId === eleccion.patientId &&
                     c.day === eleccion.day &&
                     c.roomId === eleccion.roomId &&
-                    c.OTid === eleccion.OTid)
+                    c.OTid === eleccion.OTid
+                )
             );
-            // console.log(`Candidato descartado: ${eleccion.patientId} en día ${eleccion.day}, habitación ${eleccion.roomId}, OT ${eleccion.OTid}`);
         }
     }
 
-    // Si llegamos aquí, hemos colocado a todos los obligatorios correctamente.
     return solution;
 }
 
