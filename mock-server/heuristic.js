@@ -1,6 +1,5 @@
 const _ = require('lodash'); // para sample, shuffle
 
-/** Crea la estructura vacía para ir almacenando asignaciones. */
 function inicializarSolution(D, rooms, operating_theaters, surgeons) {
     // patientAssigns: map paciente → { day, room, operatingTheater }, vacío al inicio
     const patientAssigns = new Map();
@@ -32,10 +31,6 @@ function inicializarSolution(D, rooms, operating_theaters, surgeons) {
     return { patientAssigns, roomOccupancy, OTUsage, surgeonUsage };
 }
 
-/**
- * Inserta en roomOccupancy[a día][room] a cada “occupant” para forzar
- * que esas camas ya estén ocupadas.
- */
 function cargarOccupantsEnSolucion(solution, occupants) {
     const { roomOccupancy } = solution;
     for (const o of occupants) {
@@ -52,11 +47,6 @@ function cargarOccupantsEnSolucion(solution, occupants) {
     }
 }
 
-/**
- * Construye el pool inicial de candidatos { patientId, day, roomId, OTid },
- * sin comprobar aún capacidad real en los siguientes días—solo la ventana de admisión,
- * quirófano y cirujano. 
- */
 function construirPoolInicial(instance) {
     const D = instance.days;
     const rooms = instance.rooms; // [{ id, capacity }, …]
@@ -112,80 +102,136 @@ function construirPoolInicial(instance) {
     return pool;
 }
 
-/**
- * Comprueba todas las restricciones duras para asignar “candidate” en la sol actual.
- * Devuelve true si se puede “fijar” definitivamente.
- */
 function cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occupantMap) {
-    // solution: { patientAssigns, roomOccupancy, OTUsage, surgeonUsage }
     const { patientAssigns, roomOccupancy, OTUsage, surgeonUsage } = solution;
     const { patientId, day: d, roomId: r, OTid: t } = candidate;
-    const patients = instance.patients;
-    const patientMap = new Map(patients.map(p => [p.id, p]));
-    const rooms = instance.rooms;
-    const roomMap = new Map(rooms.map(rm => [rm.id, rm]));
-    const OTs = instance.operating_theaters;
-    const OTMap = new Map(OTs.map(ot => [ot.id, ot]));
-    const surgeons = instance.surgeons;
-    const surgeonMap = new Map(surgeons.map(s => [s.id, s]));
 
-    // 0) Si el paciente ya está asignado en otro sitio, falla:
-    if (patientAssigns.has(patientId)) return false;
+    // 0) No reasignar mismo paciente
+    if (patientAssigns.has(patientId)) {
+        console.log(`Cannot assign patient ${patientId}: already assigned.`);
+        return false;
+    }
 
-    const p = patientMap.get(patientId);
-    const stay = p.length_of_stay;            // número de días a ocupar
-    const gen = p.gender;                     // "A"|"B"
-    const ageGrp = p.age_group;               // (para soft, no aquí)
+    // 0.1) Paciente existe
+    const p = instance.patients.find(pac => pac.id === patientId);
+    if (!p) {
+        console.log(`Cannot assign patient ${patientId}: patient record not found.`);
+        return false;
+    }
+
+    // 0.5) Ventana de admisión
+    const release = p.surgery_release_day;
+    const due = p.mandatory
+        ? p.surgery_due_day
+        : instance.days - 1;
+    if (d < release || d > due) {
+        console.log(
+            `Cannot assign patient ${patientId} on day ${d}: outside admission window [${release}..${due}].`
+        );
+        return false;
+    }
+
+    // 0.6) Debe venir con OT
+    if (t == null) {
+        console.log(`Cannot assign patient ${patientId} on day ${d}: no operating theater provided.`);
+        return false;
+    }
+
+    const stay = p.length_of_stay;
+    const gen = p.gender;
     const incomp = new Set(p.incompatible_room_ids);
 
-    // 1) Verificar que 'r' no está en incompatible (pero ya lo hizo el pool).
-    if (incomp.has(r)) return false;
+    // 1) Compatibilidad de sala
+    if (incomp.has(r)) {
+        console.log(`Cannot assign patient ${patientId} to room ${r}: room is incompatible.`);
+        return false;
+    }
 
-    // 2) Comprobar que, para TODOS los días de la estancia (d … d+stay-1):
-    //    - 0 ≤ d+i < D
-    //    - La capacidad de la habitación (roomMap.get(r).capacity) no se excede
-    //    - No hay mezcla de género
-    //    - (Los ocupantes fijos ya están en roomOccupancy, se cuentan)
+    // 2) Capacidad y género en los días válidos de la estancia
+    const roomObj = instance.rooms.find(x => x.id === r);
+    if (!roomObj) {
+        console.log(`Cannot assign patient ${patientId} to room ${r}: room not found.`);
+        return false;
+    }
+
     for (let offset = 0; offset < stay; offset++) {
         const diaReal = d + offset;
-        if (diaReal < 0 || diaReal >= instance.days) return false;
+
+        // Si el día es anterior al horizonte, seguimos; si pasa del último día, lo ignoramos
+        if (diaReal < 0) {
+            console.log(
+                `Patient ${patientId} stay starts before day 0 (day ${diaReal}): ignoring that day.`
+            );
+            continue;
+        }
+        if (diaReal >= instance.days) {
+            console.log(
+                `Patient ${patientId} stay extends beyond planning horizon (day ${diaReal}): ignoring that day.`
+            );
+            break;  // a partir de aquí todos offset mayores también estarán fuera
+        }
+
+        const ocupantes = roomOccupancy[diaReal].get(r) || [];
 
         // 2a) Capacidad
-        const listaEnDia = roomOccupancy[diaReal].get(r);
-        const capacidad = roomMap.get(r).capacity;
-        if (listaEnDia.length + 1 > capacidad) return false;
+        if (ocupantes.length + 1 > roomObj.capacity) {
+            console.log(
+                `Cannot assign patient ${patientId} to room ${r} on day ${diaReal}: capacity exceeded (${ocupantes.length + 1}/${roomObj.capacity}).`
+            );
+            return false;
+        }
 
-        // 2b) Género mix
-        for (const otroId of listaEnDia) {
-            // Si es un occupant fijo, tomamos su género de occupantMap
-            // Si es un paciente asignado en runtime, hay que sacarlo de patientMap.
+        // 2b) Mezcla de géneros
+        for (const otroId of ocupantes) {
             const gOtro = occupantMap.has(otroId)
                 ? occupantMap.get(otroId).gender
-                : patientMap.get(otroId).gender;
-            if (gOtro !== gen) return false;
+                : (instance.patients.find(x => x.id === otroId) || {}).gender;
+            if (gOtro !== gen) {
+                console.log(
+                    `Cannot assign patient ${patientId} (gender ${gen}) to room ${r} on day ${diaReal}: gender mix with patient ${otroId} (gender ${gOtro}).`
+                );
+                return false;
+            }
         }
     }
 
-    // 3) Verificar quirófano y cirujano para el día d (la cirugía se asume en d):
-    const surgeonId = p.surgeon_id;
+    // 3) Cirujano
     const dur = p.surgery_duration;
+    const surgeonId = p.surgeon_id;
+    const surgeonObj = instance.surgeons.find(s => s.id === surgeonId);
+    if (!surgeonObj) {
+        console.log(`Cannot assign patient ${patientId}: surgeon ${surgeonId} not found.`);
+        return false;
+    }
     const sUsoHoy = surgeonUsage[d].get(surgeonId) || 0;
-    const maxCirujanoHoy = surgeonMap.get(surgeonId).max_surgery_time[d] || 0;
-    if (sUsoHoy + dur > maxCirujanoHoy) return false;
+    const maxCirHoy = surgeonObj.max_surgery_time[d] || 0;
+    if (sUsoHoy + dur > maxCirHoy) {
+        console.log(
+            `Cannot assign patient ${patientId} with surgeon ${surgeonId} on day ${d}: surgeon overload (${sUsoHoy + dur}/${maxCirHoy}).`
+        );
+        return false;
+    }
 
+    // 4) Quirófano
+    const otObj = instance.operating_theaters.find(ot => ot.id === t);
+    if (!otObj) {
+        console.log(`Cannot assign patient ${patientId}: OT ${t} not found.`);
+        return false;
+    }
     const otUsoHoy = OTUsage[d].get(t) || 0;
-    const otCapHoy = OTMap.get(t).availability[d] || 0;
-    if (otUsoHoy + dur > otCapHoy) return false;
+    const otCapHoy = otObj.availability[d] || 0;
+    if (otUsoHoy + dur > otCapHoy) {
+        console.log(
+            `Cannot assign patient ${patientId} to OT ${t} on day ${d}: OT overload (${otUsoHoy + dur}/${otCapHoy}).`
+        );
+        return false;
+    }
 
-    // 4) Asegurarnos de que no haya ya otro “patientAssigns” con este patientId
-    //    (lo hacemos al inicio). Y que no haya ya “otro room+day” con el mismo p—ya cubierto.
-
-    return true; // si no ha saltado ningún return false, se puede asignar.
+    // Si llegamos aquí, la asignación es válida
+    console.log(`Assigning patient ${patientId} to day ${d}, room ${r}, OT ${t}.`);
+    return true;
 }
 
-/**
- * Asigna definitivamente un candidato en la solución (se llama si pasó todas las restricciones).
- */
 function fijarAsignacion(solution, candidate, instance) {
     const { patientAssigns, roomOccupancy, OTUsage, surgeonUsage } = solution;
     const { patientId, day: d, roomId: r, OTid: t } = candidate;
@@ -201,22 +247,22 @@ function fijarAsignacion(solution, candidate, instance) {
         operating_theater: t
     });
 
-    // 2) Sumar ocupación de habitación para cada día en la estancia
+    // 2) Sumar ocupación de habitación para cada día válido en la estancia
     for (let offset = 0; offset < stay; offset++) {
         const diaReal = d + offset;
-        const listaEnDia = roomOccupancy[diaReal].get(r);
-        listaEnDia.push(patientId);
+        // Solo si diaReal está dentro del planning [0 .. D-1]
+        if (diaReal >= 0 && diaReal < roomOccupancy.length) {
+            const listaEnDia = roomOccupancy[diaReal].get(r);
+            listaEnDia.push(patientId);
+        }
+        // si está fuera, lo ignoramos
     }
 
-    // 3) Sumar uso de OT y uso de cirujano para el día d
+    // 3) Sumar uso de OT y uso de cirujano para el día d (d está garantizado dentro de [0..D-1])
     OTUsage[d].set(t, (OTUsage[d].get(t) || 0) + dur);
     surgeonUsage[d].set(surgeonId, (surgeonUsage[d].get(surgeonId) || 0) + dur);
 }
 
-/**
- * Heurística constructiva pura: intenta ubicar TODOS los obligatorios.
- * Devuelve la solución parcial (o null si falla).
- */
 function heuristicaConstructivaIHTC(instance) {
     const D = instance.days;
     const rooms = instance.rooms;
@@ -247,6 +293,13 @@ function heuristicaConstructivaIHTC(instance) {
 
     // 4) Bucle principal: mientras queden obligatorios
     while (pendientes.size > 0) {
+        // —————— AÑADE ESTO ——————
+        // Calculamos qué pacientes obligatorios no tienen ningún candidato
+        const sinCandidatos = mandatoryPatients.filter(
+            pid => !pool.some(c => c.patientId === pid)
+        );
+        console.log("Pacientes sin candidatos:", sinCandidatos);
+        // ————————————————————————
         // Filtrar pool para quedarnos con candidatos cuyo paciente esté en pendientes
         const posibles = pool.filter(c => pendientes.has(c.patientId));
         if (posibles.length === 0) {
@@ -275,6 +328,7 @@ function heuristicaConstructivaIHTC(instance) {
                     c.roomId === eleccion.roomId &&
                     c.OTid === eleccion.OTid)
             );
+            console.log(`Candidato descartado: ${eleccion.patientId} en día ${eleccion.day}, habitación ${eleccion.roomId}, OT ${eleccion.OTid}`);
         }
     }
 
@@ -282,9 +336,6 @@ function heuristicaConstructivaIHTC(instance) {
     return solution;
 }
 
-/**
- * Construye una estructura intermedia RN[d][roomId][shift] = { totalWorkload, minSkill }.
- */
 function construirRequerimientosEnfermeras(solution, instance) {
     const D = instance.days;
     const roomOcc = solution.roomOccupancy;
@@ -352,14 +403,6 @@ function construirRequerimientosEnfermeras(solution, instance) {
     return RN;
 }
 
-/**
- * Una vez tenemos RN[d][roomId][shift], asigna enfermeras aleatoriamente:
- *  - nurseAvailable[d][shift] = Set de nurseIds disponibles,
- *    y nurseMaxLoad[nurseId][d][shift] = valor máximo;
- *  - asignar tantas habitaciones como podamos a cada enfermera (sin exceder carga).
- *
- * Devuelve nurseAssigns: Map nurseId → [ { day, shift, rooms: [r1,…] }, … ]
- */
 function asignarEnfermeras(solution, instance) {
     const D = instance.days;
     const nurses = instance.nurses;
@@ -474,11 +517,6 @@ function asignarEnfermeras(solution, instance) {
     return nurseAssigns;
 }
 
-/**
- * Orquesta la ejecución completa: pacientes + enfermeras.
- * Devuelve un objeto listo para exportar a JSON con la forma que pide el validador,
- * asegurándose de que TODOS los pacientes aparezcan (los no asignados con admission_day:"none").
- */
 function ejecutarHeuristicaIHTC(instance, maxRetries = 1000) {
     // 1) Intentamos generar asignaciones de pacientes (múltiples reintentos si falla)
     let solPacientes = null;
