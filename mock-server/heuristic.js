@@ -108,14 +108,14 @@ function cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occup
 
     // 0) No reasignar mismo paciente
     if (patientAssigns.has(patientId)) {
-        console.log(`Cannot assign patient ${patientId}: already assigned.`);
+        // console.log(`Cannot assign patient ${patientId}: already assigned.`);
         return false;
     }
 
     // 0.1) Paciente existe
     const p = instance.patients.find(pac => pac.id === patientId);
     if (!p) {
-        console.log(`Cannot assign patient ${patientId}: patient record not found.`);
+        // console.log(`Cannot assign patient ${patientId}: patient record not found.`);
         return false;
     }
 
@@ -125,15 +125,13 @@ function cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occup
         ? p.surgery_due_day
         : instance.days - 1;
     if (d < release || d > due) {
-        console.log(
-            `Cannot assign patient ${patientId} on day ${d}: outside admission window [${release}..${due}].`
-        );
+        // console.log(`Cannot assign patient ${patientId} on day ${d}: outside admission window [${release}..${due}].`);
         return false;
     }
 
     // 0.6) Debe venir con OT
     if (t == null) {
-        console.log(`Cannot assign patient ${patientId} on day ${d}: no operating theater provided.`);
+        // console.log(`Cannot assign patient ${patientId} on day ${d}: no operating theater provided.`);
         return false;
     }
 
@@ -143,14 +141,14 @@ function cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occup
 
     // 1) Compatibilidad de sala
     if (incomp.has(r)) {
-        console.log(`Cannot assign patient ${patientId} to room ${r}: room is incompatible.`);
+        // console.log(`Cannot assign patient ${patientId} to room ${r}: room is incompatible.`);
         return false;
     }
 
     // 2) Capacidad y género en los días válidos de la estancia
     const roomObj = instance.rooms.find(x => x.id === r);
     if (!roomObj) {
-        console.log(`Cannot assign patient ${patientId} to room ${r}: room not found.`);
+        // console.log(`Cannot assign patient ${patientId} to room ${r}: room not found.`);
         return false;
     }
 
@@ -159,15 +157,11 @@ function cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occup
 
         // Si el día es anterior al horizonte, seguimos; si pasa del último día, lo ignoramos
         if (diaReal < 0) {
-            console.log(
-                `Patient ${patientId} stay starts before day 0 (day ${diaReal}): ignoring that day.`
-            );
+            // console.log(`Patient ${patientId} stay starts before day 0 (day ${diaReal}): ignoring that day.`);
             continue;
         }
         if (diaReal >= instance.days) {
-            console.log(
-                `Patient ${patientId} stay extends beyond planning horizon (day ${diaReal}): ignoring that day.`
-            );
+            // console.log(`Patient ${patientId} stay extends beyond planning horizon (day ${diaReal}): ignoring that day.`);
             break;  // a partir de aquí todos offset mayores también estarán fuera
         }
 
@@ -175,9 +169,7 @@ function cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occup
 
         // 2a) Capacidad
         if (ocupantes.length + 1 > roomObj.capacity) {
-            console.log(
-                `Cannot assign patient ${patientId} to room ${r} on day ${diaReal}: capacity exceeded (${ocupantes.length + 1}/${roomObj.capacity}).`
-            );
+            // console.log(`Cannot assign patient ${patientId} to room ${r} on day ${diaReal}: capacity exceeded (${ocupantes.length + 1}/${roomObj.capacity}).`);
             return false;
         }
 
@@ -187,9 +179,7 @@ function cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occup
                 ? occupantMap.get(otroId).gender
                 : (instance.patients.find(x => x.id === otroId) || {}).gender;
             if (gOtro !== gen) {
-                console.log(
-                    `Cannot assign patient ${patientId} (gender ${gen}) to room ${r} on day ${diaReal}: gender mix with patient ${otroId} (gender ${gOtro}).`
-                );
+                // console.log(`Cannot assign patient ${patientId} (gender ${gen}) to room ${r} on day ${diaReal}: gender mix with patient ${otroId} (gender ${gOtro}).`);
                 return false;
             }
         }
@@ -200,35 +190,31 @@ function cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occup
     const surgeonId = p.surgeon_id;
     const surgeonObj = instance.surgeons.find(s => s.id === surgeonId);
     if (!surgeonObj) {
-        console.log(`Cannot assign patient ${patientId}: surgeon ${surgeonId} not found.`);
+        // console.log(`Cannot assign patient ${patientId}: surgeon ${surgeonId} not found.`);
         return false;
     }
     const sUsoHoy = surgeonUsage[d].get(surgeonId) || 0;
     const maxCirHoy = surgeonObj.max_surgery_time[d] || 0;
     if (sUsoHoy + dur > maxCirHoy) {
-        console.log(
-            `Cannot assign patient ${patientId} with surgeon ${surgeonId} on day ${d}: surgeon overload (${sUsoHoy + dur}/${maxCirHoy}).`
-        );
+        // console.log(`Cannot assign patient ${patientId} with surgeon ${surgeonId} on day ${d}: surgeon overload (${sUsoHoy + dur}/${maxCirHoy}).`);
         return false;
     }
 
     // 4) Quirófano
     const otObj = instance.operating_theaters.find(ot => ot.id === t);
     if (!otObj) {
-        console.log(`Cannot assign patient ${patientId}: OT ${t} not found.`);
+        // console.log(`Cannot assign patient ${patientId}: OT ${t} not found.`);
         return false;
     }
     const otUsoHoy = OTUsage[d].get(t) || 0;
     const otCapHoy = otObj.availability[d] || 0;
     if (otUsoHoy + dur > otCapHoy) {
-        console.log(
-            `Cannot assign patient ${patientId} to OT ${t} on day ${d}: OT overload (${otUsoHoy + dur}/${otCapHoy}).`
-        );
+        // console.log(`Cannot assign patient ${patientId} to OT ${t} on day ${d}: OT overload (${otUsoHoy + dur}/${otCapHoy}).`);
         return false;
     }
 
     // Si llegamos aquí, la asignación es válida
-    console.log(`Assigning patient ${patientId} to day ${d}, room ${r}, OT ${t}.`);
+    // console.log(`Assigning patient ${patientId} to day ${d}, room ${r}, OT ${t}.`);
     return true;
 }
 
@@ -293,13 +279,11 @@ function heuristicaConstructivaIHTC(instance) {
 
     // 4) Bucle principal: mientras queden obligatorios
     while (pendientes.size > 0) {
-        // —————— AÑADE ESTO ——————
-        // Calculamos qué pacientes obligatorios no tienen ningún candidato
-        const sinCandidatos = mandatoryPatients.filter(
-            pid => !pool.some(c => c.patientId === pid)
-        );
-        console.log("Pacientes sin candidatos:", sinCandidatos);
-        // ————————————————————————
+        // // Calculamos qué pacientes obligatorios no tienen ningún candidato
+        // const sinCandidatos = mandatoryPatients.filter(
+        //     pid => !pool.some(c => c.patientId === pid)
+        // );
+        // console.log("Pacientes sin candidatos:", sinCandidatos);
         // Filtrar pool para quedarnos con candidatos cuyo paciente esté en pendientes
         const posibles = pool.filter(c => pendientes.has(c.patientId));
         if (posibles.length === 0) {
@@ -328,7 +312,7 @@ function heuristicaConstructivaIHTC(instance) {
                     c.roomId === eleccion.roomId &&
                     c.OTid === eleccion.OTid)
             );
-            console.log(`Candidato descartado: ${eleccion.patientId} en día ${eleccion.day}, habitación ${eleccion.roomId}, OT ${eleccion.OTid}`);
+            // console.log(`Candidato descartado: ${eleccion.patientId} en día ${eleccion.day}, habitación ${eleccion.roomId}, OT ${eleccion.OTid}`);
         }
     }
 
@@ -517,7 +501,7 @@ function asignarEnfermeras(solution, instance) {
     return nurseAssigns;
 }
 
-function ejecutarHeuristicaIHTC(instance, maxRetries = 1000) {
+function ejecutarHeuristicaIHTC(instance, maxRetries = 10) {
     // 1) Intentamos generar asignaciones de pacientes (múltiples reintentos si falla)
     let solPacientes = null;
     for (let intento = 0; intento < maxRetries; intento++) {
