@@ -49,56 +49,43 @@ function cargarOccupantsEnSolucion(solution, occupants) {
 
 function construirPoolInicial(instance) {
     const D = instance.days;
-    const rooms = instance.rooms; // [{ id, capacity }, …]
-    const OTs = instance.operating_theaters; // [{ id, availability:[…] }, …]
-    const surgeons = instance.surgeons; // [{ id, max_surgery_time:[…] }, …]
-    const patients = instance.patients.filter(p => p.mandatory);
-    // (si quisieras incluir opcionales en un segundo paso, podrías mantenerlos en otro array)
-
-    // Creamos mapas rápidos: surgeonId → arreglo de max_surgery_time
-    const surgeonMap = new Map();
-    for (const s of surgeons) {
-        surgeonMap.set(s.id, s.max_surgery_time);
-    }
-
-    // OTMap: OTid → availability array
-    const OTMap = new Map();
-    for (const t of OTs) {
-        OTMap.set(t.id, t.availability);
-    }
-
+    const rooms = instance.rooms;
+    const OTs = instance.operating_theaters;
+    const surgeonMap = new Map(instance.surgeons.map(s => [s.id, s.max_surgery_time]));
     const pool = [];
-    for (const p of patients) {
-        const release = p.surgery_release_day;
-        const due = p.surgery_due_day; // estrictamente, dado que es obligatorio, lo tiene definido
-        const length_of_stay = p.length_of_stay;
-        const incomp = new Set(p.incompatible_room_ids);
-        const surgeonAvail = surgeonMap.get(p.surgeon_id);
-        const dur = p.surgery_duration;
 
-        for (let d = release; d <= due; d++) {
-            if (d < 0 || d >= D) continue;
-            // 1) Comprobar cirujano en d: 
-            if ((surgeonAvail[d] || 0) < dur) continue;
+    for (const p of instance.patients) {
+        const { id: patientId,
+            surgery_release_day: release,
+            surgery_due_day: surgeryDue,
+            mandatory,
+            incompatible_room_ids: incompatibleRooms,
+            surgeon_id,
+            surgery_duration: dur } = p;
+        const due = mandatory ? surgeryDue : D - 1;
+        const incomp = new Set(incompatibleRooms);
+        const surgeonAvail = surgeonMap.get(surgeon_id);
 
-            // 2) Para cada quirófano t disponible ese día:
-            for (const t of OTs) {
-                if ((t.availability[d] || 0) < dur) continue;
-                // 3) Para cada habitación no incompatible:
-                for (const r of rooms) {
-                    if (incomp.has(r.id)) continue;
-                    // En principio, añadimos el candidato.  
-                    // Más adelante, cuando "intentemos asignar", comprobaremos el resto de restricciones duras.
-                    pool.push({
-                        patientId: p.id,
-                        day: d,
-                        roomId: r.id,
-                        OTid: t.id
-                    });
+        if (!Array.isArray(surgeonAvail)) {
+            console.warn(`Cirujano ${surgeon_id} sin datos de disponibilidad`);
+            continue;
+        }
+
+        for (let day = release; day <= due; day++) {
+            if (day < 0 || day >= D) continue;
+            if ((surgeonAvail[day] || 0) < dur) continue;
+
+            for (const ot of OTs) {
+                if ((ot.availability[day] || 0) < dur) continue;
+
+                for (const room of rooms) {
+                    if (incomp.has(room.id)) continue;
+                    pool.push({ patientId, day, roomId: room.id, OTid: ot.id });
                 }
             }
         }
     }
+
     return pool;
 }
 
@@ -214,7 +201,6 @@ function cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occup
     }
 
     // Si llegamos aquí, la asignación es válida
-    // console.log(`Assigning patient ${patientId} to day ${d}, room ${r}, OT ${t}.`);
     return true;
 }
 
@@ -255,89 +241,103 @@ function heuristicaConstructivaIHTC(instance) {
     const OTs = instance.operating_theaters;
     const surgeons = instance.surgeons;
     const occupants = instance.occupants;
-    const mandatoryPatients = instance.patients
-        .filter(p => p.mandatory)
-        .map(p => p.id);
 
-    // 1) Inicializar la solución vacía e inyectar ocupantes fijos
+    // 1) Inicializar solución e inyectar ocupantes fijos
     const solution = inicializarSolution(D, rooms, OTs, surgeons);
-    const occupantMap = new Map();
-    for (const o of occupants) occupantMap.set(o.id, o);
+    const occupantMap = new Map(occupants.map(o => [o.id, o]));
     cargarOccupantsEnSolucion(solution, occupants);
 
-    // 2) Generar y barajar el pool inicial de candidatos
-    let pool = _.shuffle(construirPoolInicial(instance));
+    // 2) Generar pool completo y separar mandatorios/opcionales
+    const allCandidates = construirPoolInicial(instance);
+    let poolMand = _.shuffle(
+        allCandidates.filter(c => instance.patients.find(p => p.id === c.patientId).mandatory)
+    );
+    let poolOpt = _.shuffle(
+        allCandidates.filter(c => !instance.patients.find(p => p.id === c.patientId).mandatory)
+    );
 
-    // 3) Conjunto de pendientes
-    const pendientes = new Set(mandatoryPatients);
-    console.log(`Pendientes: ${pendientes.size}, Pool: ${pool.length}`);
+    // Listas de IDs
+    const mandatorios = instance.patients.filter(p => p.mandatory).map(p => p.id);
+    const opcionales = instance.patients.filter(p => !p.mandatory).map(p => p.id);
 
-    // 4) Bucle principal con MRV
-    while (pendientes.size > 0) {
-        // ★ 4.1) Para cada pendiente, contamos cuántos candidatos le quedan
-        let pacienteMRV = null;
-        let minCandidatos = Infinity;
-        for (const pid of pendientes) {
-            const cnt = pool.reduce((sum, c) => sum + (c.patientId === pid ? 1 : 0), 0);
-            if (cnt < minCandidatos ||
-                (cnt === minCandidatos && ( // ← CAMBIO: desempate por length_of_stay
-                    instance.patients.find(p => p.id === pid).length_of_stay >
-                    instance.patients.find(p => p.id === pacienteMRV).length_of_stay
-                ))
-            ) {
-                minCandidatos = cnt;
-                pacienteMRV = pid;
+    // Función genérica de asignación por MRV con muestreo aleatorio y poda dinámica
+    function asignarConMRV(pool, pendientesArray, esOpcional = false) {
+        const pendientes = new Set(pendientesArray);
+        while (pendientes.size > 0) {
+            // 1) Encontrar paciente MRV
+            let pacienteMRV = null;
+            let minCnt = Infinity;
+            for (const pid of pendientes) {
+                const cnt = pool.reduce((sum, c) => sum + (c.patientId === pid ? 1 : 0), 0);
+                if (cnt < minCnt) {
+                    minCnt = cnt;
+                    pacienteMRV = pid;
+                }
+            }
+            // 2) Si no hay candidatos
+            if (minCnt === 0) {
+                if (esOpcional) {
+                    pendientes.delete(pacienteMRV);
+                    continue;
+                } else {
+                    console.warn(`❌ Sin candidatos para obligatorio ${pacienteMRV}.`);
+                    return false;
+                }
+            }
+
+            // 3) Muestreo aleatorio entre candidatos
+            let candidatos = pool.filter(c => c.patientId === pacienteMRV);
+            let assigned = false;
+            while (candidatos.length > 0) {
+                const eleccion = _.sample(candidatos);
+                if (cumpleRestriccionesDurasyPoliticas(solution, eleccion, instance, occupantMap)) {
+                    // Encaja: asignar y actualizar
+                    fijarAsignacion(solution, eleccion, instance);
+                    const pObj = instance.patients.find(p => p.id === eleccion.patientId);
+                    occupantMap.set(eleccion.patientId, pObj);
+                    pendientes.delete(pacienteMRV);
+                    // Eliminar todos los candidatos de este paciente
+                    pool = pool.filter(c => c.patientId !== pacienteMRV);
+                    // Poda dinámica: quitar candidatos inválidos tras asignación
+                    pool = pool.filter(c => cumpleRestriccionesDurasyPoliticas(solution, c, instance, occupantMap));
+                    assigned = true;
+                    break;
+                } else {
+                    // Descartar solo este candidato
+                    const { patientId, day, roomId, OTid } = eleccion;
+                    candidatos = candidatos.filter(c =>
+                        !(c.patientId === patientId && c.day === day && c.roomId === roomId && c.OTid === OTid)
+                    );
+                    pool = pool.filter(c =>
+                        !(c.patientId === patientId && c.day === day && c.roomId === roomId && c.OTid === OTid)
+                    );
+                }
+            }
+            // 4) Si ninguno encajó
+            if (!assigned) {
+                if (esOpcional) pendientes.delete(pacienteMRV);
+                else return false;
             }
         }
-
-        if (minCandidatos === 0) {
-            console.warn(`Heurística falló: el paciente ${pacienteMRV} no tiene candidatos.`);
-            return null;
-        }
-
-        // ★ 4.2) Extraemos sólo los candidatos de ese paciente
-        let candidatos = pool.filter(c => c.patientId === pacienteMRV);
-
-        // ★ 4.3) Elegimos el día más tardío (prioridad a los días altos) ← CAMBIO
-        candidatos.sort((a, b) => b.day - a.day);
-        const eleccion = candidatos[0];
-        const { patientId } = eleccion;
-
-        // 4.4) Comprobamos restricciones duras
-        if (cumpleRestriccionesDurasyPoliticas(solution, eleccion, instance, occupantMap)) {
-            // 1) Asignamos y actualizamos la solución
-            fijarAsignacion(solution, eleccion, instance);
-
-            // 1.1) Insertamos al paciente en occupantMap para futuras comprobaciones
-            const p = instance.patients.find(pac => pac.id === patientId);
-            occupantMap.set(patientId, p);
-
-            // 2) Marcamos como resuelto
-            pendientes.delete(patientId);
-
-            // 3) Eliminamos **todos** los candidatos de este paciente
-            pool = pool.filter(c => c.patientId !== patientId);
-
-            // 4) ***PODA DINÁMICA***: quitamos del pool
-            //    cualquier candidato que ya no cumpla las restricciones
-            pool = pool.filter(c =>
-                cumpleRestriccionesDurasyPoliticas(solution, c, instance, occupantMap)
-            );
-
-        } else {
-            // si falla, descartamos solo ese candidato
-            pool = pool.filter(c =>
-                !(
-                    c.patientId === eleccion.patientId &&
-                    c.day === eleccion.day &&
-                    c.roomId === eleccion.roomId &&
-                    c.OTid === eleccion.OTid
-                )
-            );
-        }
+        return true;
     }
 
-    console.log("Heurística completada: todos los pacientes asignados.");
+    // 3) Asignar pacientes mandatorios
+    if (!asignarConMRV(poolMand, mandatorios, false)) {
+        console.error("❌ No se pudo asignar todos los pacients obligatorios.");
+        return null;
+    }
+
+    // 4) Reconstruir pool de opcionales tras bloquear solución parcial
+    poolOpt = _.shuffle(
+        construirPoolInicial(instance)
+            .filter(c => opcionales.includes(c.patientId))
+            .filter(c => cumpleRestriccionesDurasyPoliticas(solution, c, instance, occupantMap))
+    );
+
+    // 5) Asignar pacientes opcionales
+    asignarConMRV(poolOpt, opcionales, true);
+
     return solution;
 }
 
