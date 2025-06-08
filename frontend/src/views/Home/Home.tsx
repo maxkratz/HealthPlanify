@@ -8,7 +8,6 @@ export const Home: React.FC = () => (
     <div className={styles.container}>
         <div className={styles.leftPane}>
             <img src={logo} alt="HealthPlanify logo" width={400} height={400} />
-            {/* <h1 className={styles.heading}>HealthPlanify</h1> */}
             <h2 className={styles.subheading}>A healthcare timetable visualizer</h2>
             <InputFiles />
         </div>

@@ -298,7 +298,7 @@ export const PatientScheduler = () => {
                                 <RoomCell
                                     day={"none"}
                                     roomId="unscheduled"
-                                    capacity={inputData.patients.length / 2} // Arbitrary value
+                                    capacity={unscheduledPatients.length}
                                     patients={unscheduledPatients}
                                     onDropPatient={(patientId, _newDay, _newRoom) => {
                                         handleDropPatient(patientId, "none", "");
