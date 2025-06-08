@@ -274,31 +274,33 @@ function heuristicaConstructivaIHTC(instance) {
 
     // 4) Bucle principal con MRV
     while (pendientes.size > 0) {
-        console.log(`Pendientes: ${pendientes.size}, Pool: ${pool.length}`);
         // ★ 4.1) Para cada pendiente, contamos cuántos candidatos le quedan
         let pacienteMRV = null;
         let minCandidatos = Infinity;
         for (const pid of pendientes) {
             const cnt = pool.reduce((sum, c) => sum + (c.patientId === pid ? 1 : 0), 0);
-            if (cnt < minCandidatos) {
+            if (cnt < minCandidatos ||
+                (cnt === minCandidatos && ( // ← CAMBIO: desempate por length_of_stay
+                    instance.patients.find(p => p.id === pid).length_of_stay >
+                    instance.patients.find(p => p.id === pacienteMRV).length_of_stay
+                ))
+            ) {
                 minCandidatos = cnt;
                 pacienteMRV = pid;
             }
         }
 
-        // Si alguno tiene 0 candidatos, fallo inmediato
         if (minCandidatos === 0) {
-            console.warn(
-                `Heurística falló: el paciente ${pacienteMRV} no tiene candidatos disponibles.`, pendientes.size, "pendientes restantes."
-            );
+            console.warn(`Heurística falló: el paciente ${pacienteMRV} no tiene candidatos.`);
             return null;
         }
 
         // ★ 4.2) Extraemos sólo los candidatos de ese paciente
-        const candidatos = pool.filter(c => c.patientId === pacienteMRV);
+        let candidatos = pool.filter(c => c.patientId === pacienteMRV);
 
-        // ★ 4.3) Elegimos uno al azar (puedes aquí reemplazar por un score si quieres)
-        const eleccion = _.sample(candidatos);
+        // ★ 4.3) Elegimos el día más tardío (prioridad a los días altos) ← CAMBIO
+        candidatos.sort((a, b) => b.day - a.day);
+        const eleccion = candidatos[0];
         const { patientId } = eleccion;
 
         // 4.4) Comprobamos restricciones duras
