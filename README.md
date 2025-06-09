@@ -75,6 +75,16 @@ tmux kill-server
 
 ---
 
+### Quickstart Guide
+
+1. **Upload solution file**  
+   ![file](assets/tutorial1.gif)
+
+2. **Get solution from API**  
+   ![API](assets/tutorial2.gif)
+
+---
+
 ### 🔍 Oficial Competition Validator
 
 1. Navigate to the `validator` directory:
