@@ -77,11 +77,15 @@ tmux kill-server
 
 ### Quickstart Guide
 
-1. **Upload solution file**  
-   ![file](assets/tutorial1.gif)
+Sample test instances and their corresponding solution files can be found in the `data` directory at the root of the HealthPlanify project (`/HealthPlanify/data`).
 
-2. **Get solution from API**  
-   ![API](assets/tutorial2.gif)
+#### Upload solution file
+
+![file](assets/tutorial1.gif)
+
+#### Get solution from API
+
+![API](assets/tutorial2.gif)
 
 ---
 
