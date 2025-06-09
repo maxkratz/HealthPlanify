@@ -1,4 +1,4 @@
-const _ = require('lodash'); // para sample, shuffle
+const _ = require('lodash'); // para sample y shuffle
 
 function inicializarSolution(D, rooms, operating_theaters, surgeons) {
     // patientAssigns: map paciente → { day, room, operatingTheater }, vacío al inicio
@@ -280,7 +280,7 @@ function heuristicaConstructivaIHTC(instance) {
                     pendientes.delete(pacienteMRV);
                     continue;
                 } else {
-                    console.warn(`❌ Sin candidatos para obligatorio ${pacienteMRV}.`);
+                    console.warn(`Sin candidatos para obligatorio ${pacienteMRV}.`);
                     return false;
                 }
             }
@@ -324,7 +324,7 @@ function heuristicaConstructivaIHTC(instance) {
 
     // 3) Asignar pacientes mandatorios
     if (!asignarConMRV(poolMand, mandatorios, false)) {
-        console.error("❌ No se pudo asignar todos los pacients obligatorios.");
+        console.error("No se pudo asignar todos los pacients obligatorios.");
         return null;
     }
 
@@ -343,10 +343,8 @@ function heuristicaConstructivaIHTC(instance) {
 
 function construirRequerimientosEnfermeras(solution, instance) {
     const D = instance.days;
-    const roomOcc = solution.roomOccupancy;
     const patients = instance.patients;
     const patientMap = new Map(patients.map(p => [p.id, p]));
-    // Shift → índice en [0,1,2]
     const shiftIndex = { early: 0, late: 1, night: 2 };
 
     // RN[d][r][s] tendrá { totalWorkload, minSkill, patientIds: [...] }
@@ -360,9 +358,8 @@ function construirRequerimientosEnfermeras(solution, instance) {
                 late: { totalWorkload: 0, minSkill: 0, patientIds: [] },
                 night: { totalWorkload: 0, minSkill: 0, patientIds: [] }
             };
-            // Para cada paciente en la habitación
             for (const pid of lista) {
-                // Puede ser occupant o paciente “nuevo”:
+                // Puede ser occupant o paciente
                 const p = patientMap.get(pid) || null;
                 // Si es occupant, asumimos que occupancy-kicks in desde el día 0,
                 // pero no sabemos su workload_produced; si el JSON de "occupants" 
