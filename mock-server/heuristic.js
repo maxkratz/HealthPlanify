@@ -343,179 +343,168 @@ function heuristicaConstructivaIHTC(instance) {
 
 function construirRequerimientosEnfermeras(solution, instance) {
     const D = instance.days;
-    const patients = instance.patients;
-    const patientMap = new Map(patients.map(p => [p.id, p]));
     const shiftIndex = { early: 0, late: 1, night: 2 };
 
-    // RN[d][r][s] tendrá { totalWorkload, minSkill, patientIds: [...] }
-    const RN = Array.from({ length: D }, () => ({}));
-    for (let d = 0; d < D; d++) {
-        RN[d] = {}; // RN[d] será un objeto roomId→{ early:{…}, late:{…}, night:{…} }
-        for (const [rId, lista] of solution.roomOccupancy[d].entries()) {
-            if (!lista || lista.length === 0) continue;
-            RN[d][rId] = {
-                early: { totalWorkload: 0, minSkill: 0, patientIds: [] },
-                late: { totalWorkload: 0, minSkill: 0, patientIds: [] },
-                night: { totalWorkload: 0, minSkill: 0, patientIds: [] }
-            };
-            for (const pid of lista) {
-                // Puede ser occupant o paciente
-                const p = patientMap.get(pid) || null;
-                // Si es occupant, asumimos que occupancy-kicks in desde el día 0,
-                // pero no sabemos su workload_produced; si el JSON de "occupants" 
-                // incluyera workload_produced y skill_level_required, haríamos algo similar.
-                if (p) {
-                    const stay = p.length_of_stay;
-                    // calculamos índice base en el vector workload_produced:
-                    // si el paciente ingresó en day0 = p.surgery_release_day, pues
-                    // su “primer turno” en hospital es turno (d = ingreso, shift early) = índice 0 de workload_produced.
-                    // Aquí simplificaremos: asumimos que el vector workload_produced está alineado
-                    // con la estancia: i.e. workload_produced[0] es el turno early del día de ingreso, y así.
-                    const { day: admitDay } = solution.patientAssigns.get(pid);
-                    const baseIdx = (d - admitDay) * 3;
-                    for (const sft of ["early", "late", "night"]) {
-                        const idx = baseIdx + shiftIndex[sft];
-                        if (idx < 0 || idx >= p.workload_produced.length) continue;
-                        RN[d][rId][sft].totalWorkload += p.workload_produced[idx];
-                        RN[d][rId][sft].minSkill = Math.max(RN[d][rId][sft].minSkill, p.skill_level_required[idx]);
-                        RN[d][rId][sft].patientIds.push(pid);
-                    }
-                } else {
-                    // Si pid es occupant, necesitaríamos un campo similar a workload_produced
-                    // y skill_level_required en “occupants”. Para este ejemplo asumimos que occupant
-                    // incluye esos vectores y procedemos idéntico. 
-                    const occ = instance.occupants.find(o => o.id === pid);
-                    if (!occ) continue;
-                    // misma lógica, asumiendo que occ.workload_produced y occ.skill_level_required existen
-                    const { day: _ignored } = { day: 0 }; // su "admitDay" real es <0, pero
-                    // para occupant el vector ya comienza en d=0, así que baseIdx = 0 cuando d=0,
-                    // baseIdx = 3 cuando d=1, etc.
-                    const baseIdx = d * 3;
-                    for (const sft of ["early", "late", "night"]) {
-                        const idx = baseIdx + shiftIndex[sft];
-                        if (idx < 0 || idx >= occ.workload_produced.length) continue;
-                        RN[d][rId][sft].totalWorkload += occ.workload_produced[idx];
-                        RN[d][rId][sft].minSkill = Math.max(RN[d][rId][sft].minSkill, occ.skill_level_required[idx]);
-                        RN[d][rId][sft].patientIds.push(pid);
-                    }
-                }
-            }
+    // 1) Combinar pacientes y occupants en un solo mapa de entidades con admitDay, workload y skill.
+    const combined = new Map();
+    for (const p of instance.patients) {
+        const info = solution.patientAssigns.get(p.id);
+        if (info) {
+            combined.set(p.id, {
+                admitDay: info.day,
+                workload: p.workload_produced,
+                skill: p.skill_level_required,
+            });
         }
     }
+    for (const o of instance.occupants) {
+        if (Array.isArray(o.workload_produced) && Array.isArray(o.skill_level_required)) {
+            combined.set(o.id, {
+                admitDay: 0,
+                workload: o.workload_produced,
+                skill: o.skill_level_required,
+            });
+        }
+    }
+
+    // 2) Inicializar RN como Array de Maps: RN[d] → Map(roomId → Map(shift → req))
+    const RN = Array.from({ length: D }, () => new Map());
+    for (let d = 0; d < D; d++) {
+        for (const [roomId, occupants] of solution.roomOccupancy[d].entries()) {
+            if (!occupants.length) continue;
+            const shiftMap = new Map([
+                ['early', { totalWorkload: 0, minSkill: Infinity, patientIds: [] }],
+                ['late', { totalWorkload: 0, minSkill: Infinity, patientIds: [] }],
+                ['night', { totalWorkload: 0, minSkill: Infinity, patientIds: [] }],
+            ]);
+
+            for (const id of occupants) {
+                const ent = combined.get(id);
+                if (!ent) continue;
+                const { admitDay, workload, skill } = ent;
+                const baseIdx = (d - admitDay) * 3;
+
+                for (const [shift, idxOffset] of Object.entries(shiftIndex)) {
+                    const idx = baseIdx + idxOffset;
+                    if (idx < 0 || idx >= workload.length) continue;
+                    const req = shiftMap.get(shift);
+                    req.totalWorkload += workload[idx];
+                    req.minSkill = Math.min(req.minSkill, skill[idx]);
+                    req.patientIds.push(id);
+                }
+            }
+
+            for (const req of shiftMap.values()) {
+                if (req.minSkill === Infinity) req.minSkill = 0;
+            }
+
+            RN[d].set(roomId, shiftMap);
+        }
+    }
+
     return RN;
 }
 
 function asignarEnfermeras(solution, instance) {
     const D = instance.days;
     const nurses = instance.nurses;
-    // Construimos nurseAvailable[d][shift] = Set de enfermeras disponibles
-    // y nurseMaxLoad[nurseId][d][shift] = número
-    const nurseAvailable = Array.from({ length: D }, () => ({
-        early: new Set(),
-        late: new Set(),
-        night: new Set()
-    }));
-    const nurseMaxLoad = {}; // nurseMaxLoad[nurseId] = Array[d] → { early: x, late: y, night: z }
+
+    // 1) Disponibilidad y capacidad
+    const nurseAvailable = Array.from({ length: D }, () => ({ early: new Set(), late: new Set(), night: new Set() }));
+    const nurseMaxLoad = new Map();
+    const nurseMap = new Map(nurses.map(n => [n.id, n]));
+
     for (const n of nurses) {
-        nurseMaxLoad[n.id] = Array.from({ length: D }, () => ({ early: 0, late: 0, night: 0 }));
+        const maxArr = Array.from({ length: D }, () => ({ early: 0, late: 0, night: 0 }));
+        nurseMaxLoad.set(n.id, maxArr);
         for (const ws of n.working_shifts) {
-            // ws = { day, shift, max_load }
             nurseAvailable[ws.day][ws.shift].add(n.id);
-            nurseMaxLoad[n.id][ws.day][ws.shift] = ws.max_load;
+            maxArr[ws.day][ws.shift] = ws.max_load;
         }
     }
 
-    // Construimos la tabla RN
+    // 2) Requerimientos
     const RN = construirRequerimientosEnfermeras(solution, instance);
 
-    // nurseAssigns: Map nurseId → array de { day, shift, rooms }
-    const nurseAssigns = new Map();
+    // 3) Contador de carga asignada
+    const loadAssigned = new Map();
     for (const n of nurses) {
-        nurseAssigns.set(n.id, []);
+        loadAssigned.set(n.id, Array.from({ length: D }, () => ({ early: 0, late: 0, night: 0 })));
     }
 
-    // Para cada día y shift, iremos asignando habitación por habitación
-    for (let d = 0; d < D; d++) {
-        for (const shift of ["early", "late", "night"]) {
-            // copio el set de disponibles a un array para muestrearlo
-            let disponibles = Array.from(nurseAvailable[d][shift]);
-            // Mezclo el array para aleatorizar
-            disponibles = _.shuffle(disponibles);
+    // 4) Asignaciones
+    const nurseAssigns = new Map(nurses.map(n => [n.id, []]));
 
-            // Lista de habitaciones ocupadas ese día (las que tengan RN[d][r] definido y no vacío)
-            const roomsHoy = Object.keys(RN[d] || {});
+    // 5) Recorrer días y turnos
+    for (let d = 0; d < D; d++) {
+        for (const shift of ['early', 'late', 'night']) {
+            let disponibles = Array.from(nurseAvailable[d][shift]);
+            const roomsHoy = Array.from(RN[d].entries())
+                .filter(([, shifts]) => shifts.get(shift).patientIds.length > 0)
+                .sort(([, a], [, b]) => b.get(shift).totalWorkload - a.get(shift).totalWorkload)
+                .map(([rId]) => rId);
+
             for (const rId of roomsHoy) {
-                const req = RN[d][rId][shift];
-                // Si no hay pacientes en esa habitación en este turno, seguimos
-                if (!req || req.patientIds.length === 0) continue;
+                const req = RN[d].get(rId).get(shift);
                 const W = req.totalWorkload;
                 const Smin = req.minSkill;
 
-                // Busco en “disponibles” una enfermera que cumpla (carga y skill)
-                let elegida = null;
+                // Buscar enfermera ideal dentro de límites
+                let bestId = null;
+                let bestMetric = null;
                 for (const nurseId of disponibles) {
-                    const nObj = nurses.find(n => n.id === nurseId);
-                    const currentLoad = nurseMaxLoad[nurseId][d][shift];
-                    // en realidad “currentLoad” es el máximo, y nosotros mantenemos un 
-                    // contador de “loadAssigned[nurseId][d][shift]” que arranca en 0
-                    // y vamos sumando W. Implementamos ese contador:
-                    if (!nurseAssigns.loadAssigned) nurseAssigns.loadAssigned = {};
-                    if (!nurseAssigns.loadAssigned[nurseId]) {
-                        nurseAssigns.loadAssigned[nurseId] = Array.from({ length: D }, () => ({
-                            early: 0,
-                            late: 0,
-                            night: 0
-                        }));
-                    }
-                    const usedSoFar = nurseAssigns.loadAssigned[nurseId][d][shift];
-                    const maxSoFar = nObj.skill_level >= Smin ? currentLoad : -1;
-                    // Si la skill no alcanza Smin, marcamos maxSoFar = -1 para forzar que no se elija
-                    if (maxSoFar >= 0 && usedSoFar + W <= maxSoFar) {
-                        elegida = nurseId;
-                        break;
-                    }
-                }
-                if (elegida === null) {
-                    // No hay enfermera que cumpla skill+carga al 100%. Como fallback,
-                    // podemos buscar que cumpla solo carga (aceptando infraskill) OR
-                    // marcar infactivo. Aquí elegimos “aceptar infraskill”:
-                    for (const nurseId of disponibles) {
-                        const usedSoFar = nurseAssigns.loadAssigned[nurseId][d][shift];
-                        const maxSoFar = nurseMaxLoad[nurseId][d][shift];
-                        if (maxSoFar >= 0 && usedSoFar + W <= maxSoFar) {
-                            elegida = nurseId;
-                            break;
-                        }
+                    const nObj = nurseMap.get(nurseId);
+                    const used = loadAssigned.get(nurseId)[d][shift];
+                    const maxCap = nurseMaxLoad.get(nurseId)[d][shift];
+                    if (used + W > maxCap) continue;
+
+                    const skillGap = Math.max(0, Smin - nObj.skill_level);
+                    const loadGap = maxCap - used;
+                    const metric = [skillGap, -loadGap];
+                    if (!bestMetric || metric[0] < bestMetric[0] || (metric[0] === bestMetric[0] && metric[1] > bestMetric[1])) {
+                        bestId = nurseId;
+                        bestMetric = metric;
                     }
                 }
 
-                if (elegida !== null) {
-                    // 1) Actualizar loadAssigned
-                    nurseAssigns.loadAssigned[elegida][d][shift] += W;
-                    // 2) Añadir a nurseAssigns[elegida] el par { day:d, shift, rooms:[…] }
-                    const arr = nurseAssigns.get(elegida);
-                    // Buscamos si ya hay un objeto para este (d,shift)
-                    let entry = arr.find(x => x.day === d && x.shift === shift);
+                // Fallback: asignar aun excediendo límites
+                if (bestId === null) {
+                    let fallbackId = null;
+                    let fallbackMetric = null;
+                    for (const nurseId of disponibles) {
+                        const nObj = nurseMap.get(nurseId);
+                        const used = loadAssigned.get(nurseId)[d][shift];
+                        const maxCap = nurseMaxLoad.get(nurseId)[d][shift];
+                        const skillGap = Math.max(0, Smin - nObj.skill_level);
+                        const overload = Math.max(0, used + W - maxCap);
+                        const metric = [skillGap, overload];
+                        if (!fallbackMetric || metric[0] < fallbackMetric[0] || (metric[0] === fallbackMetric[0]
+                            && metric[1] < fallbackMetric[1])) {
+                            fallbackId = nurseId;
+                            fallbackMetric = metric;
+                        }
+                    }
+                    bestId = fallbackId;
+                }
+
+                if (bestId !== null) {
+                    loadAssigned.get(bestId)[d][shift] += W;
+                    const arr = nurseAssigns.get(bestId);
+                    let entry = arr.find(e => e.day === d && e.shift === shift);
                     if (!entry) {
-                        entry = { day: d, shift: shift, rooms: [] };
+                        entry = { day: d, shift, rooms: [] };
                         arr.push(entry);
                     }
                     entry.rooms.push(rId);
-                }
-                // Si elegida sigue null, dejamos la habitación “sin asignar” → violación dura
-                // (la solución global sería infactible). Para esta heurística asumimos que
-                // las instancias públicas normalmente permitirán asignar alguna enfermera.
-            } // fin for roomsHoy
-        } // fin for shift
-    } // fin for d
 
-    // Finalmente, convertimos nurseAssigns.loadAssigned de forma oculta y devolvemos
-    // solo el Map nurseId → [ { day, shift, rooms } ]
-    for (const nurseId of nurseAssigns.keys()) {
-        const arr = nurseAssigns.get(nurseId).filter(x => x.rooms.length > 0);
-        nurseAssigns.set(nurseId, arr);
+                    if (loadAssigned.get(bestId)[d][shift] >= nurseMaxLoad.get(bestId)[d][shift]) {
+                        disponibles = disponibles.filter(id => id !== bestId);
+                    }
+                }
+            }
+        }
     }
-    delete nurseAssigns.loadAssigned;
+
     return nurseAssigns;
 }
 
