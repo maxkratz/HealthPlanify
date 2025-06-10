@@ -47,7 +47,7 @@ export const OperatingTheatersList: React.FC = () => {
     return (
         <div>
             <div className='mb-16'>
-                <h1>Operating Theaters List (day {dayNumber})</h1>
+                <h1>Operating Theaters List (day {dayNumber + 1})</h1>
             </div>
             {theatersWithAssignments.length > 0 ? (
                 <div className="flex items-center justify-center flex-row flex-wrap gap-4">

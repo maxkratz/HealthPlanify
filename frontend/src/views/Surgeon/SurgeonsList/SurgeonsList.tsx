@@ -47,7 +47,7 @@ export const SurgeonsList: React.FC = () => {
     return (
         <div>
             <div className='mb-16'>
-                <h1>Surgeons List (day {dayNumber})</h1>
+                <h1>Surgeons List (day {dayNumber + 1})</h1>
             </div>
             {surgeonsWithAssignments.length > 0 ? (
                 <div className="flex items-center justify-center flex-row flex-wrap gap-4">
