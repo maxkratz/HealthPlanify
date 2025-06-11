@@ -3,11 +3,14 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 
-const { HeuristicaConstructivaAleatoria, HeuristicaDummy, Heuristica } = require('./heuristic');
+const {
+    HeuristicaConstructivaAleatoria,
+    HeuristicaDummy,
+    Heuristica
+} = require('./heuristic');
 
 const randomConstructiveHeuristic = new HeuristicaConstructivaAleatoria();
 const dummyHeuristic = new HeuristicaDummy();
-const context = new Heuristica(randomConstructiveHeuristic);
 
 const SOL_DIR = '../data/test-solutions/';
 
@@ -19,25 +22,34 @@ let allowedFiles;
 try {
     allowedFiles = fs.readdirSync(SOL_DIR)
         .filter(f => f.startsWith('sol_') && f.endsWith('.json'))
-        .map(f => `${f.slice(4)}`);
+        .map(f => f.slice(4)); // quitamos "sol_"
 } catch (err) {
     console.error(`Could not read solutions directory (${SOL_DIR}):`, err);
     process.exit(1);
 }
 
 app.post('/api/solve', (req, res) => {
-    const fileName = req.query.file;
-    if (!fileName) {
+    const { file, heuristic } = req.query;
+
+    if (!file) {
         return res.status(400).json({ error: 'Missing "file" parameter.' });
     }
-
-    if (path.extname(fileName) !== '.json') {
+    if (path.extname(file) !== '.json') {
         return res.status(400).json({
-            error: `Invalid extension: ${path.extname(fileName)}. Only .json is allowed.`
+            error: `Invalid extension: ${path.extname(file)}. Only .json is allowed.`
         });
     }
 
-    if (!allowedFiles.includes(fileName)) {
+    const heuristicsMap = {
+        random: randomConstructiveHeuristic,
+        dummy: dummyHeuristic,
+    };
+
+    const selected = heuristicsMap[heuristic] || randomConstructiveHeuristic;
+
+    const context = new Heuristica(selected);
+
+    if (!allowedFiles.includes(file)) {
         try {
             const inputData = req.body;
             const solution = context.ejecutarHeuristica(inputData);
@@ -47,7 +59,7 @@ app.post('/api/solve', (req, res) => {
         }
     }
 
-    const base = path.basename(fileName, '.json');
+    const base = path.basename(file, '.json');
     const solFile = `sol_${base}.json`;
     const solPath = path.join(SOL_DIR, solFile);
 
