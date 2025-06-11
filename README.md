@@ -112,5 +112,3 @@ Sample test instances and their corresponding solution files can be found in the
 ```bash
 ./validator-code/IHTP_Validator ../data/test-instances/test09.json ../data/test-solutions/sol_test09.json verbose
 ```
-
----
