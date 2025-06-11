@@ -248,13 +248,10 @@ class HeuristicaConstructivaAleatoria {
         const occupantMap = new Map(occupants.map(o => [o.id, o]));
         this.cargarOccupantsEnSolucion(solution, occupants);
 
-        // 2) Generar pool completo y separar mandatorios/opcionales
+        // 2) Construir pool de pacientes mandatorios
         const allCandidates = this.construirPoolInicial(instance);
-        let poolMand = _.shuffle(
+        const poolMand = _.shuffle(
             allCandidates.filter(c => instance.patients.find(p => p.id === c.patientId).mandatory)
-        );
-        let poolOpt = _.shuffle(
-            allCandidates.filter(c => !instance.patients.find(p => p.id === c.patientId).mandatory)
         );
 
         // Listas de IDs
@@ -329,8 +326,8 @@ class HeuristicaConstructivaAleatoria {
             return null;
         }
 
-        // 4) Reconstruir pool de opcionales tras bloquear solución parcial
-        poolOpt = _.shuffle(
+        // 4) Construir pool de pacientes opcionales tras asignar a los obligatorios
+        const poolOpt = _.shuffle(
             this.construirPoolInicial(instance)
                 .filter(c => opcionales.includes(c.patientId))
                 .filter(c => this.cumpleRestriccionesDurasyPoliticas(solution, c, instance, occupantMap))
