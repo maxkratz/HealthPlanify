@@ -28,7 +28,7 @@ export const PatientScheduler = () => {
     const [selectedPatientId, setSelectedPatientId] = React.useState<string | null>(inputData?.patients[0]?.id || null);
     const [selectedDay, setSelectedDay] = React.useState<number | null>(0);
     const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
-    const MAX_HISTORY = 20;
+    const MAX_HISTORY = 50;
 
     const [deltaHistory, setDeltaHistory] = React.useState<PatientDelta[]>(() => {
         const persistedDeltas = localStorage.getItem('deltaHistory');

@@ -34,7 +34,7 @@ HealthPlanify is an interactive web application for exploring, validating, and e
    - Mock server:
 
      ```bash
-     cd ../mock-server && npm install
+     cd ../backend && npm install
      ```
 
 ---
@@ -48,7 +48,7 @@ Choose one of the following options:
 1. Launch the mock server:
 
    ```bash
-   cd mock-server && npm start
+   cd backend && npm start
    ```
 
 2. In a new terminal, start the frontend dev server:

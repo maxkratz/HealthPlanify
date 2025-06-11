@@ -9,8 +9,8 @@ if [ $? -eq 0 ]; then
   tmux kill-session -t $SESSION
 fi
 
-# Crea una nueva sesión en segundo plano, en la ruta mock-server
-tmux new-session -d -s $SESSION -c "#{PWD}/mock-server"
+# Crea una nueva sesión en segundo plano, en la ruta backend
+tmux new-session -d -s $SESSION -c "#{PWD}/backend"
 
 # Envía el comando npm start al primer panel
 tmux send-keys -t $SESSION "npm start" C-m
