@@ -90,7 +90,7 @@ class HeuristicaConstructivaAleatoria {
         return pool;
     }
 
-    cumpleRestriccionesDurasyPoliticas(solution, candidate, instance, occupantMap) {
+    cumpleRestricciones(solution, candidate, instance, occupantMap) {
         const { patientAssigns, roomOccupancy, OTUsage, surgeonUsage } = solution;
         const { patientId, day: d, roomId: r, OTid: t } = candidate;
 
@@ -234,109 +234,6 @@ class HeuristicaConstructivaAleatoria {
         // 3) Sumar uso de OT y uso de cirujano para el día d (d está garantizado dentro de [0..D-1])
         OTUsage[d].set(t, (OTUsage[d].get(t) || 0) + dur);
         surgeonUsage[d].set(surgeonId, (surgeonUsage[d].get(surgeonId) || 0) + dur);
-    }
-
-    heuristicaConstructivaAleatoria(instance) {
-        const D = instance.days;
-        const rooms = instance.rooms;
-        const OTs = instance.operating_theaters;
-        const surgeons = instance.surgeons;
-        const occupants = instance.occupants;
-
-        // 1) Inicializar solución e inyectar ocupantes fijos
-        const solution = this.inicializarSolution(D, rooms, OTs, surgeons);
-        const occupantMap = new Map(occupants.map(o => [o.id, o]));
-        this.cargarOccupantsEnSolucion(solution, occupants);
-
-        // 2) Construir pool de pacientes mandatorios
-        const allCandidates = this.construirPoolInicial(instance);
-        const poolMand = _.shuffle(
-            allCandidates.filter(c => instance.patients.find(p => p.id === c.patientId).mandatory)
-        );
-
-        // Listas de IDs
-        const mandatorios = instance.patients.filter(p => p.mandatory).map(p => p.id);
-        const opcionales = instance.patients.filter(p => !p.mandatory).map(p => p.id);
-
-        // Función genérica de asignación por MRV con muestreo aleatorio y poda dinámica
-        const asignarConMRV = (pool, pendientesArray, esOpcional = false) => {
-            const pendientes = new Set(pendientesArray);
-            while (pendientes.size > 0) {
-                // 1) Encontrar paciente MRV
-                let pacienteMRV = null;
-                let minCnt = Infinity;
-                for (const pid of pendientes) {
-                    const cnt = pool.reduce((sum, c) => sum + (c.patientId === pid ? 1 : 0), 0);
-                    if (cnt < minCnt) {
-                        minCnt = cnt;
-                        pacienteMRV = pid;
-                    }
-                }
-                // 2) Si no hay candidatos
-                if (minCnt === 0) {
-                    if (esOpcional) {
-                        pendientes.delete(pacienteMRV);
-                        continue;
-                    } else {
-                        console.warn(`Sin candidatos para obligatorio ${pacienteMRV}.`);
-                        return false;
-                    }
-                }
-
-                // 3) Muestreo aleatorio entre candidatos
-                let candidatos = pool.filter(c => c.patientId === pacienteMRV);
-                let assigned = false;
-                while (candidatos.length > 0) {
-                    const eleccion = _.sample(candidatos);
-                    if (this.cumpleRestriccionesDurasyPoliticas(solution, eleccion, instance, occupantMap)) {
-                        // Encaja: asignar y actualizar
-                        this.fijarAsignacion(solution, eleccion, instance);
-                        const pObj = instance.patients.find(p => p.id === eleccion.patientId);
-                        occupantMap.set(eleccion.patientId, pObj);
-                        pendientes.delete(pacienteMRV);
-                        // Eliminar todos los candidatos de este paciente
-                        pool = pool.filter(c => c.patientId !== pacienteMRV);
-                        // Poda dinámica: quitar candidatos inválidos tras asignación
-                        pool = pool.filter(c => this.cumpleRestriccionesDurasyPoliticas(solution, c, instance, occupantMap));
-                        assigned = true;
-                        break;
-                    } else {
-                        // Descartar solo este candidato
-                        const { patientId, day, roomId, OTid } = eleccion;
-                        candidatos = candidatos.filter(c =>
-                            !(c.patientId === patientId && c.day === day && c.roomId === roomId && c.OTid === OTid)
-                        );
-                        pool = pool.filter(c =>
-                            !(c.patientId === patientId && c.day === day && c.roomId === roomId && c.OTid === OTid)
-                        );
-                    }
-                }
-                // 4) Si ninguno encajó
-                if (!assigned) {
-                    if (esOpcional) pendientes.delete(pacienteMRV);
-                    else return false;
-                }
-            }
-            return true;
-        }
-
-        // 3) Asignar pacientes mandatorios
-        if (!asignarConMRV(poolMand, mandatorios, false)) {
-            console.error("No se pudo asignar todos los pacients obligatorios.");
-            return null;
-        }
-
-        // 4) Construir pool de pacientes opcionales tras asignar a los obligatorios
-        const poolOpt = _.shuffle(
-            this.construirPoolInicial(instance)
-                .filter(c => opcionales.includes(c.patientId))
-                .filter(c => this.cumpleRestriccionesDurasyPoliticas(solution, c, instance, occupantMap))
-        );
-
-        // 5) Asignar pacientes opcionales
-        asignarConMRV(poolOpt, opcionales, true);
-
-        return solution;
     }
 
     construirRequerimientosEnfermeras(solution, instance) {
@@ -504,6 +401,109 @@ class HeuristicaConstructivaAleatoria {
         }
 
         return nurseAssigns;
+    }
+
+    heuristicaConstructivaAleatoria(instance) {
+        const D = instance.days;
+        const rooms = instance.rooms;
+        const OTs = instance.operating_theaters;
+        const surgeons = instance.surgeons;
+        const occupants = instance.occupants;
+
+        // 1) Inicializar solución e inyectar ocupantes fijos
+        const solution = this.inicializarSolution(D, rooms, OTs, surgeons);
+        const occupantMap = new Map(occupants.map(o => [o.id, o]));
+        this.cargarOccupantsEnSolucion(solution, occupants);
+
+        // 2) Construir pool de pacientes mandatorios
+        const allCandidates = this.construirPoolInicial(instance);
+        const poolMand = _.shuffle(
+            allCandidates.filter(c => instance.patients.find(p => p.id === c.patientId).mandatory)
+        );
+
+        // Listas de IDs
+        const mandatorios = instance.patients.filter(p => p.mandatory).map(p => p.id);
+        const opcionales = instance.patients.filter(p => !p.mandatory).map(p => p.id);
+
+        // Función genérica de asignación por MRV con muestreo aleatorio y poda dinámica
+        const asignarConMRV = (pool, pendientesArray, esOpcional = false) => {
+            const pendientes = new Set(pendientesArray);
+            while (pendientes.size > 0) {
+                // 1) Encontrar paciente MRV
+                let pacienteMRV = null;
+                let minCnt = Infinity;
+                for (const pid of pendientes) {
+                    const cnt = pool.reduce((sum, c) => sum + (c.patientId === pid ? 1 : 0), 0);
+                    if (cnt < minCnt) {
+                        minCnt = cnt;
+                        pacienteMRV = pid;
+                    }
+                }
+                // 2) Si no hay candidatos
+                if (minCnt === 0) {
+                    if (esOpcional) {
+                        pendientes.delete(pacienteMRV);
+                        continue;
+                    } else {
+                        console.warn(`Sin candidatos para obligatorio ${pacienteMRV}.`);
+                        return false;
+                    }
+                }
+
+                // 3) Muestreo aleatorio entre candidatos
+                let candidatos = pool.filter(c => c.patientId === pacienteMRV);
+                let assigned = false;
+                while (candidatos.length > 0) {
+                    const eleccion = _.sample(candidatos);
+                    if (this.cumpleRestricciones(solution, eleccion, instance, occupantMap)) {
+                        // Encaja: asignar y actualizar
+                        this.fijarAsignacion(solution, eleccion, instance);
+                        const pObj = instance.patients.find(p => p.id === eleccion.patientId);
+                        occupantMap.set(eleccion.patientId, pObj);
+                        pendientes.delete(pacienteMRV);
+                        // Eliminar todos los candidatos de este paciente
+                        pool = pool.filter(c => c.patientId !== pacienteMRV);
+                        // Poda dinámica: quitar candidatos inválidos tras asignación
+                        pool = pool.filter(c => this.cumpleRestricciones(solution, c, instance, occupantMap));
+                        assigned = true;
+                        break;
+                    } else {
+                        // Descartar solo este candidato
+                        const { patientId, day, roomId, OTid } = eleccion;
+                        candidatos = candidatos.filter(c =>
+                            !(c.patientId === patientId && c.day === day && c.roomId === roomId && c.OTid === OTid)
+                        );
+                        pool = pool.filter(c =>
+                            !(c.patientId === patientId && c.day === day && c.roomId === roomId && c.OTid === OTid)
+                        );
+                    }
+                }
+                // 4) Si ninguno encajó
+                if (!assigned) {
+                    if (esOpcional) pendientes.delete(pacienteMRV);
+                    else return false;
+                }
+            }
+            return true;
+        }
+
+        // 3) Asignar pacientes mandatorios
+        if (!asignarConMRV(poolMand, mandatorios, false)) {
+            console.error("No se pudo asignar todos los pacients obligatorios.");
+            return null;
+        }
+
+        // 4) Construir pool de pacientes opcionales tras asignar a los obligatorios
+        const poolOpt = _.shuffle(
+            this.construirPoolInicial(instance)
+                .filter(c => opcionales.includes(c.patientId))
+                .filter(c => this.cumpleRestricciones(solution, c, instance, occupantMap))
+        );
+
+        // 5) Asignar pacientes opcionales
+        asignarConMRV(poolOpt, opcionales, true);
+
+        return solution;
     }
 
     ejecutarHeuristica(instance, maxRetries = 100) {
