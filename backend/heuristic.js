@@ -509,7 +509,7 @@ class HeuristicaConstructivaAleatoria {
         return nurseAssigns;
     }
 
-    ejecutarHeuristica(instance, maxRetries = 10) {
+    ejecutarHeuristica(instance, maxRetries = 100) {
         // 1) Intentamos generar asignaciones de pacientes (múltiples reintentos si falla)
         let solPacientes = null;
         for (let intento = 0; intento < maxRetries; intento++) {
