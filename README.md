@@ -4,7 +4,7 @@
 
 HealthPlanify is an interactive web application for exploring, validating, and editing solutions to the Integrated Healthcare Timetabling Problem (IHTP) from [IHTC 2024](https://ihtc2024.github.io/). Through an intuitive interface and real-time visualizations, it enables both experts and non-technical users to analyze surgical scheduling, hospital admissions, and nurse assignments, assess associated costs, and adjust parameters on the fly.
 
-### 📋 Prerequisites
+### Prerequisites
 
 - **Git** 2.0+
 - **Node.js** 14+
@@ -14,7 +14,7 @@ HealthPlanify is an interactive web application for exploring, validating, and e
 
 ---
 
-### ⚙️ Installation
+### Installation
 
 1. **Clone the repository**
 
@@ -39,7 +39,7 @@ HealthPlanify is an interactive web application for exploring, validating, and e
 
 ---
 
-### ▶️ Running the Application
+### Running the Application
 
 Choose one of the following options:
 
@@ -89,7 +89,7 @@ Sample test instances and their corresponding solution files can be found in the
 
 ---
 
-### 🔍 Oficial Competition Validator
+### Oficial Competition Validator
 
 1. Navigate to the `validator` directory:
 
