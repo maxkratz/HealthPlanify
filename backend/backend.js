@@ -1,7 +1,6 @@
 const cluster = require('cluster');
 const os = require('os');
 const express = require('express');
-const path = require('path');
 
 const {
     HeuristicaConstructivaAleatoria,
@@ -33,16 +32,7 @@ if (cluster.isMaster) {
     app.use(express.json({ limit: '5mb' }));
 
     app.post('/api/solve', (req, res) => {
-        const { file, heuristic } = req.query;
-
-        if (!file) {
-            return res.status(400).json({ error: 'Missing "file" parameter.' });
-        }
-        if (path.extname(file) !== '.json') {
-            return res.status(400).json({
-                error: `Invalid extension: ${path.extname(file)}. Only .json is allowed.`
-            });
-        }
+        const { heuristic } = req.query;
 
         const inputData = req.body;
         const selected = heuristicsMap[heuristic] || heuristicsMap.random;
