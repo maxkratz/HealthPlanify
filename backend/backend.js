@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const path = require('path');
 
 const {
@@ -8,12 +7,13 @@ const {
     Heuristica
 } = require('./heuristic');
 
-const randomConstructiveHeuristic = new HeuristicaConstructivaAleatoria();
-const dummyHeuristic = new HeuristicaDummy();
+const heuristicsMap = {
+    random: new HeuristicaConstructivaAleatoria(),
+    dummy: new HeuristicaDummy(),
+};
 
 const app = express();
-app.use(bodyParser.json({ limit: '5mb' }));
-app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
+app.use(express.json({ limit: '5mb' }));
 
 app.post('/api/solve', (req, res) => {
     const { file, heuristic } = req.query;
@@ -27,21 +27,16 @@ app.post('/api/solve', (req, res) => {
         });
     }
 
-    const heuristicsMap = {
-        random: randomConstructiveHeuristic,
-        dummy: dummyHeuristic,
-    };
-
-    const selected = heuristicsMap[heuristic] || randomConstructiveHeuristic;
-
+    const inputData = req.body;
+    const selected = heuristicsMap[heuristic] || heuristicsMap.random;
     const context = new Heuristica(selected);
 
     try {
-        const inputData = req.body;
         const solution = context.ejecutarHeuristica(inputData);
         return res.json(solution);
     } catch (e) {
-        return res.status(400).json({ error: 'Invalid inputData: ' + e.message });
+        console.error(e);
+        return res.status(500).json({ error: 'Server error: ' + e.message });
     }
 });
 
