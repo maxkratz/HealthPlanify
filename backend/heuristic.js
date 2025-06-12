@@ -1,7 +1,7 @@
 const _ = require('lodash'); // para sample y shuffle
 
 class HeuristicaConstructivaAleatoria {
-    inicializarSolution(D, rooms, operating_theaters, surgeons) {
+    inicializarSolucion(D, rooms, operating_theaters, surgeons) {
         // patientAssigns: map paciente → { day, room, operatingTheater }, vacío al inicio
         const patientAssigns = new Map();
 
@@ -32,7 +32,7 @@ class HeuristicaConstructivaAleatoria {
         return { patientAssigns, roomOccupancy, OTUsage, surgeonUsage };
     }
 
-    cargarOccupantsEnSolucion(solution, occupants) {
+    cargarOcupantes(solution, occupants) {
         const { roomOccupancy } = solution;
         for (const o of occupants) {
             // o: { id, gender, age_group, length_of_stay, workload_produced, skill_level_required, room_id }
@@ -409,22 +409,16 @@ class HeuristicaConstructivaAleatoria {
         const OTs = instance.operating_theaters;
         const surgeons = instance.surgeons;
         const occupants = instance.occupants;
-
         // 1) Inicializar solución e inyectar ocupantes fijos
-        const solution = this.inicializarSolution(D, rooms, OTs, surgeons);
+        const solution = this.inicializarSolucion(D, rooms, OTs, surgeons);
         const occupantMap = new Map(occupants.map(o => [o.id, o]));
-        this.cargarOccupantsEnSolucion(solution, occupants);
-
+        this.cargarOcupantes(solution, occupants);
         // 2) Construir pool de pacientes mandatorios
+        const mandatorios = instance.patients.filter(p => p.mandatory).map(p => p.id);
         const allCandidates = this.construirPoolInicial(instance);
         const poolMand = _.shuffle(
             allCandidates.filter(c => instance.patients.find(p => p.id === c.patientId).mandatory)
         );
-
-        // Listas de IDs
-        const mandatorios = instance.patients.filter(p => p.mandatory).map(p => p.id);
-        const opcionales = instance.patients.filter(p => !p.mandatory).map(p => p.id);
-
         // Función genérica de asignación por MRV con muestreo aleatorio y poda dinámica
         const asignarConMRV = (pool, pendientesArray, esOpcional = false) => {
             const pendientes = new Set(pendientesArray);
@@ -449,7 +443,6 @@ class HeuristicaConstructivaAleatoria {
                         return false;
                     }
                 }
-
                 // 3) Muestreo aleatorio entre candidatos
                 let candidatos = pool.filter(c => c.patientId === pacienteMRV);
                 let assigned = false;
@@ -486,23 +479,20 @@ class HeuristicaConstructivaAleatoria {
             }
             return true;
         }
-
         // 3) Asignar pacientes mandatorios
         if (!asignarConMRV(poolMand, mandatorios, false)) {
             console.error("No se pudo asignar todos los pacients obligatorios.");
             return null;
         }
-
         // 4) Construir pool de pacientes opcionales tras asignar a los obligatorios
+        const opcionales = instance.patients.filter(p => !p.mandatory).map(p => p.id);
         const poolOpt = _.shuffle(
             this.construirPoolInicial(instance)
                 .filter(c => opcionales.includes(c.patientId))
                 .filter(c => this.cumpleRestricciones(solution, c, instance, occupantMap))
         );
-
         // 5) Asignar pacientes opcionales
         asignarConMRV(poolOpt, opcionales, true);
-
         return solution;
     }
 
