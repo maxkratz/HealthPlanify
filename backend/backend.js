@@ -1,3 +1,5 @@
+const cluster = require('cluster');
+const os = require('os');
 const express = require('express');
 const path = require('path');
 
@@ -12,35 +14,50 @@ const heuristicsMap = {
     dummy: new HeuristicaDummy(),
 };
 
-const app = express();
-app.use(express.json({ limit: '5mb' }));
+const PORT = process.env.PORT || 3001;
 
-app.post('/api/solve', (req, res) => {
-    const { file, heuristic } = req.query;
+if (cluster.isMaster) {
+    const cpus = os.cpus().length;
+    console.log(`Master ${process.pid} is running`);
 
-    if (!file) {
-        return res.status(400).json({ error: 'Missing "file" parameter.' });
-    }
-    if (path.extname(file) !== '.json') {
-        return res.status(400).json({
-            error: `Invalid extension: ${path.extname(file)}. Only .json is allowed.`
-        });
+    for (let i = 0; i < cpus; i++) {
+        cluster.fork();
     }
 
-    const inputData = req.body;
-    const selected = heuristicsMap[heuristic] || heuristicsMap.random;
-    const context = new Heuristica(selected);
+    cluster.on('exit', (worker, code, signal) => {
+        console.log(`Worker ${worker.process.pid} died (code: ${code}, signal: ${signal}). Forking a new one.`);
+        cluster.fork();
+    });
+} else {
+    const app = express();
+    app.use(express.json({ limit: '5mb' }));
 
-    try {
-        const solution = context.ejecutarHeuristica(inputData);
-        return res.json(solution);
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({ error: 'Server error: ' + e.message });
-    }
-});
+    app.post('/api/solve', (req, res) => {
+        const { file, heuristic } = req.query;
 
-const PORT = 3001;
-app.listen(PORT, () => {
-    console.log(`Mock API running at http://localhost:${PORT}`);
-});
+        if (!file) {
+            return res.status(400).json({ error: 'Missing "file" parameter.' });
+        }
+        if (path.extname(file) !== '.json') {
+            return res.status(400).json({
+                error: `Invalid extension: ${path.extname(file)}. Only .json is allowed.`
+            });
+        }
+
+        const inputData = req.body;
+        const selected = heuristicsMap[heuristic] || heuristicsMap.random;
+        const context = new Heuristica(selected);
+
+        try {
+            const solution = context.ejecutarHeuristica(inputData);
+            return res.json(solution);
+        } catch (e) {
+            console.error(e);
+            return res.status(500).json({ error: 'Server error: ' + e.message });
+        }
+    });
+
+    app.listen(PORT, () => {
+        console.log(`Worker ${process.pid} listening on port ${PORT}`);
+    });
+}
