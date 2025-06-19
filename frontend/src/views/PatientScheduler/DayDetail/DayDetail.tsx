@@ -44,7 +44,7 @@ export const DayDetail: React.FC<DayDetailProps> = ({ day }) => {
     return (
         <div className="border rounded p-4">
             <div className="flex justify-between items-center mb-2">
-                <h3 className="text-center">Day {day} Details</h3>
+                <h3 className="text-center">Day {day+1} Details</h3>
                 <button
                     onClick={toggleDetails}
                     className="
