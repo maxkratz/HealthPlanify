@@ -261,7 +261,7 @@ export const PatientScheduler = () => {
                                                 : solutionGridStyles.dayLabel
                                         }
                                     >
-                                        Day {day}
+                                        Day {day+1}
                                     </span>
                                 </div>
                             ))}
