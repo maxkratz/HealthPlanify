@@ -19,7 +19,7 @@ tmux send-keys -t $SESSION "npm start" C-m
 tmux split-window -h -t $SESSION:0 -c "#{PWD}/frontend"
 
 # Envía el comando npm run dev al segundo panel
-tmux send-keys -t $SESSION:0.1 "npm run dev" C-m
+tmux send-keys -t $SESSION:0.1 "npm run dev -- --host" C-m
 
 # Opcional: ajusta el tamaño de los paneles (ajusta el porcentaje si quieres otro reparto)
 tmux select-pane -t $SESSION:0.0
