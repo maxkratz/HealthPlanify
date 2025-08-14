@@ -7,7 +7,7 @@ HealthPlanify is an interactive web application for exploring, validating, and e
 ### Prerequisites
 
 - **Git** 2.0+
-- **Node.js** 14+
+- **Node.js** 20+
 - **npm** 6+
 - **C++ compiler** (g++ or clang++) for the validator (OPTIONAL)
 - **tmux** for running the app with the script (OPTIONAL)
