@@ -64,7 +64,7 @@ Choose one of the following options:
 From the project root:
 
 ```bash
-./start-dev
+./start-dev.sh
 ```
 
 When finished, terminate all sessions with:
@@ -89,7 +89,7 @@ Sample test instances and their corresponding solution files can be found in the
 
 ---
 
-### Oficial Competition Validator
+### Official Competition Validator
 
 1. Navigate to the `validator` directory:
 
